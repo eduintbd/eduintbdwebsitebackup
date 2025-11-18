@@ -61,9 +61,9 @@ export const Navigation = () => {
   ];
 
   const freeResources = [
-    { name: "Learn", href: "https://learn.eduintbd.com", external: true },
-    { name: "Planner", href: "https://plan.eduintbd.com/", external: true },
-    { name: "Chatbot", href: "https://chatbot.eduintbd.com/", external: true },
+    { name: "IELTS Learning Platform", href: "https://lovable.dev/projects/31bd4f24-b8e1-4b56-92d1-280ca13df0bd", external: true },
+    { name: "Study Abroad Planner", href: "https://lovable.dev/projects/5a6bb03e-3087-4a58-9681-2a679a7f2b7b", external: true },
+    { name: "AI Education Chatbot", href: "https://lovable.dev/projects/98f760ff-000e-4b55-b4dd-d1fef26dc1e1", external: true },
   ];
 
   const latestUpdates = [
