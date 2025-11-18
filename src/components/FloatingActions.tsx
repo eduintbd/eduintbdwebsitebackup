@@ -113,7 +113,7 @@ export const FloatingActions = () => {
         {/* Facebook Button */}
         <button
           onClick={handleFacebook}
-          className="fixed bottom-[280px] right-6 z-40 bg-blue-600 hover:bg-blue-700 text-white w-16 h-16 rounded-full shadow-[0_4px_20px_rgba(0,0,0,0.15)] hover:shadow-[0_6px_30px_rgba(0,0,0,0.25)] transition-all duration-300 hover:scale-110 group flex items-center justify-center"
+          className="fixed bottom-[440px] right-6 z-40 bg-blue-600 hover:bg-blue-700 text-white w-16 h-16 rounded-full shadow-[0_4px_20px_rgba(0,0,0,0.15)] hover:shadow-[0_6px_30px_rgba(0,0,0,0.25)] transition-all duration-300 hover:scale-110 group flex items-center justify-center"
           aria-label="Facebook"
         >
           <Facebook className="w-7 h-7" />
@@ -163,7 +163,7 @@ export const FloatingActions = () => {
         {showScrollTop && (
           <button
             onClick={scrollToTop}
-            className="fixed bottom-[440px] right-6 z-40 bg-secondary hover:bg-secondary/90 text-primary w-14 h-14 rounded-full shadow-[0_4px_20px_rgba(0,0,0,0.15)] hover:shadow-[0_6px_30px_rgba(0,0,0,0.25)] transition-all duration-300 hover:scale-110 animate-fade-in flex items-center justify-center"
+            className="fixed bottom-[520px] right-6 z-40 bg-secondary hover:bg-secondary/90 text-primary w-14 h-14 rounded-full shadow-[0_4px_20px_rgba(0,0,0,0.15)] hover:shadow-[0_6px_30px_rgba(0,0,0,0.25)] transition-all duration-300 hover:scale-110 animate-fade-in flex items-center justify-center"
             aria-label="Scroll to top"
           >
             <ArrowUp className="w-6 h-6" />

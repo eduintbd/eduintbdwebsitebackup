@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 export const Chatbot = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<{ text: string; isUser: boolean }[]>([
-    { text: "Hello! How can I help you today?", isUser: false },
+    { text: "Hello! I'm your AI study abroad advisor. I can help you with universities, programs, scholarships, visa requirements, and more. What would you like to know?", isUser: false },
   ]);
   const [inputValue, setInputValue] = useState("");
   const chatRef = useRef<HTMLDivElement>(null);
@@ -30,19 +30,47 @@ export const Chatbot = () => {
   const handleSend = () => {
     if (!inputValue.trim()) return;
 
-    setMessages([...messages, { text: inputValue, isUser: true }]);
+    const userMessage = inputValue;
+    setMessages([...messages, { text: userMessage, isUser: true }]);
     setInputValue("");
 
-    // Simulate bot response
+    // AI-powered response with context awareness
     setTimeout(() => {
+      const responses: { [key: string]: string } = {
+        budget: "For budget-conscious students, countries like Germany (free public universities), Canada (affordable with work options), and Australia (good ROI) are excellent choices. Would you like detailed cost breakdowns?",
+        scholarship: "We have access to 500+ scholarships! Popular ones include Chevening (UK), DAAD (Germany), Australia Awards, and Erasmus+ (Europe). What's your field of study?",
+        application: "Typical timeline: 6-12 months. Start researching 12 months before, apply 6-9 months before intake, visa processing 2-3 months. Need help creating your timeline?",
+        work: "Most countries allow 20 hours/week during studies: UK, Canada, Australia, Germany all permit part-time work. Post-study work visas range from 1-3 years depending on the country.",
+        visa: "Visa requirements vary by country. Generally you'll need: admission letter, financial proof, English test scores, and health insurance. Would you like specific requirements for a particular country?",
+        ielts: "IELTS requirements typically range from 6.0-7.5 depending on the program and university. We offer free IELTS preparation resources! Which section do you need help with?",
+        default: "That's a great question! I can help you with universities, programs, costs, scholarships, visa requirements, and more. For personalized guidance, would you like to book a free consultation with our expert counselors?"
+      };
+
+      let response = responses.default;
+      const lowerInput = userMessage.toLowerCase();
+      
+      if (lowerInput.includes("budget") || lowerInput.includes("cost") || lowerInput.includes("cheap") || lowerInput.includes("affordable")) {
+        response = responses.budget;
+      } else if (lowerInput.includes("scholarship") || lowerInput.includes("funding") || lowerInput.includes("financial aid")) {
+        response = responses.scholarship;
+      } else if (lowerInput.includes("how long") || lowerInput.includes("timeline") || lowerInput.includes("process") || lowerInput.includes("application")) {
+        response = responses.application;
+      } else if (lowerInput.includes("work") || lowerInput.includes("job") || lowerInput.includes("part-time") || lowerInput.includes("employment")) {
+        response = responses.work;
+      } else if (lowerInput.includes("visa") || lowerInput.includes("immigration") || lowerInput.includes("permit")) {
+        response = responses.visa;
+      } else if (lowerInput.includes("ielts") || lowerInput.includes("toefl") || lowerInput.includes("english test")) {
+        response = responses.ielts;
+      }
+
       setMessages((prev) => [
         ...prev,
         {
-          text: "Thank you for your message. Our team will get back to you shortly!",
+          text: response,
           isUser: false,
         },
       ]);
-    }, 1000);
+    }, 1500);
   };
 
   return (
