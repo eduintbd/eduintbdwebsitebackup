@@ -367,6 +367,7 @@ export type Database = {
           admin_notes: string | null
           application_status: string | null
           assigned_counselor: string | null
+          budget: string | null
           cas_received: boolean | null
           competitor_universities: string | null
           consultation_completed: boolean | null
@@ -381,13 +382,16 @@ export type Database = {
           enrolled_university: string | null
           id: string
           intake_semester: string | null
+          level: string | null
           lifecycle_stage: string | null
           meeting_link: string | null
           name: string
           offer_letter_received: boolean | null
           phone: string
+          preferred_course: string | null
           preferred_partners: string | null
           priority_level: string | null
+          reference_source: string | null
           scholarship_amount: number | null
           session_booked: boolean | null
           session_date: string | null
@@ -405,6 +409,7 @@ export type Database = {
           admin_notes?: string | null
           application_status?: string | null
           assigned_counselor?: string | null
+          budget?: string | null
           cas_received?: boolean | null
           competitor_universities?: string | null
           consultation_completed?: boolean | null
@@ -419,13 +424,16 @@ export type Database = {
           enrolled_university?: string | null
           id?: string
           intake_semester?: string | null
+          level?: string | null
           lifecycle_stage?: string | null
           meeting_link?: string | null
           name: string
           offer_letter_received?: boolean | null
           phone: string
+          preferred_course?: string | null
           preferred_partners?: string | null
           priority_level?: string | null
+          reference_source?: string | null
           scholarship_amount?: number | null
           session_booked?: boolean | null
           session_date?: string | null
@@ -443,6 +451,7 @@ export type Database = {
           admin_notes?: string | null
           application_status?: string | null
           assigned_counselor?: string | null
+          budget?: string | null
           cas_received?: boolean | null
           competitor_universities?: string | null
           consultation_completed?: boolean | null
@@ -457,13 +466,16 @@ export type Database = {
           enrolled_university?: string | null
           id?: string
           intake_semester?: string | null
+          level?: string | null
           lifecycle_stage?: string | null
           meeting_link?: string | null
           name?: string
           offer_letter_received?: boolean | null
           phone?: string
+          preferred_course?: string | null
           preferred_partners?: string | null
           priority_level?: string | null
+          reference_source?: string | null
           scholarship_amount?: number | null
           session_booked?: boolean | null
           session_date?: string | null

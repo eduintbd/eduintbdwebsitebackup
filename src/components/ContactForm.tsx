@@ -43,6 +43,10 @@ export const ContactForm = () => {
     countryCode: "+880",
     destination: "",
     year: "",
+    preferred_course: "",
+    level: "",
+    budget: "",
+    reference_source: "",
     details: "",
     website: "", // Honeypot field - bots will fill this, humans won't see it
   });
@@ -79,6 +83,10 @@ export const ContactForm = () => {
           phone: fullPhone,
           study_destination: formData.destination || null,
           study_year: formData.year || null,
+          preferred_course: formData.preferred_course || null,
+          level: formData.level || null,
+          budget: formData.budget || null,
+          reference_source: formData.reference_source || null,
           details: validatedData.details || null,
         }]);
 
@@ -142,6 +150,10 @@ export const ContactForm = () => {
         countryCode: "+880",
         destination: "",
         year: "",
+        preferred_course: "",
+        level: "",
+        budget: "",
+        reference_source: "",
         details: "",
         website: "", // Reset honeypot field
       });
@@ -254,20 +266,85 @@ export const ContactForm = () => {
                     <SelectItem value="canada">{language === 'en' ? 'Canada' : 'কানাডা'}</SelectItem>
                     <SelectItem value="uk">{language === 'en' ? 'United Kingdom' : 'যুক্তরাজ্য'}</SelectItem>
                     <SelectItem value="usa">{language === 'en' ? 'USA' : 'মার্কিন যুক্তরাষ্ট্র'}</SelectItem>
+                    <SelectItem value="new-zealand">{language === 'en' ? 'New Zealand' : 'নিউজিল্যান্ড'}</SelectItem>
+                    <SelectItem value="south-korea">{language === 'en' ? 'South Korea' : 'দক্ষিণ কোরিয়া'}</SelectItem>
                     <SelectItem value="help">{language === 'en' ? 'Help Me Decide' : 'আমাকে সিদ্ধান্ত নিতে সাহায্য করুন'}</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
 
+              <div className="grid md:grid-cols-2 gap-6">
+                <div className="space-y-2">
+                  <Label htmlFor="year" className="text-foreground font-medium">{t.year} *</Label>
+                  <Select value={formData.year} onValueChange={(value) => setFormData({...formData, year: value})}>
+                    <SelectTrigger className="h-12 rounded-xl border-border focus:border-secondary">
+                      <SelectValue placeholder={t.yearPlaceholder} />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="2026">2026</SelectItem>
+                      <SelectItem value="2027">2027</SelectItem>
+                      <SelectItem value="2028">2028</SelectItem>
+                      <SelectItem value="2029">2029</SelectItem>
+                      <SelectItem value="2030">2030</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="level" className="text-foreground font-medium">{language === 'en' ? 'Level' : 'স্তর'}</Label>
+                  <Select value={formData.level} onValueChange={(value) => setFormData({...formData, level: value})}>
+                    <SelectTrigger className="h-12 rounded-xl border-border focus:border-secondary">
+                      <SelectValue placeholder={language === 'en' ? 'Select level' : 'স্তর নির্বাচন করুন'} />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="undergraduate">{language === 'en' ? 'Undergraduate' : 'স্নাতক'}</SelectItem>
+                      <SelectItem value="postgraduate">{language === 'en' ? 'Postgraduate' : 'স্নাতকোত্তর'}</SelectItem>
+                      <SelectItem value="phd">{language === 'en' ? 'PhD' : 'পিএইচডি'}</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+
+              <div className="grid md:grid-cols-2 gap-6">
+                <div className="space-y-2">
+                  <Label htmlFor="preferred_course" className="text-foreground font-medium">{language === 'en' ? 'Preferred Course' : 'পছন্দের কোর্স'}</Label>
+                  <Input 
+                    id="preferred_course" 
+                    placeholder={language === 'en' ? 'e.g., Computer Science' : 'যেমন, কম্পিউটার বিজ্ঞান'}
+                    value={formData.preferred_course}
+                    onChange={(e) => setFormData({...formData, preferred_course: e.target.value})}
+                    className="h-12 rounded-xl border-border focus:border-secondary"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="budget" className="text-foreground font-medium">{language === 'en' ? 'Budget' : 'বাজেট'}</Label>
+                  <Select value={formData.budget} onValueChange={(value) => setFormData({...formData, budget: value})}>
+                    <SelectTrigger className="h-12 rounded-xl border-border focus:border-secondary">
+                      <SelectValue placeholder={language === 'en' ? 'Select budget range' : 'বাজেট পরিসীমা নির্বাচন করুন'} />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="under-10000">{language === 'en' ? 'Under $10,000' : '$১০,০০০ এর নিচে'}</SelectItem>
+                      <SelectItem value="10000-20000">{language === 'en' ? '$10,000 - $20,000' : '$১০,০০০ - $২০,০০০'}</SelectItem>
+                      <SelectItem value="20000-30000">{language === 'en' ? '$20,000 - $30,000' : '$২০,০০০ - $৩০,০০০'}</SelectItem>
+                      <SelectItem value="30000-50000">{language === 'en' ? '$30,000 - $50,000' : '$৩০,০০০ - $৫০,০০০'}</SelectItem>
+                      <SelectItem value="above-50000">{language === 'en' ? 'Above $50,000' : '$৫০,০০০ এর উপরে'}</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+
               <div className="space-y-2">
-                <Label htmlFor="year" className="text-foreground font-medium">{t.year} *</Label>
-                <Select value={formData.year} onValueChange={(value) => setFormData({...formData, year: value})}>
+                <Label htmlFor="reference_source" className="text-foreground font-medium">{language === 'en' ? 'How did you hear about us?' : 'আপনি আমাদের সম্পর্কে কীভাবে জানলেন?'}</Label>
+                <Select value={formData.reference_source} onValueChange={(value) => setFormData({...formData, reference_source: value})}>
                   <SelectTrigger className="h-12 rounded-xl border-border focus:border-secondary">
-                    <SelectValue placeholder={t.yearPlaceholder} />
+                    <SelectValue placeholder={language === 'en' ? 'Select source' : 'উৎস নির্বাচন করুন'} />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="2026">2026</SelectItem>
-                    <SelectItem value="2027">2027</SelectItem>
+                    <SelectItem value="facebook">{language === 'en' ? 'Facebook' : 'ফেসবুক'}</SelectItem>
+                    <SelectItem value="whatsapp">{language === 'en' ? 'WhatsApp' : 'হোয়াটসঅ্যাপ'}</SelectItem>
+                    <SelectItem value="friend">{language === 'en' ? 'Friend' : 'বন্ধু'}</SelectItem>
+                    <SelectItem value="other">{language === 'en' ? 'Other' : 'অন্যান্য'}</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
