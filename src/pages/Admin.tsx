@@ -6,7 +6,7 @@ import { Navigation } from "@/components/Navigation";
 import { Footer } from "@/components/Footer";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
+import { Plus, LogOut } from "lucide-react";
 import { EnhancedDashboard } from "@/components/admin/EnhancedDashboard";
 import { StudentList } from "@/components/admin/StudentList";
 import { CallScheduler } from "@/components/admin/CallScheduler";
@@ -106,6 +106,15 @@ export default function Admin() {
     });
   };
 
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    toast({
+      title: "Logged Out",
+      description: "You have been successfully logged out.",
+    });
+    navigate("/");
+  };
+
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900">
       <Navigation />
@@ -116,13 +125,23 @@ export default function Admin() {
               <h1 className="text-3xl font-bold text-white">Admin CRM</h1>
               <p className="text-slate-200">Student management & consultation system</p>
             </div>
-            <Button
-              onClick={() => setShowAddModal(true)}
-              className="gap-2 backdrop-blur-sm bg-primary/90 hover:bg-primary"
-            >
-              <Plus className="h-4 w-4" />
-              Add Student
-            </Button>
+            <div className="flex gap-2">
+              <Button
+                onClick={() => setShowAddModal(true)}
+                className="gap-2 backdrop-blur-sm bg-primary/90 hover:bg-primary"
+              >
+                <Plus className="h-4 w-4" />
+                Add Student
+              </Button>
+              <Button
+                onClick={handleLogout}
+                variant="outline"
+                className="gap-2 backdrop-blur-sm bg-background/50 hover:bg-background/70"
+              >
+                <LogOut className="h-4 w-4" />
+                Sign Out
+              </Button>
+            </div>
           </div>
 
           <Tabs defaultValue="dashboard" className="space-y-6">
