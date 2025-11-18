@@ -44,6 +44,42 @@ export type Database = {
         }
         Relationships: []
       }
+      audit_logs: {
+        Row: {
+          action: string
+          created_at: string | null
+          details: Json | null
+          id: string
+          ip_address: string | null
+          resource_id: string | null
+          resource_type: string
+          user_agent: string | null
+          user_id: string | null
+        }
+        Insert: {
+          action: string
+          created_at?: string | null
+          details?: Json | null
+          id?: string
+          ip_address?: string | null
+          resource_id?: string | null
+          resource_type: string
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          action?: string
+          created_at?: string | null
+          details?: Json | null
+          id?: string
+          ip_address?: string | null
+          resource_id?: string | null
+          resource_type?: string
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       communication_channels: {
         Row: {
           channel_identifier: string
@@ -275,6 +311,13 @@ export type Database = {
             referencedRelation: "quiz_questions"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "quiz_attempts_question_id_fkey"
+            columns: ["question_id"]
+            isOneToOne: false
+            referencedRelation: "quiz_questions_safe"
+            referencedColumns: ["id"]
+          },
         ]
       }
       quiz_questions: {
@@ -379,6 +422,7 @@ export type Database = {
           document_urls: string[] | null
           documents_uploaded: boolean | null
           email: string
+          email_verified: boolean | null
           enrolled_university: string | null
           id: string
           intake_semester: string | null
@@ -401,6 +445,8 @@ export type Database = {
           study_year: string | null
           tuition_fees: number | null
           updated_at: string | null
+          verification_token: string | null
+          verified_at: string | null
           visa_application_date: string | null
           visa_approval_date: string | null
           visa_status: string | null
@@ -421,6 +467,7 @@ export type Database = {
           document_urls?: string[] | null
           documents_uploaded?: boolean | null
           email: string
+          email_verified?: boolean | null
           enrolled_university?: string | null
           id?: string
           intake_semester?: string | null
@@ -443,6 +490,8 @@ export type Database = {
           study_year?: string | null
           tuition_fees?: number | null
           updated_at?: string | null
+          verification_token?: string | null
+          verified_at?: string | null
           visa_application_date?: string | null
           visa_approval_date?: string | null
           visa_status?: string | null
@@ -463,6 +512,7 @@ export type Database = {
           document_urls?: string[] | null
           documents_uploaded?: boolean | null
           email?: string
+          email_verified?: boolean | null
           enrolled_university?: string | null
           id?: string
           intake_semester?: string | null
@@ -485,6 +535,8 @@ export type Database = {
           study_year?: string | null
           tuition_fees?: number | null
           updated_at?: string | null
+          verification_token?: string | null
+          verified_at?: string | null
           visa_application_date?: string | null
           visa_approval_date?: string | null
           visa_status?: string | null
@@ -673,7 +725,44 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      quiz_questions_safe: {
+        Row: {
+          created_at: string | null
+          id: string | null
+          module_id: string | null
+          options: Json | null
+          points: number | null
+          question_text: string | null
+          question_type: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string | null
+          module_id?: string | null
+          options?: Json | null
+          points?: number | null
+          question_text?: string | null
+          question_type?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string | null
+          module_id?: string | null
+          options?: Json | null
+          points?: number | null
+          question_text?: string | null
+          question_type?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "quiz_questions_module_id_fkey"
+            columns: ["module_id"]
+            isOneToOne: false
+            referencedRelation: "ielts_modules"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Functions: {
       generate_student_link: { Args: { p_student_id: string }; Returns: string }

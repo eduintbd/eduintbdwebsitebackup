@@ -65,13 +65,12 @@ export default function Login() {
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: `${window.location.origin}/ielts-learning`,
+          redirectTo: `${window.location.origin}/`,
         },
       });
 
       if (error) throw error;
     } catch (error: any) {
-      console.error("Google auth error:", error);
       toast({
         title: "Google Sign In Failed",
         description: error.message || "Failed to sign in with Google. Please try again.",
@@ -117,7 +116,6 @@ export default function Login() {
         navigate("/ielts-learning");
       }
     } catch (error: any) {
-      console.error("Auth error:", error);
       toast({
         title: isSignUp ? "Sign Up Failed" : "Login Failed",
         description: error.message || "Authentication failed. Please try again.",
