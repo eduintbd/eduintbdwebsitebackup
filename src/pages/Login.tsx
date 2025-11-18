@@ -109,20 +109,40 @@ export default function Login() {
     <div className="min-h-screen flex flex-col">
       <Navigation />
       <main className="flex-1 flex items-center justify-center px-4 py-20 bg-gradient-to-br from-primary/5 to-secondary/5">
-        <Card className="w-full max-w-md">
-          <CardHeader className="space-y-1">
-            <CardTitle className="text-2xl font-bold text-center">
-              {showForgotPassword ? "Reset Password" : isSignUp ? "Create Free Account" : "Login"}
+        <Card className="w-full max-w-md shadow-xl border-2">
+          <CardHeader className="space-y-3 pb-6">
+            <CardTitle className="text-3xl font-bold text-center">
+              {showForgotPassword ? "Reset Password" : "Welcome to EduintBD"}
             </CardTitle>
-            <CardDescription className="text-center">
+            <CardDescription className="text-center text-base">
               {showForgotPassword 
                 ? "Enter your email to receive a password reset link"
                 : emailSent 
                   ? "Check your email to verify your account"
-                  : isSignUp 
-                    ? "Create an account to track your IELTS progress"
-                    : "Sign in to access your progress tracking"}
+                  : "Access free IELTS tools or sign up to track your progress"}
             </CardDescription>
+            {!showForgotPassword && !emailSent && (
+              <div className="flex gap-2 pt-2">
+                <Button
+                  type="button"
+                  variant={!isSignUp ? "default" : "outline"}
+                  className="flex-1"
+                  onClick={() => setIsSignUp(false)}
+                >
+                  <LogIn className="mr-2 h-4 w-4" />
+                  Login
+                </Button>
+                <Button
+                  type="button"
+                  variant={isSignUp ? "default" : "outline"}
+                  className="flex-1"
+                  onClick={() => setIsSignUp(true)}
+                >
+                  <Mail className="mr-2 h-4 w-4" />
+                  Sign Up
+                </Button>
+              </div>
+            )}
           </CardHeader>
           <CardContent>
             {showForgotPassword ? (
@@ -207,20 +227,13 @@ export default function Login() {
                       Forgot your password?
                     </Button>
                   )}
-                  <Button type="submit" className="w-full" disabled={isLoading}>
-                    {isSignUp ? <Mail className="mr-2 h-4 w-4" /> : <LogIn className="mr-2 h-4 w-4" />}
-                    {isLoading ? "Processing..." : isSignUp ? "Sign Up" : "Sign In"}
+                  <Button type="submit" className="w-full h-11 text-base" disabled={isLoading}>
+                    {isLoading ? "Processing..." : isSignUp ? "Create Account" : "Sign In"}
                   </Button>
-
-                  <div className="text-center text-sm">
-                    <button
-                      type="button"
-                      onClick={() => setIsSignUp(!isSignUp)}
-                      className="text-primary hover:underline"
-                    >
-                      {isSignUp ? "Already have an account? Sign in" : "Don't have an account? Sign up"}
-                    </button>
-                  </div>
+                  
+                  <p className="text-center text-sm text-muted-foreground">
+                    {isSignUp ? "Already have an account? Switch to login above" : "Need an account? Switch to sign up above"}
+                  </p>
                  </form>
             )}
           </CardContent>
