@@ -6,7 +6,7 @@ import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { Navigation } from "@/components/Navigation";
 import { Footer } from "@/components/Footer";
-import { CheckCircle2, FileText, Calendar } from "lucide-react";
+import { CheckCircle2, FileText, Calendar, User, Phone, Mail, MessageCircle, Facebook, Globe, ArrowRight, AlertCircle } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { DocumentUpload } from "@/components/portal/DocumentUpload";
@@ -269,182 +269,314 @@ const getCurrentStepIndex = () => {
       <Navigation />
       <main className="flex-1 py-6 md:py-12 px-2 md:px-4">
         <div className="container mx-auto max-w-7xl px-0 md:px-4">
-          {/* Header */}
-          <div className="mb-4 md:mb-8 p-3 md:p-6 bg-card rounded-lg md:rounded-xl shadow-sm border mx-2 md:mx-0">
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 md:gap-4">
-              <div>
-                <h1 className="text-xl md:text-3xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-                  Welcome back, {application?.name || user?.email}
-                </h1>
-                <p className="text-xs md:text-sm text-muted-foreground mt-1">{todayDate}</p>
+          {/* Header with Profile & Quick Actions */}
+          <div className="mb-4 md:mb-8 p-4 md:p-8 bg-gradient-to-r from-primary/10 to-secondary/10 rounded-2xl shadow-lg border mx-2 md:mx-0">
+            <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
+              <div className="flex items-start gap-4 flex-1">
+                <div className="hidden sm:flex h-16 w-16 rounded-full bg-primary/20 items-center justify-center">
+                  <User className="h-8 w-8 text-primary" />
+                </div>
+                <div className="flex-1">
+                  <h1 className="text-2xl md:text-4xl font-bold text-foreground mb-1">
+                    Welcome back, {application?.name || 'Student'}!
+                  </h1>
+                  <p className="text-sm text-muted-foreground mb-3">{todayDate}</p>
+                  <div className="flex flex-wrap gap-2 text-sm">
+                    <span className="px-3 py-1 bg-background/50 rounded-full flex items-center gap-1">
+                      <Mail className="h-3 w-3" />
+                      {user?.email}
+                    </span>
+                    {application?.phone && (
+                      <span className="px-3 py-1 bg-background/50 rounded-full flex items-center gap-1">
+                        <Phone className="h-3 w-3" />
+                        {application.phone}
+                      </span>
+                    )}
+                  </div>
+                </div>
               </div>
-              <Button onClick={handleLogout} variant="outline" className="w-full md:w-fit">
-                Log Out
-              </Button>
+              
+              {/* Quick Connect Social Links */}
+              <div className="flex flex-col gap-3 w-full lg:w-auto">
+                <p className="text-sm font-semibold text-muted-foreground">Quick Connect:</p>
+                <div className="flex flex-wrap gap-2">
+                  <Button 
+                    size="sm" 
+                    variant="outline" 
+                    className="bg-green-500/10 border-green-500/20 hover:bg-green-500/20"
+                    onClick={() => window.open(`https://wa.me/8801885999642?text=Hi, I need assistance with my application`, '_blank')}
+                  >
+                    <MessageCircle className="h-4 w-4 mr-1 text-green-600" />
+                    WhatsApp
+                  </Button>
+                  <Button 
+                    size="sm" 
+                    variant="outline"
+                    className="bg-blue-500/10 border-blue-500/20 hover:bg-blue-500/20"
+                    onClick={() => window.open('https://www.facebook.com/eduintbd', '_blank')}
+                  >
+                    <Facebook className="h-4 w-4 mr-1 text-blue-600" />
+                    Facebook
+                  </Button>
+                  <Button 
+                    size="sm" 
+                    variant="outline"
+                    className="bg-primary/10 border-primary/20 hover:bg-primary/20"
+                    onClick={() => window.location.href = 'mailto:info@eduintbd.com'}
+                  >
+                    <Mail className="h-4 w-4 mr-1" />
+                    Email
+                  </Button>
+                  <Button 
+                    size="sm" 
+                    variant="outline"
+                    onClick={handleLogout}
+                  >
+                    Log Out
+                  </Button>
+                </div>
+              </div>
             </div>
           </div>
 
           {application && (
             <>
-              {/* Progress Tracker - Horizontal Stepper */}
-              <div className="mb-4 md:mb-8 bg-card/80 backdrop-blur-sm rounded-full shadow-lg border p-2 md:p-4 mx-2 md:mx-0">
-                <div className="flex items-center justify-between gap-1 md:gap-4 overflow-x-auto scrollbar-hide px-1">
-                  {steps.map((step, index) => {
-                    const isCompleted = index < currentStepIndex;
-                    const isCurrent = index === currentStepIndex;
-                    
-                    return (
-                      <div key={step.id} className="flex items-center gap-2 md:gap-3 flex-shrink-0">
-                        <div className="flex flex-col items-center gap-1 min-w-[60px] md:min-w-[80px]">
-                          <div className={`
-                            w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center font-bold text-xs md:text-sm transition-all
-                            ${isCompleted ? 'bg-secondary text-primary shadow-lg scale-110' : 
-                              isCurrent ? 'bg-primary text-primary-foreground shadow-lg scale-110 ring-4 ring-primary/20' : 
-                              'bg-muted text-muted-foreground'}
-                          `}>
-                            {isCompleted ? (
-                              <CheckCircle2 className="w-4 h-4 md:w-5 md:h-5" />
-                            ) : (
-                              <span>{index + 1}</span>
-                            )}
-                          </div>
-                          <span className={`text-[10px] md:text-xs font-medium text-center leading-tight ${
-                            isCurrent ? 'text-primary' : isCompleted ? 'text-secondary' : 'text-muted-foreground'
-                          }`}>
-                            {step.label}
-                          </span>
+              {/* Registration Status Highlight */}
+              <div className="mb-6 mx-2 md:mx-0">
+                <Card className="border-2 border-primary/20 shadow-lg bg-gradient-to-r from-primary/5 to-secondary/5">
+                  <CardHeader className="pb-3">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <div className="h-12 w-12 rounded-full bg-primary/20 flex items-center justify-center">
+                          <CheckCircle2 className="h-6 w-6 text-primary" />
                         </div>
-                        
-                        {index < steps.length - 1 && (
-                          <div className={`h-[2px] w-8 md:w-12 flex-shrink-0 rounded-full transition-all ${
-                            index < currentStepIndex ? 'bg-secondary' : 'bg-muted'
-                          }`} />
-                        )}
+                        <div>
+                          <CardTitle className="text-xl">Registration Status</CardTitle>
+                          <CardDescription>Your application is active and being processed</CardDescription>
+                        </div>
                       </div>
-                    );
-                  })}
-                </div>
+                      <span className="px-4 py-2 bg-primary/20 text-primary rounded-full text-sm font-semibold">
+                        Active
+                      </span>
+                    </div>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                      <div className="p-3 bg-background/50 rounded-lg">
+                        <p className="text-xs text-muted-foreground mb-1">Study Destination</p>
+                        <p className="font-semibold">{application.study_destination || 'Not specified'}</p>
+                      </div>
+                      <div className="p-3 bg-background/50 rounded-lg">
+                        <p className="text-xs text-muted-foreground mb-1">Study Year</p>
+                        <p className="font-semibold">{application.study_year || 'Not specified'}</p>
+                      </div>
+                      <div className="p-3 bg-background/50 rounded-lg">
+                        <p className="text-xs text-muted-foreground mb-1">Application Status</p>
+                        <p className="font-semibold capitalize">{application.application_status?.replace('_', ' ') || 'Initial Inquiry'}</p>
+                      </div>
+                      <div className="p-3 bg-background/50 rounded-lg">
+                        <p className="text-xs text-muted-foreground mb-1">Visa Status</p>
+                        <p className="font-semibold capitalize">{application.visa_status?.replace('_', ' ') || 'Not Started'}</p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
               </div>
 
-              {/* Application Details */}
-              <Card className="shadow-lg mx-2 md:mx-0 rounded-lg md:rounded-xl">
-                <CardHeader className="bg-gradient-to-r from-primary/10 to-secondary/10 p-3 md:p-6">
-                  <CardTitle className="text-lg md:text-2xl">Application Details</CardTitle>
-                  <CardDescription className="text-xs md:text-sm">Manage your study abroad application</CardDescription>
-                  <div className="flex flex-wrap gap-2 mt-3">
-                    <span className="text-xs bg-secondary/20 text-secondary-foreground px-2 md:px-3 py-1 rounded-full">
-                      Application: {application.application_status || 'initial_inquiry'}
-                    </span>
-                    <span className="text-xs bg-primary/10 text-primary px-2 md:px-3 py-1 rounded-full">
-                      Visa: {application.visa_status || 'not_started'}
-                    </span>
-                  </div>
-                </CardHeader>
-                <CardContent className="pt-4 md:pt-6 px-2 md:px-6">
-                  <div className="flex flex-col lg:grid lg:grid-cols-2 gap-4 md:gap-6">
-                    {/* Virtual Consultation - Shows first on mobile */}
-                    <div id="schedule" className="space-y-4 order-1 lg:order-2">
-                      <div className="flex items-center gap-3 mb-2">
-                        <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
-                          <Calendar className="w-4 h-4 text-primary" />
+              {/* Main Navigation Tabs */}
+              <div className="mx-2 md:mx-0">
+                <Tabs defaultValue="overview" className="space-y-6">
+                  <TabsList className="w-full grid grid-cols-2 lg:grid-cols-4 h-auto bg-card/50 backdrop-blur-sm p-1">
+                    <TabsTrigger value="overview" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground py-3">
+                      <Globe className="h-4 w-4 mr-2" />
+                      Overview
+                    </TabsTrigger>
+                    <TabsTrigger value="registration" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground py-3">
+                      <User className="h-4 w-4 mr-2" />
+                      Registration
+                    </TabsTrigger>
+                    <TabsTrigger value="consultation" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground py-3">
+                      <Calendar className="h-4 w-4 mr-2" />
+                      Consultation
+                    </TabsTrigger>
+                    <TabsTrigger value="documents" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground py-3">
+                      <FileText className="h-4 w-4 mr-2" />
+                      Documents
+                    </TabsTrigger>
+                  </TabsList>
+
+                  {/* Overview Tab */}
+                  <TabsContent value="overview" className="space-y-6">
+                    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                      {/* Quick Action Card - Schedule */}
+                      <Card className="hover:shadow-lg transition-shadow cursor-pointer border-2" onClick={() => document.querySelector('[value="consultation"]')?.dispatchEvent(new MouseEvent('click', {bubbles: true}))}>
+                        <CardHeader>
+                          <div className="flex items-center justify-between">
+                            <Calendar className="h-8 w-8 text-primary" />
+                            {!application.session_booked && <AlertCircle className="h-5 w-5 text-orange-500" />}
+                          </div>
+                          <CardTitle className="text-lg">Virtual Consultation</CardTitle>
+                          <CardDescription>
+                            {application.session_booked ? 
+                              `Scheduled: ${new Date(application.session_date).toLocaleDateString()}` : 
+                              'Book your consultation now'}
+                          </CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                          <Button className="w-full" variant={application.session_booked ? "outline" : "default"}>
+                            {application.session_booked ? 'View Details' : 'Schedule Now'}
+                            <ArrowRight className="ml-2 h-4 w-4" />
+                          </Button>
+                        </CardContent>
+                      </Card>
+
+                      {/* Quick Action Card - Documents */}
+                      <Card className="hover:shadow-lg transition-shadow cursor-pointer border-2" onClick={() => document.querySelector('[value="documents"]')?.dispatchEvent(new MouseEvent('click', {bubbles: true}))}>
+                        <CardHeader>
+                          <div className="flex items-center justify-between">
+                            <FileText className="h-8 w-8 text-primary" />
+                            {!application.documents_uploaded && <AlertCircle className="h-5 w-5 text-orange-500" />}
+                          </div>
+                          <CardTitle className="text-lg">Documents</CardTitle>
+                          <CardDescription>
+                            {application.documents_uploaded ? 
+                              'Documents uploaded' : 
+                              'Upload your documents'}
+                          </CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                          <Button className="w-full" variant={application.documents_uploaded ? "outline" : "default"}>
+                            {application.documents_uploaded ? 'View Documents' : 'Upload Now'}
+                            <ArrowRight className="ml-2 h-4 w-4" />
+                          </Button>
+                        </CardContent>
+                      </Card>
+
+                      {/* Quick Action Card - Communication */}
+                      <Card className="hover:shadow-lg transition-shadow cursor-pointer border-2" onClick={() => document.querySelector('[value="documents"]')?.dispatchEvent(new MouseEvent('click', {bubbles: true}))}>
+                        <CardHeader>
+                          <MessageCircle className="h-8 w-8 text-primary" />
+                          <CardTitle className="text-lg">Communication</CardTitle>
+                          <CardDescription>Message your counselor</CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                          <Button className="w-full" variant="outline">
+                            Open Messages
+                            <ArrowRight className="ml-2 h-4 w-4" />
+                          </Button>
+                        </CardContent>
+                      </Card>
+                    </div>
+
+                    {/* Progress Steps */}
+                    <Card>
+                      <CardHeader>
+                        <CardTitle>Your Journey Progress</CardTitle>
+                        <CardDescription>Track your application status</CardDescription>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="space-y-4">
+                          {steps.map((step, index) => {
+                            const isCompleted = index < currentStepIndex;
+                            const isCurrent = index === currentStepIndex;
+                            return (
+                              <div key={step.id} className={`p-4 rounded-lg border-2 ${
+                                isCurrent ? 'bg-primary/10 border-primary' : 
+                                isCompleted ? 'bg-secondary/10 border-secondary' : 
+                                'bg-muted/30 border-muted'
+                              }`}>
+                                <div className="flex items-center gap-3">
+                                  <div className={`h-10 w-10 rounded-full flex items-center justify-center font-bold ${
+                                    isCompleted ? 'bg-secondary text-primary' : 
+                                    isCurrent ? 'bg-primary text-primary-foreground' : 
+                                    'bg-muted text-muted-foreground'
+                                  }`}>
+                                    {isCompleted ? <CheckCircle2 className="h-5 w-5" /> : index + 1}
+                                  </div>
+                                  <div className="flex-1">
+                                    <h4 className="font-semibold">{step.label}</h4>
+                                    <p className="text-sm text-muted-foreground">{step.description}</p>
+                                  </div>
+                                </div>
+                              </div>
+                            );
+                          })}
                         </div>
-                        <h3 className="font-bold text-lg md:text-xl lg:text-2xl">Virtual Consultation</h3>
-                      </div>
-                      {!application.session_booked && (
-                        <div className="bg-gradient-to-br from-primary/10 to-secondary/10 border-2 border-primary/30 rounded-xl p-4 shadow-sm">
-                          <p className="text-sm md:text-base font-semibold text-primary mb-2">📅 Book your consultation to continue</p>
-                          <p className="text-xs md:text-sm text-muted-foreground mb-3">Schedule a convenient time to discuss your study abroad plans with our expert counselors.</p>
-                        </div>
-                      )}
-                      <VideoConsultation
-                        sessionDate={application.session_date}
-                        studyDestination={application.study_destination}
-                        studyYear={application.study_year}
-                        meetingLink={application.meeting_link}
-                        onBook={handleBookSession}
-                        onReschedule={handleReschedule}
-                        isLoading={isBooking}
-                      />
-                    </div>
+                      </CardContent>
+                    </Card>
+                  </TabsContent>
 
-                    {/* Left Column: Registration - Shows second on mobile */}
-                    <div className="space-y-6 order-2 lg:order-1">
-                      {/* Step 1: Registration */}
-                      <div className="space-y-4">
-                        <EditableRegistration 
-                          application={application}
-                          onUpdate={() => loadApplication(user.email!)}
-                        />
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Step 3: Documents & Communication - Full Width Section */}
-                  <div className="space-y-4 pt-6 border-t mt-6">
-                    <div className="flex items-center gap-3 mb-2">
-                      <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
-                        <FileText className="w-4 h-4 text-primary" />
-                      </div>
-                      <h3 className="font-bold text-lg md:text-xl lg:text-2xl">Documents & Communication</h3>
-                    </div>
-                    <Tabs defaultValue="communication" className="w-full">
-                      <TabsList className="grid w-full grid-cols-2 h-auto max-w-md">
-                        <TabsTrigger value="communication" className="text-xs md:text-sm py-2.5">💬 Communication Center</TabsTrigger>
-                        <TabsTrigger value="documents" className="text-xs md:text-sm py-2.5">📄 Documents</TabsTrigger>
-                      </TabsList>
-
-                      <TabsContent value="communication" className="mt-4 w-full">
-                        <CommunicationCenter
-                          studentId={application.id}
-                          studentEmail={application.email}
-                          studentPhone={application.phone}
-                          studentName={application.name}
-                          isAdmin={false}
-                        />
-                      </TabsContent>
-
-                      <TabsContent value="documents" className="space-y-4 mt-4">
-                        <p className="text-sm text-muted-foreground">Upload and track all necessary documents</p>
-                        <DocumentUpload
-                          userId={user.id}
-                          userEmail={user.email!}
-                          documents={application.document_urls || []}
-                          onDocumentsChange={() => loadApplication(user.email!)}
-                        />
-                      </TabsContent>
-                    </Tabs>
-                  </div>
-
-                  {/* Optional Fields Section */}
-                  <div className="space-y-4 pt-6 border-t">
-                    <h3 className="font-semibold text-base md:text-lg">Additional Information (Optional)</h3>
-                    <div className="space-y-4">
-                      <div>
-                        <Label htmlFor="competitors" className="text-sm md:text-base">Preferred Universities/Program/Remarks</Label>
-                        <Textarea
-                          id="competitors"
-                          placeholder="List preferred universities, programs, or any remarks (optional)..."
-                          value={competitorUniversities}
-                          onChange={(e) => setCompetitorUniversities(e.target.value)}
-                          className="mt-2 text-sm md:text-base"
-                          rows={4}
-                        />
-                      </div>
-                      <Button onClick={handleUpdateFields} variant="outline" className="w-full md:w-auto text-sm md:text-base">
-                        Save Additional Information
-                      </Button>
-                    </div>
-                  </div>
-
-                  {/* Custom Fields Section */}
-                  <div className="space-y-4 pt-6 border-t">
-                    <StudentCustomFields 
-                      studentId={application.id}
-                      isAdmin={false}
+                  {/* Registration Tab */}
+                  <TabsContent value="registration" className="space-y-6">
+                    <EditableRegistration 
+                      application={application}
+                      onUpdate={() => loadApplication(user.email!)}
                     />
-                  </div>
-                </CardContent>
-              </Card>
+                    <StudentCustomFields studentId={application.id} />
+                  </TabsContent>
+
+                  {/* Consultation Tab */}
+                  <TabsContent value="consultation" className="space-y-6">
+                    <Card>
+                      <CardHeader>
+                        <CardTitle className="flex items-center gap-2">
+                          <Calendar className="h-5 w-5" />
+                          Virtual Consultation
+                        </CardTitle>
+                        <CardDescription>Schedule or manage your consultation session</CardDescription>
+                      </CardHeader>
+                      <CardContent>
+                        <VideoConsultation
+                          sessionDate={application.session_date}
+                          studyDestination={application.study_destination}
+                          studyYear={application.study_year}
+                          meetingLink={application.meeting_link}
+                          onBook={handleBookSession}
+                          onReschedule={handleReschedule}
+                          isLoading={isBooking}
+                        />
+                      </CardContent>
+                    </Card>
+                  </TabsContent>
+
+                  {/* Documents Tab */}
+                  <TabsContent value="documents" className="space-y-6">
+                    <Card>
+                      <CardHeader>
+                        <CardTitle className="flex items-center gap-2">
+                          <FileText className="h-5 w-5" />
+                          Documents & Communication
+                        </CardTitle>
+                        <CardDescription>Upload documents and communicate with your counselor</CardDescription>
+                      </CardHeader>
+                      <CardContent>
+                        <Tabs defaultValue="communication" className="w-full">
+                          <TabsList className="grid w-full grid-cols-2">
+                            <TabsTrigger value="communication">Messages</TabsTrigger>
+                            <TabsTrigger value="upload">Upload Documents</TabsTrigger>
+                          </TabsList>
+                          <TabsContent value="communication" className="space-y-4 mt-4">
+                            <CommunicationCenter 
+                              studentId={application.id} 
+                              studentEmail={application.email}
+                              studentPhone={application.phone}
+                              studentName={application.name}
+                            />
+                          </TabsContent>
+                          <TabsContent value="upload" className="space-y-4 mt-4">
+                            <DocumentUpload
+                              userId={user.id}
+                              userEmail={user.email!}
+                              documents={application.document_urls || []}
+                              onDocumentsChange={() => loadApplication(user.email!)}
+                            />
+                          </TabsContent>
+                        </Tabs>
+                      </CardContent>
+                    </Card>
+                  </TabsContent>
+                </Tabs>
+              </div>
             </>
           )}
         </div>
