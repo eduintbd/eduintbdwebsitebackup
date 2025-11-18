@@ -8,7 +8,8 @@ import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
-import { BookOpen, PenTool, Headphones, Mic, Trophy, TrendingUp, Target } from "lucide-react";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { BookOpen, PenTool, Headphones, Mic, Trophy, TrendingUp, Target, Lock } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 interface Module {
@@ -50,7 +51,7 @@ const IELTSLearning = () => {
   const [achievements, setAchievements] = useState<Achievement[]>([]);
   const [problemAreas, setProblemAreas] = useState<ProblemArea[]>([]);
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState("dashboard");
+  const [activeTab, setActiveTab] = useState("modules");
 
   useEffect(() => {
     checkUser();
@@ -58,46 +59,41 @@ const IELTSLearning = () => {
 
   const checkUser = async () => {
     const { data: { user } } = await supabase.auth.getUser();
-    if (!user) {
-      navigate("/login");
-      return;
-    }
     setUser(user);
-    await fetchData(user.id);
+    await fetchData(user?.id);
   };
 
-  const fetchData = async (userId: string) => {
+  const fetchData = async (userId?: string) => {
     try {
-      // Fetch modules
       const { data: modulesData } = await supabase
         .from("ielts_modules")
         .select("*")
         .order("order_index");
       
-      // Fetch user progress
-      const { data: progressData } = await supabase
-        .from("user_progress")
-        .select("*")
-        .eq("user_id", userId);
-
-      // Fetch achievements
-      const { data: achievementsData } = await supabase
-        .from("achievements")
-        .select("*")
-        .eq("user_id", userId)
-        .order("earned_at", { ascending: false });
-
-      // Fetch problem areas
-      const { data: problemAreasData } = await supabase
-        .from("problem_areas")
-        .select("*")
-        .eq("user_id", userId)
-        .order("error_count", { ascending: false });
-
       setModules(modulesData || []);
-      setProgress(progressData || []);
-      setAchievements(achievementsData || []);
-      setProblemAreas(problemAreasData || []);
+
+      if (userId) {
+        const { data: progressData } = await supabase
+          .from("user_progress")
+          .select("*")
+          .eq("user_id", userId);
+
+        const { data: achievementsData } = await supabase
+          .from("achievements")
+          .select("*")
+          .eq("user_id", userId)
+          .order("earned_at", { ascending: false });
+
+        const { data: problemAreasData } = await supabase
+          .from("problem_areas")
+          .select("*")
+          .eq("user_id", userId)
+          .order("error_count", { ascending: false });
+
+        setProgress(progressData || []);
+        setAchievements(achievementsData || []);
+        setProblemAreas(problemAreasData || []);
+      }
     } catch (error) {
       console.error("Error fetching data:", error);
       toast({
@@ -121,253 +117,236 @@ const IELTSLearning = () => {
   };
 
   const getProgressPercentage = () => {
-    if (modules.length === 0) return 0;
+    if (!user || modules.length === 0) return 0;
     const completed = progress.filter(p => p.completed).length;
     return Math.round((completed / modules.length) * 100);
   };
 
   const getAverageScore = () => {
-    if (progress.length === 0) return 0;
-    const total = progress.reduce((sum, p) => sum + (p.score || 0), 0);
-    return Math.round(total / progress.length);
+    if (!user || progress.length === 0) return 0;
+    const scores = progress.filter(p => p.score).map(p => p.score);
+    if (scores.length === 0) return 0;
+    return Math.round(scores.reduce((a, b) => a + b, 0) / scores.length);
   };
 
-  const modulesByType = (type: string) => 
-    modules.filter(m => m.module_type === type);
+  const getDifficultyColor = (difficulty: string) => {
+    switch (difficulty) {
+      case "beginner": return "bg-green-500";
+      case "intermediate": return "bg-yellow-500";
+      case "advanced": return "bg-red-500";
+      default: return "bg-gray-500";
+    }
+  };
+
+  const groupedModules = modules.reduce((acc, module) => {
+    if (!acc[module.module_type]) {
+      acc[module.module_type] = [];
+    }
+    acc[module.module_type].push(module);
+    return acc;
+  }, {} as Record<string, Module[]>);
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
-          <p className="mt-4 text-muted-foreground">Loading your learning dashboard...</p>
-        </div>
+      <div className="min-h-screen flex flex-col">
+        <Navigation />
+        <main className="flex-1 flex items-center justify-center">
+          <p>Loading...</p>
+        </main>
+        <Footer />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background to-muted/20">
+    <div className="min-h-screen flex flex-col">
       <Navigation />
-      
-      <main className="container mx-auto px-4 pt-24 pb-12">
-        <div className="mb-8">
-          <h1 className="text-4xl font-bold mb-2">IELTS Learning Platform</h1>
-          <p className="text-muted-foreground">Master IELTS with personalized learning and AI-powered feedback</p>
-        </div>
-
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid w-full grid-cols-5">
-            <TabsTrigger value="dashboard">Dashboard</TabsTrigger>
-            <TabsTrigger value="modules">Modules</TabsTrigger>
-            <TabsTrigger value="progress">Progress</TabsTrigger>
-            <TabsTrigger value="problems">Problem Areas</TabsTrigger>
-            <TabsTrigger value="achievements">Achievements</TabsTrigger>
-          </TabsList>
-
-          {/* Dashboard Tab */}
-          <TabsContent value="dashboard" className="space-y-6">
-            <div className="grid md:grid-cols-3 gap-6">
-              <Card className="p-6">
-                <div className="flex items-center gap-4">
-                  <div className="p-3 bg-primary/10 rounded-full">
-                    <Target className="w-6 h-6 text-primary" />
-                  </div>
-                  <div>
-                    <p className="text-sm text-muted-foreground">Overall Progress</p>
-                    <p className="text-3xl font-bold">{getProgressPercentage()}%</p>
-                  </div>
-                </div>
-                <Progress value={getProgressPercentage()} className="mt-4" />
-              </Card>
-
-              <Card className="p-6">
-                <div className="flex items-center gap-4">
-                  <div className="p-3 bg-secondary/10 rounded-full">
-                    <TrendingUp className="w-6 h-6 text-secondary" />
-                  </div>
-                  <div>
-                    <p className="text-sm text-muted-foreground">Average Score</p>
-                    <p className="text-3xl font-bold">{getAverageScore()}%</p>
-                  </div>
-                </div>
-              </Card>
-
-              <Card className="p-6">
-                <div className="flex items-center gap-4">
-                  <div className="p-3 bg-accent/10 rounded-full">
-                    <Trophy className="w-6 h-6 text-accent" />
-                  </div>
-                  <div>
-                    <p className="text-sm text-muted-foreground">Achievements</p>
-                    <p className="text-3xl font-bold">{achievements.length}</p>
-                  </div>
-                </div>
-              </Card>
-            </div>
-
-            {/* Recent Problem Areas */}
-            {problemAreas.length > 0 && (
-              <Card className="p-6">
-                <h3 className="text-xl font-semibold mb-4">Areas to Focus On</h3>
-                <div className="space-y-3">
-                  {problemAreas.slice(0, 3).map((area, index) => (
-                    <div key={index} className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
-                      <div>
-                        <p className="font-medium capitalize">{area.module_type} - {area.skill_area.replace(/_/g, ' ')}</p>
-                        <p className="text-sm text-muted-foreground">Errors: {area.error_count}</p>
-                      </div>
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={() => setActiveTab("problems")}
-                      >
-                        View Details
-                      </Button>
-                    </div>
-                  ))}
-                </div>
-              </Card>
+      <main className="flex-1 py-12 px-4 max-w-7xl mx-auto w-full">
+        <div className="space-y-8">
+          <div className="text-center space-y-4">
+            <h1 className="text-4xl font-bold">AI-Powered IELTS Learning</h1>
+            <p className="text-xl text-muted-foreground">
+              Practice for free • Get AI feedback • Track your progress
+            </p>
+            {!user && (
+              <Alert>
+                <Lock className="h-4 w-4" />
+                <AlertDescription>
+                  You're using the free version. <Button variant="link" className="h-auto p-0" onClick={() => navigate("/login")}>Create a free account</Button> to track your progress and achievements!
+                </AlertDescription>
+              </Alert>
             )}
-          </TabsContent>
+          </div>
 
-          {/* Modules Tab */}
-          <TabsContent value="modules" className="space-y-6">
-            {["reading", "writing", "listening", "speaking"].map((type) => {
-              const typeModules = modulesByType(type);
-              if (typeModules.length === 0) return null;
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+            <TabsList className="grid w-full grid-cols-4">
+              <TabsTrigger value="modules">All Modules</TabsTrigger>
+              <TabsTrigger value="dashboard" disabled={!user}>
+                Dashboard {!user && <Lock className="ml-2 h-3 w-3" />}
+              </TabsTrigger>
+              <TabsTrigger value="achievements" disabled={!user}>
+                Achievements {!user && <Lock className="ml-2 h-3 w-3" />}
+              </TabsTrigger>
+              <TabsTrigger value="problem-areas" disabled={!user}>
+                Focus Areas {!user && <Lock className="ml-2 h-3 w-3" />}
+              </TabsTrigger>
+            </TabsList>
 
-              return (
-                <div key={type}>
-                  <h3 className="text-2xl font-semibold mb-4 capitalize flex items-center gap-2">
+            <TabsContent value="modules" className="space-y-6 mt-6">
+              {Object.entries(groupedModules).map(([type, typeModules]) => (
+                <div key={type} className="space-y-4">
+                  <div className="flex items-center gap-3">
                     {getModuleIcon(type)}
-                    {type}
-                  </h3>
-                  <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <h2 className="text-2xl font-bold capitalize">{type}</h2>
+                  </div>
+                  <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                     {typeModules.map((module) => {
                       const moduleProgress = progress.find(p => p.module_id === module.id);
                       return (
                         <Card key={module.id} className="p-6 hover:shadow-lg transition-shadow">
-                          <div className="flex items-start justify-between mb-3">
-                            <Badge variant={module.difficulty === 'beginner' ? 'secondary' : module.difficulty === 'intermediate' ? 'default' : 'destructive'}>
-                              {module.difficulty}
-                            </Badge>
-                            {moduleProgress?.completed && (
-                              <Badge variant="outline" className="bg-green-500/10 text-green-600">
-                                Completed
+                          <div className="space-y-4">
+                            <div className="flex items-start justify-between">
+                              <div className="flex-1">
+                                <h3 className="font-semibold text-lg">{module.title}</h3>
+                                <p className="text-sm text-muted-foreground mt-1">
+                                  {module.description}
+                                </p>
+                              </div>
+                              {moduleProgress?.completed && (
+                                <Trophy className="w-5 h-5 text-yellow-500" />
+                              )}
+                            </div>
+                            <div className="flex items-center justify-between">
+                              <Badge className={getDifficultyColor(module.difficulty)}>
+                                {module.difficulty}
                               </Badge>
-                            )}
+                              {user && moduleProgress && (
+                                <span className="text-sm font-medium">
+                                  Score: {moduleProgress.score}%
+                                </span>
+                              )}
+                            </div>
+                            <Button 
+                              className="w-full" 
+                              onClick={() => navigate(`/ielts-module/${module.id}`)}
+                            >
+                              Start Module
+                            </Button>
                           </div>
-                          <h4 className="font-semibold mb-2">{module.title}</h4>
-                          <p className="text-sm text-muted-foreground mb-4">{module.description}</p>
-                          {moduleProgress && (
-                            <p className="text-sm mb-3">Score: <span className="font-semibold">{moduleProgress.score}%</span></p>
-                          )}
-                          <Button 
-                            className="w-full"
-                            onClick={() => navigate(`/ielts/module/${module.id}`)}
-                          >
-                            {moduleProgress?.completed ? 'Review' : 'Start'}
-                          </Button>
                         </Card>
                       );
                     })}
                   </div>
                 </div>
-              );
-            })}
-          </TabsContent>
+              ))}
+            </TabsContent>
 
-          {/* Progress Tab */}
-          <TabsContent value="progress">
-            <Card className="p-6">
-              <h3 className="text-xl font-semibold mb-4">Your Progress</h3>
-              {progress.length === 0 ? (
-                <p className="text-muted-foreground text-center py-8">Start learning to track your progress!</p>
-              ) : (
-                <div className="space-y-4">
-                  {modules.map((module) => {
-                    const moduleProgress = progress.find(p => p.module_id === module.id);
-                    return (
-                      <div key={module.id} className="flex items-center justify-between p-4 bg-muted/30 rounded-lg">
-                        <div className="flex items-center gap-3">
-                          {getModuleIcon(module.module_type)}
-                          <div>
-                            <p className="font-medium">{module.title}</p>
-                            <p className="text-sm text-muted-foreground capitalize">{module.module_type}</p>
-                          </div>
-                        </div>
-                        <div className="text-right">
-                          {moduleProgress ? (
-                            <>
-                              <p className="font-semibold">{moduleProgress.score}%</p>
-                              <Badge variant={moduleProgress.completed ? 'default' : 'secondary'} className="mt-1">
-                                {moduleProgress.completed ? 'Completed' : 'In Progress'}
-                              </Badge>
-                            </>
-                          ) : (
-                            <Badge variant="outline">Not Started</Badge>
-                          )}
-                        </div>
+            <TabsContent value="dashboard" className="space-y-6 mt-6">
+              {user && (
+                <div className="grid gap-6 md:grid-cols-3">
+                  <Card className="p-6">
+                    <div className="flex items-center gap-4">
+                      <div className="p-3 bg-primary/10 rounded-lg">
+                        <Target className="w-6 h-6 text-primary" />
                       </div>
-                    );
-                  })}
+                      <div>
+                        <p className="text-sm text-muted-foreground">Overall Progress</p>
+                        <p className="text-2xl font-bold">{getProgressPercentage()}%</p>
+                      </div>
+                    </div>
+                    <Progress value={getProgressPercentage()} className="mt-4" />
+                  </Card>
+
+                  <Card className="p-6">
+                    <div className="flex items-center gap-4">
+                      <div className="p-3 bg-green-100 rounded-lg">
+                        <TrendingUp className="w-6 h-6 text-green-600" />
+                      </div>
+                      <div>
+                        <p className="text-sm text-muted-foreground">Average Score</p>
+                        <p className="text-2xl font-bold">{getAverageScore()}%</p>
+                      </div>
+                    </div>
+                  </Card>
+
+                  <Card className="p-6">
+                    <div className="flex items-center gap-4">
+                      <div className="p-3 bg-yellow-100 rounded-lg">
+                        <Trophy className="w-6 h-6 text-yellow-600" />
+                      </div>
+                      <div>
+                        <p className="text-sm text-muted-foreground">Achievements</p>
+                        <p className="text-2xl font-bold">{achievements.length}</p>
+                      </div>
+                    </div>
+                  </Card>
                 </div>
               )}
-            </Card>
-          </TabsContent>
+            </TabsContent>
 
-          {/* Problem Areas Tab */}
-          <TabsContent value="problems">
-            <Card className="p-6">
-              <h3 className="text-xl font-semibold mb-4">Problem Areas</h3>
-              {problemAreas.length === 0 ? (
-                <p className="text-muted-foreground text-center py-8">No problem areas identified yet. Keep practicing!</p>
+            <TabsContent value="achievements" className="space-y-6 mt-6">
+              {user && achievements.length === 0 ? (
+                <Card className="p-8 text-center">
+                  <Trophy className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
+                  <h3 className="text-lg font-semibold mb-2">No Achievements Yet</h3>
+                  <p className="text-muted-foreground">
+                    Complete modules to earn achievements!
+                  </p>
+                </Card>
+              ) : (
+                <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                  {achievements.map((achievement) => (
+                    <Card key={achievement.id} className="p-6">
+                      <div className="text-center space-y-3">
+                        <div className="text-4xl">{achievement.badge_icon}</div>
+                        <h3 className="font-semibold">{achievement.title}</h3>
+                        <p className="text-sm text-muted-foreground">
+                          {achievement.description}
+                        </p>
+                        <p className="text-xs text-muted-foreground">
+                          Earned: {new Date(achievement.earned_at).toLocaleDateString()}
+                        </p>
+                      </div>
+                    </Card>
+                  ))}
+                </div>
+              )}
+            </TabsContent>
+
+            <TabsContent value="problem-areas" className="space-y-6 mt-6">
+              {user && problemAreas.length === 0 ? (
+                <Card className="p-8 text-center">
+                  <Target className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
+                  <h3 className="text-lg font-semibold mb-2">No Focus Areas Yet</h3>
+                  <p className="text-muted-foreground">
+                    Complete some exercises to identify areas for improvement
+                  </p>
+                </Card>
               ) : (
                 <div className="space-y-4">
                   {problemAreas.map((area, index) => (
-                    <div key={index} className="p-4 border rounded-lg">
-                      <div className="flex items-center justify-between mb-2">
-                        <h4 className="font-semibold capitalize">
-                          {area.module_type} - {area.skill_area.replace(/_/g, ' ')}
-                        </h4>
-                        <Badge variant="destructive">{area.error_count} errors</Badge>
+                    <Card key={index} className="p-6">
+                      <div className="space-y-3">
+                        <div className="flex items-center justify-between">
+                          <h3 className="font-semibold capitalize">
+                            {area.module_type} - {area.skill_area}
+                          </h3>
+                          <Badge variant="destructive">
+                            {area.error_count} errors
+                          </Badge>
+                        </div>
+                        <p className="text-sm text-muted-foreground">
+                          {area.improvement_suggestions}
+                        </p>
                       </div>
-                      {area.improvement_suggestions && (
-                        <p className="text-sm text-muted-foreground mt-2">{area.improvement_suggestions}</p>
-                      )}
-                    </div>
+                    </Card>
                   ))}
                 </div>
               )}
-            </Card>
-          </TabsContent>
-
-          {/* Achievements Tab */}
-          <TabsContent value="achievements">
-            <Card className="p-6">
-              <h3 className="text-xl font-semibold mb-4">Your Achievements</h3>
-              {achievements.length === 0 ? (
-                <p className="text-muted-foreground text-center py-8">Complete modules to earn achievements!</p>
-              ) : (
-                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {achievements.map((achievement) => (
-                    <div key={achievement.id} className="p-4 border rounded-lg text-center">
-                      <div className="text-4xl mb-2">{achievement.badge_icon}</div>
-                      <h4 className="font-semibold mb-1">{achievement.title}</h4>
-                      <p className="text-sm text-muted-foreground">{achievement.description}</p>
-                      <p className="text-xs text-muted-foreground mt-2">
-                        Earned: {new Date(achievement.earned_at).toLocaleDateString()}
-                      </p>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </Card>
-          </TabsContent>
-        </Tabs>
+            </TabsContent>
+          </Tabs>
+        </div>
       </main>
-
       <Footer />
     </div>
   );
