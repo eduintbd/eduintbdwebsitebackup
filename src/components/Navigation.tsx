@@ -1,9 +1,11 @@
 import { Button } from "@/components/ui/button";
-import { Menu, X, ChevronDown, Shield, Languages } from "lucide-react";
+import { Menu, X, ChevronDown, Shield, Languages, LogOut } from "lucide-react";
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { User } from "@supabase/supabase-js";
+import { toast } from "@/hooks/use-toast";
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -26,11 +28,15 @@ export const Navigation = () => {
   const [openUpdates, setOpenUpdates] = useState(false);
   const [openResources, setOpenResources] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [user, setUser] = useState<User | null>(null);
   const { language, setLanguage } = useLanguage();
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const checkAdmin = async () => {
+    const checkAuth = async () => {
       const { data: { session } } = await supabase.auth.getSession();
+      setUser(session?.user ?? null);
+      
       if (session) {
         const { data } = await supabase.rpc('has_role', {
           _user_id: session.user.id,
@@ -39,8 +45,32 @@ export const Navigation = () => {
         setIsAdmin(data || false);
       }
     };
-    checkAdmin();
+
+    checkAuth();
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null);
+      if (session) {
+        supabase.rpc('has_role', {
+          _user_id: session.user.id,
+          _role: 'admin'
+        }).then(({ data }) => setIsAdmin(data || false));
+      } else {
+        setIsAdmin(false);
+      }
+    });
+
+    return () => subscription.unsubscribe();
   }, []);
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    toast({
+      title: "Logged Out",
+      description: "You have been successfully logged out.",
+    });
+    navigate("/");
+  };
 
   const destinations = [
     { name: "Study in USA", href: "/study-usa" },
@@ -236,14 +266,25 @@ export const Navigation = () => {
                   </Button>
                 </NavigationMenuItem>
 
-                {/* Log In Button */}
+                {/* Auth Button */}
                 <NavigationMenuItem>
-                  <Button 
-                    asChild
-                    className="bg-secondary hover:bg-secondary/90 text-primary font-semibold rounded-full ml-2"
-                  >
-                    <Link to="/login">Sign up/Log in</Link>
-                  </Button>
+                  {user ? (
+                    <Button 
+                      onClick={handleLogout}
+                      variant="outline"
+                      className="gap-2 rounded-full ml-2"
+                    >
+                      <LogOut className="h-4 w-4" />
+                      Sign Out
+                    </Button>
+                  ) : (
+                    <Button 
+                      asChild
+                      className="bg-secondary hover:bg-secondary/90 text-primary font-semibold rounded-full ml-2"
+                    >
+                      <Link to="/login">Sign up/Log in</Link>
+                    </Button>
+                  )}
                 </NavigationMenuItem>
               </NavigationMenuList>
             </NavigationMenu>
@@ -395,12 +436,26 @@ export const Navigation = () => {
                 <Languages className="w-4 h-4" />
                 {language === 'en' ? 'বাংলা' : 'English'}
               </Button>
-              <Button 
-                className="bg-secondary hover:bg-secondary/90 text-primary font-semibold rounded-full w-full mt-2"
-                asChild
-              >
-                <Link to="/login" onClick={() => setIsOpen(false)}>Sign up/Log in</Link>
-              </Button>
+              {user ? (
+                <Button 
+                  onClick={() => {
+                    handleLogout();
+                    setIsOpen(false);
+                  }}
+                  variant="outline"
+                  className="gap-2 w-full mt-2"
+                >
+                  <LogOut className="h-4 w-4" />
+                  Sign Out
+                </Button>
+              ) : (
+                <Button 
+                  className="bg-secondary hover:bg-secondary/90 text-primary font-semibold rounded-full w-full mt-2"
+                  asChild
+                >
+                  <Link to="/login" onClick={() => setIsOpen(false)}>Sign up/Log in</Link>
+                </Button>
+              )}
             </div>
           </div>
         )}
