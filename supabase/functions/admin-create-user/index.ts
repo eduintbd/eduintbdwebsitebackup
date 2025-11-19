@@ -13,7 +13,13 @@ interface CreateUserRequest {
 }
 
 // Limit which emails can be created by this public function for safety
-const allowedEmails = new Set<string>(["demo@eduintbd.com"]);
+const allowedEmails = new Set<string>([
+  "demo@eduintbd.com",
+  "rakib@eduintbd.com",
+  "syed@eduintbd.com",
+  "marshal@eduintbd.com",
+  "support@eduintbd.com"
+]);
 
 serve(async (req) => {
   if (req.method === "OPTIONS") {
