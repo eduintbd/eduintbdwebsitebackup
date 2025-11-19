@@ -18,9 +18,9 @@ interface Question {
   id: string;
   question_text: string;
   question_type: string;
-  correct_answer: string;
+  correct_answer?: string;
   options: any;
-  explanation: string;
+  explanation?: string;
   points: number;
 }
 
@@ -67,7 +67,7 @@ const IELTSModule = () => {
         .single();
 
       const { data: questionsData } = await supabase
-        .from("quiz_questions")
+        .from("quiz_questions_safe")
         .select("*")
         .eq("module_id", moduleId);
 
@@ -83,6 +83,15 @@ const IELTSModule = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const fetchCorrectAnswer = async (questionId: string) => {
+    const { data } = await supabase
+      .from("quiz_questions")
+      .select("correct_answer, explanation")
+      .eq("id", questionId)
+      .single();
+    return data;
   };
 
   const currentQuestion = questions[currentQuestionIndex];
@@ -104,33 +113,38 @@ const IELTSModule = () => {
       return;
     }
 
-    if (!user) {
-      const userAnswer = answers[currentQuestion.id];
-      const isCorrect = currentQuestion.question_type === 'essay' ? null :
-        userAnswer.toLowerCase().trim() === currentQuestion.correct_answer.toLowerCase().trim();
-
-      setFeedback({
-        ...feedback,
-        [currentQuestion.id]: currentQuestion.question_type === 'essay' 
-          ? "Sign in to get AI feedback on your essay!"
-          : isCorrect ? "Correct!" : `Incorrect. ${currentQuestion.explanation}`,
-      });
-
-      setSubmitted({
-        ...submitted,
-        [currentQuestion.id]: true,
-      });
-      
-      setShowLoginPrompt(true);
-      return;
-    }
-
     setLoading(true);
 
     try {
       const userAnswer = answers[currentQuestion.id];
+      
+      // Fetch correct answer after user submits
+      const answerData = await fetchCorrectAnswer(currentQuestion.id);
+      const correctAnswer = answerData?.correct_answer;
+      const explanation = answerData?.explanation;
+
+      if (!user) {
+        const isCorrect = currentQuestion.question_type === 'essay' ? null :
+          userAnswer.toLowerCase().trim() === correctAnswer?.toLowerCase().trim();
+
+        setFeedback({
+          ...feedback,
+          [currentQuestion.id]: currentQuestion.question_type === 'essay' 
+            ? "Sign in to get AI feedback on your essay!"
+            : isCorrect ? "Correct!" : `Incorrect. ${explanation}`,
+        });
+
+        setSubmitted({
+          ...submitted,
+          [currentQuestion.id]: true,
+        });
+        
+        setShowLoginPrompt(true);
+        return;
+      }
+
       const isCorrect = currentQuestion.question_type === 'essay' ? null :
-        userAnswer.toLowerCase().trim() === currentQuestion.correct_answer.toLowerCase().trim();
+        userAnswer.toLowerCase().trim() === correctAnswer?.toLowerCase().trim();
 
       await supabase.from("quiz_attempts").insert({
         user_id: user.id,
@@ -158,7 +172,7 @@ const IELTSModule = () => {
       } else {
         setFeedback({
           ...feedback,
-          [currentQuestion.id]: isCorrect ? "Correct!" : `Incorrect. ${currentQuestion.explanation}`,
+          [currentQuestion.id]: isCorrect ? "Correct!" : `Incorrect. ${explanation}`,
         });
       }
 
@@ -194,13 +208,22 @@ const IELTSModule = () => {
     }
 
     const answeredQuestions = Object.keys(answers).length;
-    const correctAnswers = Object.entries(answers).filter(([qId]) => {
-      const question = questions.find(q => q.id === qId);
-      if (!question || question.question_type === 'essay') return false;
-      return answers[qId]?.toLowerCase().trim() === question.correct_answer.toLowerCase().trim();
-    }).length;
+    
+    // Fetch correct answers for scoring
+    const correctAnswersPromises = questions
+      .filter(q => q.question_type !== 'essay' && answers[q.id])
+      .map(async (q) => {
+        const answerData = await fetchCorrectAnswer(q.id);
+        return {
+          questionId: q.id,
+          isCorrect: answers[q.id]?.toLowerCase().trim() === answerData?.correct_answer?.toLowerCase().trim()
+        };
+      });
+    
+    const correctAnswersData = await Promise.all(correctAnswersPromises);
+    const correctAnswers = correctAnswersData.filter(a => a.isCorrect);
 
-    const score = Math.round((correctAnswers / questions.length) * 100);
+    const score = Math.round((correctAnswers.length / questions.length) * 100);
     const timeSpent = Math.round((Date.now() - startTime) / 1000);
 
     try {
