@@ -53,6 +53,21 @@ serve(async (req) => {
       throw new Error('Email and new password are required');
     }
 
+    // Validate password strength
+    if (newPassword.length < 8) {
+      throw new Error('Password must be at least 8 characters');
+    }
+    
+    const hasUpper = /[A-Z]/.test(newPassword);
+    const hasLower = /[a-z]/.test(newPassword);
+    const hasNumber = /[0-9]/.test(newPassword);
+    const hasSpecial = /[^A-Za-z0-9]/.test(newPassword);
+    const complexity = [hasUpper, hasLower, hasNumber, hasSpecial].filter(Boolean).length;
+    
+    if (complexity < 3) {
+      throw new Error('Password must contain at least 3 of: uppercase, lowercase, number, special character');
+    }
+
     console.log(`Admin ${user.email} resetting password for ${email}`);
 
     // Get user by email

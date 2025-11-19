@@ -38,10 +38,25 @@ export function PasswordResetDialog({ studentEmail }: PasswordResetDialogProps) 
       return;
     }
 
-    if (newPassword.length < 6) {
+    if (newPassword.length < 8) {
       toast({
         title: "Error",
-        description: "Password must be at least 6 characters",
+        description: "Password must be at least 8 characters",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const hasUpper = /[A-Z]/.test(newPassword);
+    const hasLower = /[a-z]/.test(newPassword);
+    const hasNumber = /[0-9]/.test(newPassword);
+    const hasSpecial = /[^A-Za-z0-9]/.test(newPassword);
+    const complexity = [hasUpper, hasLower, hasNumber, hasSpecial].filter(Boolean).length;
+
+    if (complexity < 3) {
+      toast({
+        title: "Error",
+        description: "Password must contain at least 3 of: uppercase, lowercase, number, special character",
         variant: "destructive",
       });
       return;
@@ -105,7 +120,7 @@ export function PasswordResetDialog({ studentEmail }: PasswordResetDialogProps) 
                 onChange={(e) => setNewPassword(e.target.value)}
                 placeholder="Enter new password"
                 required
-                minLength={6}
+                minLength={8}
               />
             </div>
             <div className="grid gap-2">
@@ -117,7 +132,7 @@ export function PasswordResetDialog({ studentEmail }: PasswordResetDialogProps) 
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 placeholder="Confirm new password"
                 required
-                minLength={6}
+                minLength={8}
               />
             </div>
           </div>
