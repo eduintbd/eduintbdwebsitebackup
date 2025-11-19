@@ -237,6 +237,21 @@ export const Navigation = () => {
                   </a>
                 </NavigationMenuItem>
 
+                {/* Student Dashboard Link */}
+                {user && !isAdmin && (
+                  <NavigationMenuItem>
+                    <Button 
+                      variant="default"
+                      size="sm"
+                      asChild
+                    >
+                      <Link to="/portal">
+                        My Dashboard
+                      </Link>
+                    </Button>
+                  </NavigationMenuItem>
+                )}
+
                 {/* Admin Link */}
                 {isAdmin && (
                   <NavigationMenuItem>
@@ -418,6 +433,15 @@ export const Navigation = () => {
               >
                 Free Consultation
               </a>
+              {user && !isAdmin && (
+                <Link
+                  to="/portal"
+                  className="py-2 text-foreground hover:text-primary transition-colors font-medium text-sm"
+                  onClick={() => setIsOpen(false)}
+                >
+                  My Dashboard
+                </Link>
+              )}
               {isAdmin && (
                 <Link
                   to="/admin"
