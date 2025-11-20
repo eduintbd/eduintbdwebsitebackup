@@ -18,7 +18,8 @@ const allowedEmails = new Set<string>([
   "rakib@eduintbd.com",
   "syed@eduintbd.com",
   "marshal@eduintbd.com",
-  "support@eduintbd.com"
+  "support@eduintbd.com",
+  "najmul@eduintbd.com"
 ]);
 
 serve(async (req) => {
