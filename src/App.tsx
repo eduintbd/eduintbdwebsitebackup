@@ -45,6 +45,7 @@ import SOPSample from "./pages/blog/SOPSample";
 import LocalConsultants from "./pages/blog/LocalConsultants";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsOfService from "./pages/TermsOfService";
+import BrandGuidelines from "./pages/BrandGuidelines";
 
 const queryClient = new QueryClient();
 
@@ -114,6 +115,7 @@ const App = () => (
           <Route path="/study-planner" element={<StudyPlanner />} />
           <Route path="/privacy-policy" element={<PrivacyPolicy />} />
           <Route path="/terms-of-service" element={<TermsOfService />} />
+          <Route path="/brand-guidelines" element={<BrandGuidelines />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
