@@ -81,11 +81,6 @@ export default function Portal() {
       
       if (!data) {
         setApplication(null);
-        toast({
-          title: "No Application Found",
-          description: "Please submit the contact form on the homepage to create your application.",
-          variant: "destructive",
-        });
         return;
       }
       
