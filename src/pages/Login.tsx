@@ -26,7 +26,7 @@ export default function Login() {
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (session) {
-        navigate("/ielts-learning");
+        navigate("/portal");
       }
     });
   }, [navigate]);
@@ -123,7 +123,7 @@ export default function Login() {
           title: "Success",
           description: "Logged in successfully!",
         });
-        navigate("/ielts-learning");
+        navigate("/portal");
       }
     } catch (error: any) {
       toast({
