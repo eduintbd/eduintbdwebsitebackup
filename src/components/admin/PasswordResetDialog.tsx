@@ -24,6 +24,7 @@ export function PasswordResetDialog({ studentEmail }: PasswordResetDialogProps) 
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [willCreateAccount, setWillCreateAccount] = useState(false);
   const { toast } = useToast();
 
   const handleResetPassword = async (e: React.FormEvent) => {
@@ -76,7 +77,9 @@ export function PasswordResetDialog({ studentEmail }: PasswordResetDialogProps) 
 
       toast({
         title: "Success",
-        description: `Password reset successfully for ${studentEmail}`,
+        description: willCreateAccount 
+          ? `Account created and password set for ${studentEmail}`
+          : `Password reset successfully for ${studentEmail}`,
       });
 
       setOpen(false);
@@ -84,11 +87,21 @@ export function PasswordResetDialog({ studentEmail }: PasswordResetDialogProps) 
       setConfirmPassword("");
     } catch (error: any) {
       console.error('Error resetting password:', error);
-      toast({
-        title: "Error",
-        description: error.message || "Failed to reset password",
-        variant: "destructive",
-      });
+      
+      // Check if error indicates user doesn't exist
+      if (error.message && error.message.includes('User account not found')) {
+        setWillCreateAccount(true);
+        toast({
+          title: "Notice",
+          description: "Student account will be created with this password",
+        });
+      } else {
+        toast({
+          title: "Error",
+          description: error.message || "Failed to reset password",
+          variant: "destructive",
+        });
+      }
     } finally {
       setIsLoading(false);
     }
@@ -105,9 +118,12 @@ export function PasswordResetDialog({ studentEmail }: PasswordResetDialogProps) 
       <DialogContent className="sm:max-w-[425px]">
         <form onSubmit={handleResetPassword}>
           <DialogHeader>
-            <DialogTitle>Reset Password</DialogTitle>
+            <DialogTitle>{willCreateAccount ? "Create Account & Set Password" : "Reset Password"}</DialogTitle>
             <DialogDescription>
-              Set a new password for {studentEmail}
+              {willCreateAccount 
+                ? `Create a new account and set password for ${studentEmail}`
+                : `Set a new password for ${studentEmail}`
+              }
             </DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 py-4">
