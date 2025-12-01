@@ -87,21 +87,30 @@ export default function Login() {
 
     try {
       if (isSignUp) {
-        const { error } = await supabase.auth.signUp({
+        const { data, error } = await supabase.auth.signUp({
           email,
           password,
           options: {
-            emailRedirectTo: `${window.location.origin}/ielts-learning`,
+            emailRedirectTo: `${window.location.origin}/portal`,
           },
         });
 
         if (error) throw error;
 
-        toast({
-          title: "Account Created",
-          description: "Check your email to verify your account.",
-        });
-        setEmailSent(true);
+        // With auto-confirm enabled, user is immediately signed in
+        if (data?.user) {
+          toast({
+            title: "Account Created Successfully",
+            description: "Welcome! Your account has been created.",
+          });
+          navigate("/portal");
+        } else {
+          toast({
+            title: "Account Created",
+            description: "Check your email to verify your account.",
+          });
+          setEmailSent(true);
+        }
       } else {
         const { error } = await supabase.auth.signInWithPassword({
           email,
