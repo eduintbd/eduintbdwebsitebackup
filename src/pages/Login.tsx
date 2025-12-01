@@ -99,7 +99,7 @@ export default function Login() {
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: `${window.location.origin}/`,
+          redirectTo: `${window.location.origin}/portal`,
         },
       });
 
@@ -175,12 +175,25 @@ export default function Login() {
           setEmailSent(true);
         }
       } else {
-        const { error } = await supabase.auth.signInWithPassword({
+        const { data, error } = await supabase.auth.signInWithPassword({
           email,
           password,
         });
 
         if (error) throw error;
+
+        // Fetch student data from student_applications table
+        if (data?.user) {
+          const { data: studentData, error: fetchError } = await supabase
+            .from('student_applications')
+            .select('*')
+            .eq('email', email)
+            .single();
+
+          if (fetchError) {
+            console.error('Error fetching student data:', fetchError);
+          }
+        }
 
         toast({
           title: "Success",
