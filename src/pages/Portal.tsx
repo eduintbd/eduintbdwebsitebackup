@@ -167,14 +167,20 @@ export default function Portal() {
       
       <main className="flex-1 w-full mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-4 sm:py-6 md:py-8 max-w-[1600px]">
         {/* Welcome Header */}
-        <div className="mb-4 sm:mb-6">
-          <div className="flex items-center gap-2 sm:gap-3 md:gap-4">
-            <Avatar className="h-12 w-12 md:h-16 md:w-16 bg-primary text-primary-foreground flex-shrink-0">
-              <AvatarFallback className="text-sm md:text-base">{getInitials(application.name)}</AvatarFallback>
+        <div className="mb-6 sm:mb-8">
+          <div className="flex items-start gap-3 sm:gap-4 md:gap-5">
+            <Avatar className="h-14 w-14 sm:h-16 sm:w-16 md:h-20 md:w-20 bg-primary text-primary-foreground flex-shrink-0">
+              <AvatarFallback className="text-base sm:text-lg md:text-xl font-semibold">
+                {getInitials(application.name)}
+              </AvatarFallback>
             </Avatar>
-            <div className="min-w-0 flex-1">
-              <h1 className="text-xl md:text-2xl lg:text-3xl font-bold break-words">Welcome back, {application.name.split(' ')[0]}!</h1>
-              <p className="text-sm md:text-base text-muted-foreground break-words">Track your study abroad journey</p>
+            <div className="flex-1 min-w-0 pt-1">
+              <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold leading-tight mb-1 break-words">
+                Welcome back, {application.name.split(' ')[0]}!
+              </h1>
+              <p className="text-sm sm:text-base md:text-lg text-muted-foreground leading-relaxed break-words">
+                Track your study abroad journey
+              </p>
             </div>
           </div>
         </div>
