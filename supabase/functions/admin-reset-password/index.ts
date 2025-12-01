@@ -74,13 +74,15 @@ serve(async (req) => {
     const { data: userData, error: getUserError } = await supabaseClient.auth.admin.listUsers();
     
     if (getUserError) {
-      throw getUserError;
+      console.error('Error listing users:', getUserError);
+      throw new Error(`Failed to list users: ${getUserError.message}`);
     }
 
     const targetUser = userData.users.find(u => u.email === email);
     
     if (!targetUser) {
-      throw new Error('User not found');
+      console.error(`User not found in auth system: ${email}`);
+      throw new Error(`User account not found. The user may need to sign up first before password can be reset.`);
     }
 
     // Update user password
