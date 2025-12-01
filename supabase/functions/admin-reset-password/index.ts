@@ -81,11 +81,35 @@ serve(async (req) => {
     const targetUser = userData.users.find(u => u.email === email);
     
     if (!targetUser) {
-      console.error(`User not found in auth system: ${email}`);
-      throw new Error(`User account not found. The user may need to sign up first before password can be reset.`);
+      console.log(`User not found in auth system, creating new account: ${email}`);
+      
+      // Create new user with the provided password
+      const { data: newUser, error: createError } = await supabaseClient.auth.admin.createUser({
+        email,
+        password: newPassword,
+        email_confirm: true,
+        user_metadata: {
+          name: email.split('@')[0]
+        }
+      });
+
+      if (createError) {
+        console.error('Error creating user:', createError);
+        throw new Error(`Failed to create user account: ${createError.message}`);
+      }
+
+      console.log(`Account created and password set for ${email}`);
+      
+      return new Response(
+        JSON.stringify({ success: true, message: 'Account created and password set successfully', created: true }),
+        {
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          status: 200,
+        }
+      );
     }
 
-    // Update user password
+    // Update existing user password
     const { error: updateError } = await supabaseClient.auth.admin.updateUserById(
       targetUser.id,
       { password: newPassword }
