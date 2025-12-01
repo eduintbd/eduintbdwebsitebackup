@@ -130,12 +130,12 @@ export default function Login() {
 
         const fullPhone = `${signupData.countryCode}${signupData.phone}`;
 
-        // Create auth user with email verification
+        // Create auth user
         const { data, error } = await supabase.auth.signUp({
           email,
           password,
           options: {
-            emailRedirectTo: `${window.location.origin}/login`,
+            emailRedirectTo: `${window.location.origin}/portal`,
           },
         });
 
@@ -161,14 +161,19 @@ export default function Login() {
           if (dbError && dbError.code !== '23505') {
             console.error('Error creating application:', dbError);
           }
-        }
 
-        // Always show verification message
-        toast({
-          title: "Verification Email Sent",
-          description: "Please check your email to verify your account before logging in.",
-        });
-        setEmailSent(true);
+          toast({
+            title: "Account Created Successfully",
+            description: "Welcome! Your account has been created.",
+          });
+          navigate("/portal");
+        } else {
+          toast({
+            title: "Account Created",
+            description: "Check your email to verify your account.",
+          });
+          setEmailSent(true);
+        }
       } else {
         const { data, error } = await supabase.auth.signInWithPassword({
           email,
@@ -176,12 +181,6 @@ export default function Login() {
         });
 
         if (error) throw error;
-
-        // Check if email is verified
-        if (data?.user && !data.user.email_confirmed_at) {
-          await supabase.auth.signOut();
-          throw new Error("Please verify your email before logging in. Check your inbox for the verification link.");
-        }
 
         // Fetch student data from student_applications table
         if (data?.user) {
