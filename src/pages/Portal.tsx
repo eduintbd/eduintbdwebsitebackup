@@ -172,9 +172,9 @@ export default function Portal() {
             <Avatar className="h-12 w-12 md:h-16 md:w-16 bg-primary text-primary-foreground flex-shrink-0">
               <AvatarFallback className="text-sm md:text-base">{getInitials(application.name)}</AvatarFallback>
             </Avatar>
-            <div className="min-w-0 flex-1 overflow-hidden">
-              <h1 className="text-xl md:text-2xl lg:text-3xl font-bold truncate">Welcome back, {application.name.split(' ')[0]}!</h1>
-              <p className="text-sm md:text-base text-muted-foreground truncate">Track your study abroad journey</p>
+            <div className="min-w-0 flex-1">
+              <h1 className="text-xl md:text-2xl lg:text-3xl font-bold break-words">Welcome back, {application.name.split(' ')[0]}!</h1>
+              <p className="text-sm md:text-base text-muted-foreground break-words">Track your study abroad journey</p>
             </div>
           </div>
         </div>
