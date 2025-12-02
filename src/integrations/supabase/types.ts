@@ -205,6 +205,62 @@ export type Database = {
         }
         Relationships: []
       }
+      practice_sessions: {
+        Row: {
+          answered_questions: number
+          completed_at: string | null
+          correct_answers: number
+          created_at: string
+          duration_seconds: number | null
+          id: string
+          metadata: Json | null
+          module_id: string
+          score_percentage: number | null
+          session_type: string | null
+          started_at: string
+          total_questions: number
+          user_id: string
+        }
+        Insert: {
+          answered_questions?: number
+          completed_at?: string | null
+          correct_answers?: number
+          created_at?: string
+          duration_seconds?: number | null
+          id?: string
+          metadata?: Json | null
+          module_id: string
+          score_percentage?: number | null
+          session_type?: string | null
+          started_at?: string
+          total_questions: number
+          user_id: string
+        }
+        Update: {
+          answered_questions?: number
+          completed_at?: string | null
+          correct_answers?: number
+          created_at?: string
+          duration_seconds?: number | null
+          id?: string
+          metadata?: Json | null
+          module_id?: string
+          score_percentage?: number | null
+          session_type?: string | null
+          started_at?: string
+          total_questions?: number
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "practice_sessions_module_id_fkey"
+            columns: ["module_id"]
+            isOneToOne: false
+            referencedRelation: "ielts_modules"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       problem_areas: {
         Row: {
           created_at: string | null
@@ -658,6 +714,105 @@ export type Database = {
           },
         ]
       }
+      study_goals: {
+        Row: {
+          created_at: string
+          description: string | null
+          goal_type: string
+          id: string
+          module_type: string | null
+          status: string | null
+          target_date: string | null
+          target_value: number | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          goal_type: string
+          id?: string
+          module_type?: string | null
+          status?: string | null
+          target_date?: string | null
+          target_value?: number | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          goal_type?: string
+          id?: string
+          module_type?: string | null
+          status?: string | null
+          target_date?: string | null
+          target_value?: number | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      study_schedules: {
+        Row: {
+          completed: boolean | null
+          completed_at: string | null
+          created_at: string
+          duration_minutes: number | null
+          goal_id: string | null
+          id: string
+          module_id: string | null
+          notes: string | null
+          reminder_sent: boolean | null
+          scheduled_date: string
+          scheduled_time: string | null
+          user_id: string
+        }
+        Insert: {
+          completed?: boolean | null
+          completed_at?: string | null
+          created_at?: string
+          duration_minutes?: number | null
+          goal_id?: string | null
+          id?: string
+          module_id?: string | null
+          notes?: string | null
+          reminder_sent?: boolean | null
+          scheduled_date: string
+          scheduled_time?: string | null
+          user_id: string
+        }
+        Update: {
+          completed?: boolean | null
+          completed_at?: string | null
+          created_at?: string
+          duration_minutes?: number | null
+          goal_id?: string | null
+          id?: string
+          module_id?: string | null
+          notes?: string | null
+          reminder_sent?: boolean | null
+          scheduled_date?: string
+          scheduled_time?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "study_schedules_goal_id_fkey"
+            columns: ["goal_id"]
+            isOneToOne: false
+            referencedRelation: "study_goals"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "study_schedules_module_id_fkey"
+            columns: ["module_id"]
+            isOneToOne: false
+            referencedRelation: "ielts_modules"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_progress: {
         Row: {
           completed: boolean | null
@@ -725,6 +880,19 @@ export type Database = {
       }
     }
     Views: {
+      module_performance_by_type: {
+        Row: {
+          attempts: number | null
+          avg_duration_seconds: number | null
+          avg_score: number | null
+          best_score: number | null
+          last_attempt_date: string | null
+          lowest_score: number | null
+          module_type: string | null
+          user_id: string | null
+        }
+        Relationships: []
+      }
       quiz_questions_safe: {
         Row: {
           created_at: string | null
@@ -763,9 +931,36 @@ export type Database = {
           },
         ]
       }
+      user_performance_analytics: {
+        Row: {
+          active_days: number | null
+          avg_score: number | null
+          best_score: number | null
+          days_since_last_practice: number | null
+          last_practice_date: string | null
+          total_correct_answers: number | null
+          total_questions_attempted: number | null
+          total_sessions: number | null
+          total_study_time_seconds: number | null
+          unique_modules_attempted: number | null
+          user_id: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
+      calculate_study_streak: { Args: { p_user_id: string }; Returns: number }
       generate_student_link: { Args: { p_student_id: string }; Returns: string }
+      get_weekly_progress: {
+        Args: { p_user_id: string }
+        Returns: {
+          avg_score: number
+          modules_completed: number
+          sessions_count: number
+          total_time_minutes: number
+          week_start: string
+        }[]
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
