@@ -2,3 +2,6 @@ project_id = "acwyisbovqxzewjhrzbh"
 
 [functions.admin-create-user]
 verify_jwt = false
+
+[functions.send-confirmation-email]
+verify_jwt = false
