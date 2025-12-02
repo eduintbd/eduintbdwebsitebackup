@@ -9,6 +9,9 @@ import { useMetaPixel } from "@/hooks/use-meta-pixel";
 import Index from "./pages/Index";
 import IELTSLearning from "./pages/IELTSLearning";
 import IELTSModule from "./pages/IELTSModule";
+import IELTSMaterials from "./pages/IELTSMaterials";
+import GamifiedLearning from "./pages/GamifiedLearning";
+import IELTSAnalytics from "./pages/IELTSAnalytics";
 import AIBuddy from "./pages/AIBuddy";
 import WritingPractice from "./pages/WritingPractice";
 import ListeningPractice from "./pages/ListeningPractice";
@@ -116,6 +119,9 @@ const App = () => (
           <Route path="/blog/study-abroad-consultants-near-me-why-local-expertise-matters" element={<LocalConsultants />} />
           <Route path="/ielts-learning" element={<IELTSLearning />} />
           <Route path="/ielts/module/:moduleId" element={<IELTSModule />} />
+          <Route path="/ielts/materials" element={<IELTSMaterials />} />
+          <Route path="/ielts/gamified" element={<GamifiedLearning />} />
+          <Route path="/ielts/analytics" element={<IELTSAnalytics />} />
           <Route path="/ielts/ai-buddy" element={<AIBuddy />} />
           <Route path="/ielts/writing" element={<WritingPractice />} />
           <Route path="/ielts/listening" element={<ListeningPractice />} />
