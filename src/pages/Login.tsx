@@ -162,9 +162,27 @@ export default function Login() {
             console.error('Error creating application:', dbError);
           }
 
+          // Send welcome email with feature highlights
+          try {
+            await supabase.functions.invoke('send-confirmation-email', {
+              body: {
+                name: validatedData.name,
+                email: validatedData.email,
+                phone: fullPhone,
+                studyDestination: signupData.destination,
+                studyYear: signupData.year,
+                details: validatedData.details,
+              },
+            });
+            console.log('Welcome email sent successfully');
+          } catch (emailError) {
+            console.error('Error sending welcome email:', emailError);
+            // Don't block signup flow if email fails
+          }
+
           toast({
             title: "Account Created Successfully",
-            description: "Welcome! Your account has been created.",
+            description: "Welcome! Check your email for next steps.",
           });
           navigate("/portal");
         } else {
