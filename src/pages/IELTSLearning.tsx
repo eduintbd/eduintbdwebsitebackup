@@ -232,7 +232,7 @@ const IELTSLearning = () => {
                             </div>
                             <Button 
                               className="w-full" 
-                              onClick={() => navigate(`/ielts-module/${module.id}`)}
+                              onClick={() => navigate(`/ielts/module/${module.id}`)}
                             >
                               Start Module
                             </Button>
