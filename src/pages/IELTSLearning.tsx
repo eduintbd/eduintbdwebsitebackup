@@ -5,54 +5,74 @@ import { Footer } from "@/components/Footer";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { BookOpen, PenTool, Headphones, Mic, Trophy, TrendingUp, Target, Lock, MessageSquare } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
-import { AnalyticsDashboard } from "@/components/ielts/AnalyticsDashboard";
+import { 
+  BookOpen, PenTool, Headphones, Mic, Trophy, TrendingUp, 
+  Target, MessageSquare, Gamepad2, BarChart3, Users, 
+  CheckCircle, Star, Sparkles, ArrowRight, Play
+} from "lucide-react";
 
-interface Module {
-  id: string;
-  title: string;
-  description: string;
-  module_type: string;
-  difficulty: string;
-  order_index: number;
-}
+const features = [
+  {
+    title: "Unlimited IELTS Materials",
+    description: "Access comprehensive Reading, Writing, Listening, and Speaking modules updated daily with global trends.",
+    icon: BookOpen,
+    color: "text-emerald-500",
+    bgColor: "bg-emerald-500/10",
+    route: "/ielts/materials"
+  },
+  {
+    title: "AI Study Coach",
+    description: "Get personalized recommendations, weak-skill analysis, and adaptive learning paths powered by AI.",
+    icon: MessageSquare,
+    color: "text-blue-500",
+    bgColor: "bg-blue-500/10",
+    route: "/ielts/ai-buddy"
+  },
+  {
+    title: "Gamified Learning",
+    description: "Master IELTS through vocabulary races, grammar battles, and listening puzzles that make learning fun.",
+    icon: Gamepad2,
+    color: "text-purple-500",
+    bgColor: "bg-purple-500/10",
+    route: "/ielts/gamified"
+  },
+  {
+    title: "Smart Analytics",
+    description: "Track your progress with detailed insights, score graphs, streak tracking, and performance metrics.",
+    icon: BarChart3,
+    color: "text-amber-500",
+    bgColor: "bg-amber-500/10",
+    route: "/ielts/analytics"
+  },
+  {
+    title: "Mock Tests & Quizzes",
+    description: "Unlimited AI-evaluated mock tests with real-time feedback and detailed explanations.",
+    icon: Target,
+    color: "text-rose-500",
+    bgColor: "bg-rose-500/10",
+    route: "/ielts/materials"
+  },
+  {
+    title: "Study Abroad Hub",
+    description: "Connect your IELTS journey with university applications, visa guidance, and study abroad planning.",
+    icon: Users,
+    color: "text-cyan-500",
+    bgColor: "bg-cyan-500/10",
+    route: "/ai-advisor"
+  }
+];
 
-interface UserProgress {
-  module_id: string;
-  completed: boolean;
-  score: number;
-}
-
-interface Achievement {
-  id: string;
-  title: string;
-  description: string;
-  badge_icon: string;
-  earned_at: string;
-}
-
-interface ProblemArea {
-  module_type: string;
-  skill_area: string;
-  error_count: number;
-  improvement_suggestions: string;
-}
+const stats = [
+  { value: "10,000+", label: "Active Learners" },
+  { value: "500K+", label: "Practice Questions" },
+  { value: "8.5", label: "Average Band Score" },
+  { value: "95%", label: "Success Rate" }
+];
 
 const IELTSLearning = () => {
   const navigate = useNavigate();
-  const { toast } = useToast();
   const [user, setUser] = useState<any>(null);
-  const [modules, setModules] = useState<Module[]>([]);
-  const [progress, setProgress] = useState<UserProgress[]>([]);
-  const [achievements, setAchievements] = useState<Achievement[]>([]);
-  const [problemAreas, setProblemAreas] = useState<ProblemArea[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState("modules");
 
   useEffect(() => {
     checkUser();
@@ -61,340 +81,220 @@ const IELTSLearning = () => {
   const checkUser = async () => {
     const { data: { user } } = await supabase.auth.getUser();
     setUser(user);
-    await fetchData(user?.id);
   };
-
-  const fetchData = async (userId?: string) => {
-    try {
-      const { data: modulesData } = await supabase
-        .from("ielts_modules")
-        .select("*")
-        .order("order_index");
-      
-      setModules(modulesData || []);
-
-      if (userId) {
-        const { data: progressData } = await supabase
-          .from("user_progress")
-          .select("*")
-          .eq("user_id", userId);
-
-        const { data: achievementsData } = await supabase
-          .from("achievements")
-          .select("*")
-          .eq("user_id", userId)
-          .order("earned_at", { ascending: false });
-
-        const { data: problemAreasData } = await supabase
-          .from("problem_areas")
-          .select("*")
-          .eq("user_id", userId)
-          .order("error_count", { ascending: false });
-
-        setProgress(progressData || []);
-        setAchievements(achievementsData || []);
-        setProblemAreas(problemAreasData || []);
-      }
-    } catch (error) {
-      console.error("Error fetching data:", error);
-      toast({
-        title: "Error",
-        description: "Failed to load learning data",
-        variant: "destructive",
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const getModuleIcon = (type: string) => {
-    switch (type) {
-      case "reading": return <BookOpen className="w-6 h-6" />;
-      case "writing": return <PenTool className="w-6 h-6" />;
-      case "listening": return <Headphones className="w-6 h-6" />;
-      case "speaking": return <Mic className="w-6 h-6" />;
-      default: return <BookOpen className="w-6 h-6" />;
-    }
-  };
-
-  const getProgressPercentage = () => {
-    if (!user || modules.length === 0) return 0;
-    const completed = progress.filter(p => p.completed).length;
-    return Math.round((completed / modules.length) * 100);
-  };
-
-  const getAverageScore = () => {
-    if (!user || progress.length === 0) return 0;
-    const scores = progress.filter(p => p.score).map(p => p.score);
-    if (scores.length === 0) return 0;
-    return Math.round(scores.reduce((a, b) => a + b, 0) / scores.length);
-  };
-
-  const getDifficultyColor = (difficulty: string) => {
-    switch (difficulty) {
-      case "beginner": return "bg-green-500";
-      case "intermediate": return "bg-yellow-500";
-      case "advanced": return "bg-red-500";
-      default: return "bg-gray-500";
-    }
-  };
-
-  const groupedModules = modules.reduce((acc, module) => {
-    if (!acc[module.module_type]) {
-      acc[module.module_type] = [];
-    }
-    acc[module.module_type].push(module);
-    return acc;
-  }, {} as Record<string, Module[]>);
-
-  if (loading) {
-    return (
-      <div className="min-h-screen flex flex-col">
-        <Navigation />
-        <main className="flex-1 flex items-center justify-center">
-          <p>Loading...</p>
-        </main>
-        <Footer />
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-screen flex flex-col">
       <Navigation />
-      <main className="flex-1 py-12 px-4 max-w-7xl mx-auto w-full">
-        <div className="space-y-8">
-          <div className="text-center space-y-4">
-            <h1 className="text-4xl font-bold">AI-Powered IELTS Learning</h1>
-            <p className="text-xl text-muted-foreground">
-              Practice for free • Get AI feedback • Track your progress
-            </p>
+      <main className="flex-1">
+        {/* Hero Section */}
+        <section className="relative py-16 md:py-24 px-4 bg-gradient-to-br from-primary/5 via-background to-secondary/5 overflow-hidden">
+          <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-5" />
+          <div className="absolute top-20 right-10 w-72 h-72 bg-primary/10 rounded-full blur-3xl" />
+          <div className="absolute bottom-10 left-10 w-96 h-96 bg-secondary/10 rounded-full blur-3xl" />
+          
+          <div className="max-w-6xl mx-auto relative z-10">
+            <div className="grid md:grid-cols-2 gap-12 items-center">
+              <div className="space-y-6">
+                <Badge className="bg-primary/10 text-primary hover:bg-primary/20 px-4 py-1">
+                  <Sparkles className="w-3 h-3 mr-1" />
+                  #1 AI-Powered IELTS Platform in Bangladesh
+                </Badge>
+                
+                <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight">
+                  Master IELTS with{" "}
+                  <span className="text-primary">Unlimited AI Practice</span>
+                </h1>
+                
+                <p className="text-lg text-muted-foreground">
+                  Your complete IELTS Academic companion powered by AI. Get unlimited mock tests, 
+                  personalized coaching, and real-time feedback to achieve your dream band score.
+                </p>
+                
+                <div className="flex flex-wrap gap-4">
+                  <Button size="lg" onClick={() => navigate("/ielts/materials")} className="gap-2">
+                    Start Free Trial
+                    <ArrowRight className="w-4 h-4" />
+                  </Button>
+                  <Button size="lg" variant="outline" onClick={() => navigate("/ielts/ai-buddy")}>
+                    <Play className="w-4 h-4 mr-2" />
+                    Talk to AI Coach
+                  </Button>
+                </div>
+                
+                <div className="flex flex-wrap gap-6 pt-4">
+                  {[
+                    { icon: CheckCircle, text: "Unlimited Mock Tests" },
+                    { icon: MessageSquare, text: "AI Study Coach" },
+                    { icon: TrendingUp, text: "Real-Time Feedback" },
+                    { icon: Star, text: "Daily Updates" }
+                  ].map((item, idx) => (
+                    <div key={idx} className="flex items-center gap-2 text-sm">
+                      <item.icon className="w-4 h-4 text-primary" />
+                      <span>{item.text}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              
+              <div className="relative hidden md:block">
+                <div className="relative w-full aspect-square max-w-md mx-auto">
+                  <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-secondary/20 rounded-3xl transform rotate-3" />
+                  <div className="absolute inset-0 bg-card rounded-3xl shadow-2xl flex items-center justify-center">
+                    <div className="text-center p-8">
+                      <div className="w-24 h-24 mx-auto mb-4 bg-primary/10 rounded-full flex items-center justify-center">
+                        <BookOpen className="w-12 h-12 text-primary" />
+                      </div>
+                      <h3 className="text-2xl font-bold mb-2">IELTS Infinity</h3>
+                      <p className="text-muted-foreground text-sm">AI-Powered Learning</p>
+                      
+                      <div className="mt-6 p-4 bg-emerald-500/10 rounded-xl">
+                        <p className="text-3xl font-bold text-emerald-500">8.5</p>
+                        <p className="text-sm text-muted-foreground">Avg Band Score</p>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  {/* Floating card */}
+                  <div className="absolute -bottom-4 -left-4 bg-card p-4 rounded-xl shadow-lg border">
+                    <p className="text-2xl font-bold text-primary">10,000+</p>
+                    <p className="text-xs text-muted-foreground">Active Learners</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Stats Banner */}
+        <section className="py-8 px-4 bg-primary text-primary-foreground">
+          <div className="max-w-6xl mx-auto">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+              {stats.map((stat, idx) => (
+                <div key={idx} className="text-center">
+                  <p className="text-3xl md:text-4xl font-bold">{stat.value}</p>
+                  <p className="text-sm opacity-80">{stat.label}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Features Section */}
+        <section className="py-16 px-4 bg-muted/30">
+          <div className="max-w-6xl mx-auto">
+            <div className="text-center mb-12">
+              <Badge className="mb-4">Powered by AI</Badge>
+              <h2 className="text-3xl md:text-4xl font-bold mb-4">
+                Everything You Need to Ace IELTS
+              </h2>
+              <p className="text-muted-foreground max-w-2xl mx-auto">
+                A complete ecosystem designed for Bangladeshi students aiming to study or migrate abroad
+              </p>
+            </div>
             
-            <Card className="bg-gradient-to-r from-primary/10 to-secondary/10 border-primary/20">
-              <CardContent className="p-6">
-                <div className="flex flex-col md:flex-row items-center gap-4">
-                  <div className="p-3 bg-primary/20 rounded-full">
-                    <MessageSquare className="w-8 h-8 text-primary" />
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {features.map((feature, idx) => {
+                const Icon = feature.icon;
+                return (
+                  <Card 
+                    key={idx} 
+                    className="group cursor-pointer hover:shadow-lg transition-all hover:-translate-y-1"
+                    onClick={() => navigate(feature.route)}
+                  >
+                    <CardContent className="p-6">
+                      <div className={`inline-flex p-3 rounded-xl ${feature.bgColor} mb-4`}>
+                        <Icon className={`w-6 h-6 ${feature.color}`} />
+                      </div>
+                      <h3 className="font-bold text-lg mb-2 group-hover:text-primary transition-colors">
+                        {feature.title}
+                      </h3>
+                      <p className="text-sm text-muted-foreground">{feature.description}</p>
+                    </CardContent>
+                  </Card>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+
+        {/* Quick Access Section */}
+        <section className="py-16 px-4">
+          <div className="max-w-6xl mx-auto">
+            <h2 className="text-2xl font-bold mb-8 text-center">Quick Start Practice</h2>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              {[
+                { title: "Reading", icon: BookOpen, color: "emerald", route: "/ielts/reading" },
+                { title: "Writing", icon: PenTool, color: "blue", route: "/ielts/writing" },
+                { title: "Listening", icon: Headphones, color: "purple", route: "/ielts/listening" },
+                { title: "Speaking", icon: Mic, color: "rose", route: "/ielts/speaking" }
+              ].map((module, idx) => {
+                const Icon = module.icon;
+                return (
+                  <Card 
+                    key={idx}
+                    className="p-6 text-center cursor-pointer hover:shadow-lg transition-all hover:-translate-y-1 group"
+                    onClick={() => navigate(module.route)}
+                  >
+                    <div className={`w-16 h-16 mx-auto mb-4 rounded-2xl bg-${module.color}-500/10 flex items-center justify-center group-hover:scale-110 transition-transform`}>
+                      <Icon className={`w-8 h-8 text-${module.color}-500`} />
+                    </div>
+                    <h3 className="font-bold">{module.title}</h3>
+                    <p className="text-xs text-muted-foreground mt-1">Start Practice</p>
+                  </Card>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+
+        {/* AI Study Buddy CTA */}
+        <section className="py-16 px-4 bg-gradient-to-r from-primary/10 to-secondary/10">
+          <div className="max-w-4xl mx-auto">
+            <Card className="border-2 border-primary/20 overflow-hidden">
+              <CardContent className="p-8 md:p-12">
+                <div className="flex flex-col md:flex-row items-center gap-8">
+                  <div className="flex-shrink-0">
+                    <div className="w-24 h-24 bg-primary/20 rounded-2xl flex items-center justify-center">
+                      <MessageSquare className="w-12 h-12 text-primary" />
+                    </div>
                   </div>
                   <div className="flex-1 text-center md:text-left">
-                    <h3 className="text-lg font-semibold mb-1">AI Study Buddy</h3>
-                    <p className="text-sm text-muted-foreground">
-                      Get instant answers, personalized study plans, and expert IELTS guidance
+                    <h3 className="text-2xl font-bold mb-2">Meet Your AI Study Buddy</h3>
+                    <p className="text-muted-foreground mb-4">
+                      Get instant answers, personalized study plans, band score predictions, 
+                      and expert IELTS strategies - all powered by advanced AI.
                     </p>
+                    <Button size="lg" onClick={() => navigate("/ielts/ai-buddy")}>
+                      Start Chatting Now
+                      <ArrowRight className="w-4 h-4 ml-2" />
+                    </Button>
                   </div>
-                  <Button onClick={() => navigate("/ielts/ai-buddy")} size="lg">
-                    Start Chatting
-                  </Button>
                 </div>
               </CardContent>
             </Card>
-
-            {!user && (
-              <Alert>
-                <Lock className="h-4 w-4" />
-                <AlertDescription>
-                  You're using the free version. <Button variant="link" className="h-auto p-0" onClick={() => navigate("/login")}>Create a free account</Button> to track your progress and achievements!
-                </AlertDescription>
-              </Alert>
-            )}
           </div>
+        </section>
 
-          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className="grid w-full grid-cols-5">
-              <TabsTrigger value="modules">All Modules</TabsTrigger>
-              <TabsTrigger value="dashboard" disabled={!user}>
-                Dashboard {!user && <Lock className="ml-2 h-3 w-3" />}
-              </TabsTrigger>
-              <TabsTrigger value="analytics" disabled={!user}>
-                Analytics {!user && <Lock className="ml-2 h-3 w-3" />}
-              </TabsTrigger>
-              <TabsTrigger value="achievements" disabled={!user}>
-                Achievements {!user && <Lock className="ml-2 h-3 w-3" />}
-              </TabsTrigger>
-              <TabsTrigger value="problem-areas" disabled={!user}>
-                Focus Areas {!user && <Lock className="ml-2 h-3 w-3" />}
-              </TabsTrigger>
-            </TabsList>
-
-            <TabsContent value="modules" className="space-y-6 mt-6">
-              {Object.entries(groupedModules).map(([type, typeModules]) => (
-                <div key={type} className="space-y-4">
-                  <div className="flex items-center gap-3">
-                    {getModuleIcon(type)}
-                    <h2 className="text-2xl font-bold capitalize">{type}</h2>
-                  </div>
-                  <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                    {typeModules.map((module) => {
-                      const moduleProgress = progress.find(p => p.module_id === module.id);
-                      return (
-                        <Card key={module.id} className="p-6 hover:shadow-lg transition-shadow">
-                          <div className="space-y-4">
-                            <div className="flex items-start justify-between">
-                              <div className="flex-1">
-                                <h3 className="font-semibold text-lg">{module.title}</h3>
-                                <p className="text-sm text-muted-foreground mt-1">
-                                  {module.description}
-                                </p>
-                              </div>
-                              {moduleProgress?.completed && (
-                                <Trophy className="w-5 h-5 text-yellow-500" />
-                              )}
-                            </div>
-                            <div className="flex items-center justify-between">
-                              <Badge className={getDifficultyColor(module.difficulty)}>
-                                {module.difficulty}
-                              </Badge>
-                              {user && moduleProgress && (
-                                <span className="text-sm font-medium">
-                                  Score: {moduleProgress.score}%
-                                </span>
-                              )}
-                            </div>
-                            <Button 
-                              className="w-full" 
-                              onClick={() => {
-                                const practiceRoutes: Record<string, string> = {
-                                  reading: "/ielts/reading",
-                                  writing: "/ielts/writing",
-                                  listening: "/ielts/listening",
-                                  speaking: "/ielts/speaking",
-                                };
-                                navigate(practiceRoutes[module.module_type] || `/ielts/module/${module.id}`);
-                              }}
-                            >
-                              Start Practice
-                            </Button>
-                          </div>
-                        </Card>
-                      );
-                    })}
-                  </div>
-                </div>
-              ))}
-            </TabsContent>
-
-            <TabsContent value="dashboard" className="space-y-6 mt-6">
-              {user && (
-                <div className="grid gap-6 md:grid-cols-3">
-                  <Card className="p-6">
-                    <div className="flex items-center gap-4">
-                      <div className="p-3 bg-primary/10 rounded-lg">
-                        <Target className="w-6 h-6 text-primary" />
-                      </div>
-                      <div>
-                        <p className="text-sm text-muted-foreground">Overall Progress</p>
-                        <p className="text-2xl font-bold">{getProgressPercentage()}%</p>
-                      </div>
-                    </div>
-                    <Progress value={getProgressPercentage()} className="mt-4" />
-                  </Card>
-
-                  <Card className="p-6">
-                    <div className="flex items-center gap-4">
-                      <div className="p-3 bg-green-100 rounded-lg">
-                        <TrendingUp className="w-6 h-6 text-green-600" />
-                      </div>
-                      <div>
-                        <p className="text-sm text-muted-foreground">Average Score</p>
-                        <p className="text-2xl font-bold">{getAverageScore()}%</p>
-                      </div>
-                    </div>
-                  </Card>
-
-                  <Card className="p-6">
-                    <div className="flex items-center gap-4">
-                      <div className="p-3 bg-yellow-100 rounded-lg">
-                        <Trophy className="w-6 h-6 text-yellow-600" />
-                      </div>
-                      <div>
-                        <p className="text-sm text-muted-foreground">Achievements</p>
-                        <p className="text-2xl font-bold">{achievements.length}</p>
-                      </div>
-                    </div>
-                  </Card>
-                </div>
+        {/* Final CTA */}
+        <section className="py-16 px-4">
+          <div className="max-w-3xl mx-auto text-center">
+            <h2 className="text-3xl font-bold mb-4">Ready to Achieve Your Dream Band Score?</h2>
+            <p className="text-muted-foreground mb-8">
+              Join thousands of students who have improved their IELTS scores with our AI-powered platform
+            </p>
+            <div className="flex flex-wrap gap-4 justify-center">
+              <Button size="lg" onClick={() => navigate("/ielts/materials")}>
+                Start Learning Free
+              </Button>
+              {!user && (
+                <Button size="lg" variant="outline" onClick={() => navigate("/login")}>
+                  Create Account
+                </Button>
               )}
-            </TabsContent>
-
-            <TabsContent value="analytics" className="mt-6">
-              {user ? (
-                <AnalyticsDashboard userId={user.id} />
-              ) : (
-                <Card className="p-8 text-center">
-                  <TrendingUp className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
-                  <h3 className="text-lg font-semibold mb-2">Analytics Unavailable</h3>
-                  <p className="text-muted-foreground mb-4">
-                    Sign in to view your detailed analytics, progress trends, and performance metrics.
-                  </p>
-                  <Button onClick={() => navigate("/login")}>
-                    Sign In to View Analytics
-                  </Button>
-                </Card>
-              )}
-            </TabsContent>
-
-            <TabsContent value="achievements" className="space-y-6 mt-6">
-              {user && achievements.length === 0 ? (
-                <Card className="p-8 text-center">
-                  <Trophy className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
-                  <h3 className="text-lg font-semibold mb-2">No Achievements Yet</h3>
-                  <p className="text-muted-foreground">
-                    Complete modules to earn achievements!
-                  </p>
-                </Card>
-              ) : (
-                <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                  {achievements.map((achievement) => (
-                    <Card key={achievement.id} className="p-6">
-                      <div className="text-center space-y-3">
-                        <div className="text-4xl">{achievement.badge_icon}</div>
-                        <h3 className="font-semibold">{achievement.title}</h3>
-                        <p className="text-sm text-muted-foreground">
-                          {achievement.description}
-                        </p>
-                        <p className="text-xs text-muted-foreground">
-                          Earned: {new Date(achievement.earned_at).toLocaleDateString()}
-                        </p>
-                      </div>
-                    </Card>
-                  ))}
-                </div>
-              )}
-            </TabsContent>
-
-            <TabsContent value="problem-areas" className="space-y-6 mt-6">
-              {user && problemAreas.length === 0 ? (
-                <Card className="p-8 text-center">
-                  <Target className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
-                  <h3 className="text-lg font-semibold mb-2">No Focus Areas Yet</h3>
-                  <p className="text-muted-foreground">
-                    Complete some exercises to identify areas for improvement
-                  </p>
-                </Card>
-              ) : (
-                <div className="space-y-4">
-                  {problemAreas.map((area, index) => (
-                    <Card key={index} className="p-6">
-                      <div className="space-y-3">
-                        <div className="flex items-center justify-between">
-                          <h3 className="font-semibold capitalize">
-                            {area.module_type} - {area.skill_area}
-                          </h3>
-                          <Badge variant="destructive">
-                            {area.error_count} errors
-                          </Badge>
-                        </div>
-                        <p className="text-sm text-muted-foreground">
-                          {area.improvement_suggestions}
-                        </p>
-                      </div>
-                    </Card>
-                  ))}
-                </div>
-              )}
-            </TabsContent>
-          </Tabs>
-        </div>
+            </div>
+          </div>
+        </section>
       </main>
       <Footer />
     </div>
