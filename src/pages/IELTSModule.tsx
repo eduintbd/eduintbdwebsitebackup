@@ -47,15 +47,50 @@ const IELTSModule = () => {
   const [loading, setLoading] = useState(true);
   const [startTime] = useState(Date.now());
   const [showLoginPrompt, setShowLoginPrompt] = useState(false);
+  const [sessionId, setSessionId] = useState<string | null>(null);
 
   useEffect(() => {
     checkUserAndFetchData();
   }, [moduleId]);
 
+  // Start practice session when module and questions are loaded
+  useEffect(() => {
+    if (user && moduleId && questions.length > 0 && !sessionId) {
+      startPracticeSession();
+    }
+  }, [user, moduleId, questions, sessionId]);
+
   const checkUserAndFetchData = async () => {
     const { data: { user } } = await supabase.auth.getUser();
     setUser(user);
     await fetchModuleData();
+  };
+
+  const startPracticeSession = async () => {
+    if (!user || !moduleId || questions.length === 0) return;
+
+    try {
+      const { data, error } = await supabase
+        .from('practice_sessions')
+        .insert({
+          user_id: user.id,
+          module_id: moduleId,
+          total_questions: questions.length,
+          session_type: 'practice'
+        })
+        .select()
+        .single();
+
+      if (error) throw error;
+      
+      if (data) {
+        setSessionId(data.id);
+        console.log('Practice session started:', data.id);
+      }
+    } catch (error) {
+      console.error('Error starting practice session:', error);
+      // Don't show error to user, just log it
+    }
   };
 
   const fetchModuleData = async () => {
@@ -227,6 +262,21 @@ const IELTSModule = () => {
     const timeSpent = Math.round((Date.now() - startTime) / 1000);
 
     try {
+      // Update practice session with completion data
+      if (sessionId) {
+        await supabase
+          .from('practice_sessions')
+          .update({
+            completed_at: new Date().toISOString(),
+            duration_seconds: timeSpent,
+            answered_questions: answeredQuestions,
+            correct_answers: correctAnswers.length,
+            score_percentage: score
+          })
+          .eq('id', sessionId);
+      }
+
+      // Keep user_progress for backward compatibility
       await supabase.from("user_progress").insert({
         user_id: user.id,
         module_id: moduleId,

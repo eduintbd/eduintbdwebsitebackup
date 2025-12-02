@@ -11,6 +11,7 @@ import { Badge } from "@/components/ui/badge";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { BookOpen, PenTool, Headphones, Mic, Trophy, TrendingUp, Target, Lock } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { AnalyticsDashboard } from "@/components/ielts/AnalyticsDashboard";
 
 interface Module {
   id: string;
@@ -179,10 +180,13 @@ const IELTSLearning = () => {
           </div>
 
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className="grid w-full grid-cols-4">
+            <TabsList className="grid w-full grid-cols-5">
               <TabsTrigger value="modules">All Modules</TabsTrigger>
               <TabsTrigger value="dashboard" disabled={!user}>
                 Dashboard {!user && <Lock className="ml-2 h-3 w-3" />}
+              </TabsTrigger>
+              <TabsTrigger value="analytics" disabled={!user}>
+                Analytics {!user && <Lock className="ml-2 h-3 w-3" />}
               </TabsTrigger>
               <TabsTrigger value="achievements" disabled={!user}>
                 Achievements {!user && <Lock className="ml-2 h-3 w-3" />}
@@ -281,6 +285,23 @@ const IELTSLearning = () => {
                     </div>
                   </Card>
                 </div>
+              )}
+            </TabsContent>
+
+            <TabsContent value="analytics" className="mt-6">
+              {user ? (
+                <AnalyticsDashboard userId={user.id} />
+              ) : (
+                <Card className="p-8 text-center">
+                  <TrendingUp className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
+                  <h3 className="text-lg font-semibold mb-2">Analytics Unavailable</h3>
+                  <p className="text-muted-foreground mb-4">
+                    Sign in to view your detailed analytics, progress trends, and performance metrics.
+                  </p>
+                  <Button onClick={() => navigate("/login")}>
+                    Sign In to View Analytics
+                  </Button>
+                </Card>
               )}
             </TabsContent>
 
