@@ -9,6 +9,7 @@ import { useMetaPixel } from "@/hooks/use-meta-pixel";
 import Index from "./pages/Index";
 import IELTSLearning from "./pages/IELTSLearning";
 import IELTSModule from "./pages/IELTSModule";
+import AIBuddy from "./pages/AIBuddy";
 import AIAdvisor from "./pages/AIAdvisor";
 import StudyPlanner from "./pages/StudyPlanner";
 import NotFound from "./pages/NotFound";
@@ -111,6 +112,7 @@ const App = () => (
           <Route path="/blog/study-abroad-consultants-near-me-why-local-expertise-matters" element={<LocalConsultants />} />
           <Route path="/ielts-learning" element={<IELTSLearning />} />
           <Route path="/ielts/module/:moduleId" element={<IELTSModule />} />
+          <Route path="/ielts/ai-buddy" element={<AIBuddy />} />
           <Route path="/ai-advisor" element={<AIAdvisor />} />
           <Route path="/study-planner" element={<StudyPlanner />} />
           <Route path="/privacy-policy" element={<PrivacyPolicy />} />
