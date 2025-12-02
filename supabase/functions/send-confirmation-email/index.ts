@@ -122,7 +122,6 @@ const handler = async (req: Request): Promise<Response> => {
                       </p>
                       <ul style="margin: 0 0 20px; padding-left: 20px; color: #333333; font-size: 16px; line-height: 1.8;">
                         <li><strong>Google Sign-in</strong> (Quickest option - one click!)</li>
-                        <li>Or create an account with your email and password</li>
                       </ul>
                       <p style="margin: 0 0 20px; color: #64748b; font-size: 14px; line-height: 1.6;">
                         <em>Important: Please use the same email address (${safeEmail}) that you registered with.</em>
@@ -176,6 +175,9 @@ const handler = async (req: Request): Promise<Response> => {
                         <h2 style="margin: 0 0 15px; color: #1e3a8a; font-size: 22px; font-weight: 700;">
                           🎯 Ready to Get Started?
                         </h2>
+                        <p style="margin: 0 0 15px; color: #333333; font-size: 16px; line-height: 1.6;">
+                          <a href="https://eduintbd.ai/login" style="color: #3b82f6; text-decoration: none; font-weight: 600;">Click here to login to your portal</a>
+                        </p>
                         <p style="margin: 0 0 25px; color: #333333; font-size: 16px; line-height: 1.6;">
                           Schedule your free consultation with our expert advisors to discuss your study abroad plans and get personalized recommendations.
                         </p>
