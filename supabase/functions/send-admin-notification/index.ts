@@ -287,7 +287,7 @@ const handler = async (req: Request): Promise<Response> => {
 
     console.log("Sending admin notification email via Resend");
     const emailResponse = await resend.emails.send({
-      from: "EduInt BD Notifications <onboarding@resend.dev>",
+      from: "EduInt BD <support@eduintbd.com>",
       to: [adminEmail],
       subject: subject,
       html: emailHtml,
