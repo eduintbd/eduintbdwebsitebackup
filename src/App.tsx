@@ -10,6 +10,10 @@ import Index from "./pages/Index";
 import IELTSLearning from "./pages/IELTSLearning";
 import IELTSModule from "./pages/IELTSModule";
 import AIBuddy from "./pages/AIBuddy";
+import WritingPractice from "./pages/WritingPractice";
+import ListeningPractice from "./pages/ListeningPractice";
+import SpeakingPractice from "./pages/SpeakingPractice";
+import ReadingPractice from "./pages/ReadingPractice";
 import AIAdvisor from "./pages/AIAdvisor";
 import StudyPlanner from "./pages/StudyPlanner";
 import NotFound from "./pages/NotFound";
@@ -113,6 +117,10 @@ const App = () => (
           <Route path="/ielts-learning" element={<IELTSLearning />} />
           <Route path="/ielts/module/:moduleId" element={<IELTSModule />} />
           <Route path="/ielts/ai-buddy" element={<AIBuddy />} />
+          <Route path="/ielts/writing" element={<WritingPractice />} />
+          <Route path="/ielts/listening" element={<ListeningPractice />} />
+          <Route path="/ielts/speaking" element={<SpeakingPractice />} />
+          <Route path="/ielts/reading" element={<ReadingPractice />} />
           <Route path="/ai-advisor" element={<AIAdvisor />} />
           <Route path="/study-planner" element={<StudyPlanner />} />
           <Route path="/privacy-policy" element={<PrivacyPolicy />} />

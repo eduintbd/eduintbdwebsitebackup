@@ -252,9 +252,17 @@ const IELTSLearning = () => {
                             </div>
                             <Button 
                               className="w-full" 
-                              onClick={() => navigate(`/ielts/module/${module.id}`)}
+                              onClick={() => {
+                                const practiceRoutes: Record<string, string> = {
+                                  reading: "/ielts/reading",
+                                  writing: "/ielts/writing",
+                                  listening: "/ielts/listening",
+                                  speaking: "/ielts/speaking",
+                                };
+                                navigate(practiceRoutes[module.module_type] || `/ielts/module/${module.id}`);
+                              }}
                             >
-                              Start Module
+                              Start Practice
                             </Button>
                           </div>
                         </Card>
