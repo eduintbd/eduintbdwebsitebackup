@@ -206,7 +206,7 @@ const handler = async (req: Request): Promise<Response> => {
 
     console.log("Sending booking confirmation email via Resend");
     const emailResponse = await resend.emails.send({
-      from: "EduInt BD <support@eduintbd.com>",
+      from: "EduInt BD <support@eduintbd.ai>",
       to: [email],
       subject: "Consultation Confirmed - EduInt BD",
       html: emailHtml,
