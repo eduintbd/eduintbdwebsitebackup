@@ -235,8 +235,8 @@ const handler = async (req: Request): Promise<Response> => {
 
     console.log("Sending welcome email via Resend");
     const emailResponse = await resend.emails.send({
-      from: "EduInt BD <onboarding@resend.dev>",
-      to: [email, "support@eduintbd.com"],
+      from: "EduInt BD <support@eduintbd.com>",
+      to: [email],
       subject: "Welcome to EduInt BD - Your Study Abroad Journey Starts Here! 🎓",
       html: emailHtml,
     });
