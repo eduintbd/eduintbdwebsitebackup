@@ -4,12 +4,12 @@ import { Navigation } from "@/components/Navigation";
 import { Footer } from "@/components/Footer";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { BookOpen, PenTool, Headphones, Mic, Trophy, TrendingUp, Target, Lock } from "lucide-react";
+import { BookOpen, PenTool, Headphones, Mic, Trophy, TrendingUp, Target, Lock, MessageSquare } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { AnalyticsDashboard } from "@/components/ielts/AnalyticsDashboard";
 
@@ -169,6 +169,26 @@ const IELTSLearning = () => {
             <p className="text-xl text-muted-foreground">
               Practice for free • Get AI feedback • Track your progress
             </p>
+            
+            <Card className="bg-gradient-to-r from-primary/10 to-secondary/10 border-primary/20">
+              <CardContent className="p-6">
+                <div className="flex flex-col md:flex-row items-center gap-4">
+                  <div className="p-3 bg-primary/20 rounded-full">
+                    <MessageSquare className="w-8 h-8 text-primary" />
+                  </div>
+                  <div className="flex-1 text-center md:text-left">
+                    <h3 className="text-lg font-semibold mb-1">AI Study Buddy</h3>
+                    <p className="text-sm text-muted-foreground">
+                      Get instant answers, personalized study plans, and expert IELTS guidance
+                    </p>
+                  </div>
+                  <Button onClick={() => navigate("/ielts/ai-buddy")} size="lg">
+                    Start Chatting
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+
             {!user && (
               <Alert>
                 <Lock className="h-4 w-4" />
