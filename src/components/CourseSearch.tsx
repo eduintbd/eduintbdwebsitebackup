@@ -44,7 +44,7 @@ export const CourseSearch = () => {
                   <div className="inline-flex items-center justify-center w-12 h-12 bg-secondary/20 rounded-full mb-2">
                     <Globe className="w-6 h-6 text-primary" />
                   </div>
-                  <div className="text-2xl font-bold text-foreground">14</div>
+                  <div className="text-2xl font-bold text-foreground">16</div>
                   <div className="text-sm text-muted-foreground">{t.countries}</div>
                 </div>
               </div>
