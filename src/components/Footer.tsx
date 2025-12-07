@@ -23,7 +23,7 @@ export const Footer = () => {
                 <a href="https://www.linkedin.com/company/go-abroad-bd" target="_blank" rel="noopener noreferrer" className="hover:text-secondary transition-colors" aria-label="LinkedIn">
                   <Linkedin className="w-5 h-5" />
                 </a>
-                <a href="#" className="hover:text-secondary transition-colors" aria-label="Instagram">
+                <a href="https://www.instagram.com/eduint_bd/" target="_blank" rel="noopener noreferrer" className="hover:text-secondary transition-colors" aria-label="Instagram">
                   <Instagram className="w-5 h-5" />
                 </a>
                 <a href="#" className="hover:text-secondary transition-colors" aria-label="YouTube">
