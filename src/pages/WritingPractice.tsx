@@ -10,12 +10,23 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Progress } from "@/components/ui/progress";
 import { PenTool, Clock, FileText, Sparkles, Loader2 } from "lucide-react";
 import { toast } from "sonner";
+import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, LineChart, Line } from "recharts";
+
+interface ChartData {
+  name: string;
+  value: number;
+  year?: number;
+}
 
 interface Topic {
   task: number;
   topic: string;
   type: string;
   minWords: number;
+  chartType?: "pie" | "bar" | "line" | "table";
+  chartData?: ChartData[];
+  chartData2?: ChartData[]; // For comparison charts (e.g., 1990 vs 2020)
+  chartLabels?: { title?: string; title2?: string; xAxis?: string; yAxis?: string };
 }
 
 interface Feedback {
@@ -26,6 +37,17 @@ interface Feedback {
   overallBand: number;
   feedback: string;
 }
+
+const CHART_COLORS = [
+  "hsl(var(--primary))",
+  "hsl(var(--chart-2))",
+  "hsl(var(--chart-3))",
+  "hsl(var(--chart-4))",
+  "hsl(var(--chart-5))",
+  "#8884d8",
+  "#82ca9d",
+  "#ffc658",
+];
 
 const WritingPractice = () => {
   const navigate = useNavigate();
@@ -43,6 +65,9 @@ const WritingPractice = () => {
   const generateTopic = async (taskNumber: 1 | 2) => {
     setIsGenerating(true);
     try {
+      const chartTypes = ["pie", "bar", "line"];
+      const randomChartType = chartTypes[Math.floor(Math.random() * chartTypes.length)];
+      
       const response = await fetch(
         `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/ielts-ai-chat`,
         {
@@ -55,10 +80,38 @@ const WritingPractice = () => {
             messages: [
               {
                 role: "user",
-                content: `Generate a unique IELTS Academic Writing Task ${taskNumber} topic. 
-                ${taskNumber === 1 ? 'Include a data description task (graph, chart, table, diagram, or process). Provide specific details about what data to describe.' : 'Provide an opinion/discussion essay topic with clear instructions.'}
-                Format: Return ONLY a JSON object with: {"task": ${taskNumber}, "topic": "the topic text", "type": "${taskNumber === 1 ? 'data description type' : 'essay type'}", "minWords": ${taskNumber === 1 ? 150 : 250}}
-                Make it completely different from common topics. Use timestamp: ${Date.now()}`,
+                content: taskNumber === 1 
+                  ? `Generate a unique IELTS Academic Writing Task 1 topic with ACTUAL DATA for a ${randomChartType} chart.
+
+Return ONLY a valid JSON object (no markdown, no explanation) with this exact structure:
+{
+  "task": 1,
+  "topic": "The ${randomChartType} chart(s) below show [describe what the data represents]. Summarise the information by selecting and reporting the main features, and make comparisons where relevant.",
+  "type": "${randomChartType === 'pie' ? 'Pie Chart' : randomChartType === 'bar' ? 'Bar Chart' : 'Line Graph'}",
+  "minWords": 150,
+  "chartType": "${randomChartType}",
+  "chartData": [{"name": "Category1", "value": 25}, {"name": "Category2", "value": 35}, ...],
+  ${randomChartType === 'pie' ? '"chartData2": [{"name": "Category1", "value": 30}, {"name": "Category2", "value": 28}, ...],' : ''}
+  "chartLabels": {"title": "Chart Title for Year 1", ${randomChartType === 'pie' ? '"title2": "Chart Title for Year 2",' : ''} "xAxis": "X Axis Label", "yAxis": "Y Axis Label (%)"}
+}
+
+Requirements:
+- Use realistic data about topics like: spending, population, energy, education, employment, transport, etc.
+- Include 4-6 data categories with realistic percentage/number values
+- ${randomChartType === 'pie' ? 'For pie charts, include TWO datasets (chartData and chartData2) comparing two different years' : 'Include meaningful numerical data'}
+- Values should add up logically (percentages should sum to ~100 for pie charts)
+- Make it unique. Timestamp: ${Date.now()}`
+                  : `Generate a unique IELTS Academic Writing Task 2 essay topic.
+
+Return ONLY a valid JSON object (no markdown, no explanation):
+{
+  "task": 2,
+  "topic": "Your essay question here. Give your opinion and support it with examples.",
+  "type": "Opinion Essay",
+  "minWords": 250
+}
+
+Make it about a current societal issue. Timestamp: ${Date.now()}`,
               },
             ],
           }),
@@ -66,6 +119,13 @@ const WritingPractice = () => {
       );
 
       const data = await response.json();
+      
+      if (data.error) {
+        toast.error(data.error);
+        setIsGenerating(false);
+        return;
+      }
+      
       let topicData: Topic;
 
       try {
@@ -73,19 +133,35 @@ const WritingPractice = () => {
         if (jsonMatch) {
           topicData = JSON.parse(jsonMatch[0]);
         } else {
-          topicData = {
-            task: taskNumber,
-            topic: data.response,
-            type: taskNumber === 1 ? "Chart Description" : "Opinion Essay",
-            minWords: taskNumber === 1 ? 150 : 250,
-          };
+          throw new Error("No JSON found");
         }
       } catch {
+        // Fallback with sample data
         topicData = {
           task: taskNumber,
-          topic: data.response,
-          type: taskNumber === 1 ? "Chart Description" : "Opinion Essay",
+          topic: taskNumber === 1 
+            ? "The pie charts below show the distribution of household expenditure in a country in 2000 and 2020. Summarise the information by selecting and reporting the main features, and make comparisons where relevant."
+            : data.response || "Some people believe that technology has made our lives more complex. To what extent do you agree or disagree?",
+          type: taskNumber === 1 ? "Pie Chart" : "Opinion Essay",
           minWords: taskNumber === 1 ? 150 : 250,
+          chartType: taskNumber === 1 ? "pie" : undefined,
+          chartData: taskNumber === 1 ? [
+            { name: "Housing", value: 32 },
+            { name: "Food", value: 25 },
+            { name: "Transport", value: 18 },
+            { name: "Healthcare", value: 12 },
+            { name: "Entertainment", value: 8 },
+            { name: "Other", value: 5 },
+          ] : undefined,
+          chartData2: taskNumber === 1 ? [
+            { name: "Housing", value: 28 },
+            { name: "Food", value: 20 },
+            { name: "Transport", value: 22 },
+            { name: "Healthcare", value: 15 },
+            { name: "Entertainment", value: 10 },
+            { name: "Other", value: 5 },
+          ] : undefined,
+          chartLabels: taskNumber === 1 ? { title: "2000", title2: "2020", yAxis: "Percentage (%)" } : undefined,
         };
       }
 
@@ -105,6 +181,101 @@ const WritingPractice = () => {
     } finally {
       setIsGenerating(false);
     }
+  };
+
+  const renderChart = (topic: Topic) => {
+    if (!topic.chartData || !topic.chartType) return null;
+
+    if (topic.chartType === "pie") {
+      return (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 my-6">
+          <div>
+            <h4 className="text-center font-medium mb-2">{topic.chartLabels?.title || "Dataset 1"}</h4>
+            <ResponsiveContainer width="100%" height={280}>
+              <PieChart>
+                <Pie
+                  data={topic.chartData}
+                  cx="50%"
+                  cy="50%"
+                  labelLine={true}
+                  label={({ name, value }) => `${name}: ${value}%`}
+                  outerRadius={90}
+                  fill="#8884d8"
+                  dataKey="value"
+                >
+                  {topic.chartData.map((_, index) => (
+                    <Cell key={`cell-${index}`} fill={CHART_COLORS[index % CHART_COLORS.length]} />
+                  ))}
+                </Pie>
+                <Tooltip />
+                <Legend />
+              </PieChart>
+            </ResponsiveContainer>
+          </div>
+          {topic.chartData2 && (
+            <div>
+              <h4 className="text-center font-medium mb-2">{topic.chartLabels?.title2 || "Dataset 2"}</h4>
+              <ResponsiveContainer width="100%" height={280}>
+                <PieChart>
+                  <Pie
+                    data={topic.chartData2}
+                    cx="50%"
+                    cy="50%"
+                    labelLine={true}
+                    label={({ name, value }) => `${name}: ${value}%`}
+                    outerRadius={90}
+                    fill="#82ca9d"
+                    dataKey="value"
+                  >
+                    {topic.chartData2.map((_, index) => (
+                      <Cell key={`cell2-${index}`} fill={CHART_COLORS[index % CHART_COLORS.length]} />
+                    ))}
+                  </Pie>
+                  <Tooltip />
+                  <Legend />
+                </PieChart>
+              </ResponsiveContainer>
+            </div>
+          )}
+        </div>
+      );
+    }
+
+    if (topic.chartType === "bar") {
+      return (
+        <div className="my-6">
+          <ResponsiveContainer width="100%" height={300}>
+            <BarChart data={topic.chartData}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="name" />
+              <YAxis label={{ value: topic.chartLabels?.yAxis || "Value", angle: -90, position: 'insideLeft' }} />
+              <Tooltip />
+              <Legend />
+              <Bar dataKey="value" fill="hsl(var(--primary))" name={topic.chartLabels?.title || "Value"} />
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
+      );
+    }
+
+    if (topic.chartType === "line") {
+      return (
+        <div className="my-6">
+          <ResponsiveContainer width="100%" height={300}>
+            <LineChart data={topic.chartData}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="name" />
+              <YAxis label={{ value: topic.chartLabels?.yAxis || "Value", angle: -90, position: 'insideLeft' }} />
+              <Tooltip />
+              <Legend />
+              <Line type="monotone" dataKey="value" stroke="hsl(var(--primary))" strokeWidth={2} name={topic.chartLabels?.title || "Value"} />
+            </LineChart>
+          </ResponsiveContainer>
+        </div>
+      );
+    }
+
+    return null;
   };
 
   const evaluateResponse = async (taskNumber: 1 | 2) => {
@@ -262,6 +433,15 @@ Return as JSON: {"taskAchievement": X.X, "coherenceCohesion": X.X, "lexicalResou
                           Minimum {task1Topic.minWords} words • Recommended time: 20 minutes
                         </p>
                       </div>
+
+                      {/* Render the chart visualization */}
+                      {task1Topic.chartData && (
+                        <Card className="border-dashed">
+                          <CardContent className="pt-4">
+                            {renderChart(task1Topic)}
+                          </CardContent>
+                        </Card>
+                      )}
 
                       <div className="space-y-2">
                         <div className="flex items-center justify-between">
