@@ -19,7 +19,7 @@ export const UniversityPartners = () => {
     <section className="py-16 bg-background border-y border-border">
       <div className="container px-6">
         <div className="text-center mb-12">
-          <p className="text-sm uppercase tracking-widest text-muted-foreground/60 mb-3 font-light">
+          <p className="text-sm uppercase tracking-widest text-muted-foreground mb-3 font-semibold">
             {t.subtitle}
           </p>
           <h2 className="text-4xl md:text-5xl font-display font-normal text-foreground">
