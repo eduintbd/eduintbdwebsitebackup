@@ -26,6 +26,7 @@ import StudyCanada from "./pages/StudyCanada";
 import StudyAustralia from "./pages/StudyAustralia";
 import StudyGermany from "./pages/StudyGermany";
 import StudyNewZealand from "./pages/StudyNewZealand";
+import StudySouthKorea from "./pages/StudySouthKorea";
 import Admission from "./pages/Admission";
 import Visa from "./pages/Visa";
 import Scholarship from "./pages/Scholarship";
@@ -92,6 +93,7 @@ const App = () => (
           <Route path="/study-australia" element={<StudyAustralia />} />
           <Route path="/study-germany" element={<StudyGermany />} />
           <Route path="/study-new-zealand" element={<StudyNewZealand />} />
+          <Route path="/study-south-korea" element={<StudySouthKorea />} />
           <Route path="/admission" element={<Admission />} />
           <Route path="/visa" element={<Visa />} />
           <Route path="/scholarship" element={<Scholarship />} />
