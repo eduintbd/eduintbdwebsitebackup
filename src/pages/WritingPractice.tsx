@@ -223,7 +223,7 @@ Return as JSON: {"taskAchievement": X.X, "coherenceCohesion": X.X, "lexicalResou
   return (
     <div className="min-h-screen flex flex-col">
       <Navigation />
-      <main className="flex-1 py-12 px-4 max-w-7xl mx-auto w-full">
+      <main className="flex-1 pt-24 pb-12 px-4 max-w-7xl mx-auto w-full">
         <div className="space-y-6">
           <div className="text-center space-y-2">
             <h1 className="text-4xl font-bold flex items-center justify-center gap-3">
