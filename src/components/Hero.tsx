@@ -55,7 +55,7 @@ export const Hero = () => {
               <div className="text-white/90 text-xs sm:text-sm font-medium">{t.partners}</div>
             </div>
             <div className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl p-5 sm:p-6 transition-transform duration-300 hover:scale-105">
-              <div className="text-2xl sm:text-3xl md:text-4xl font-bold text-secondary mb-2">14</div>
+              <div className="text-2xl sm:text-3xl md:text-4xl font-bold text-secondary mb-2">16</div>
               <div className="text-white/90 text-xs sm:text-sm font-medium">{t.countries}</div>
             </div>
           </div>
