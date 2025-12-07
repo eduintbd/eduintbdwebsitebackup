@@ -14,6 +14,7 @@ export const Destinations = () => {
     { name: language === 'en' ? "Canada" : "কানাডা", image: "🇨🇦", programs: `400+ ${t.programs}`, link: "/study-canada" },
     { name: language === 'en' ? "Australia" : "অস্ট্রেলিয়া", image: "🇦🇺", programs: `350+ ${t.programs}`, link: "/study-australia" },
     { name: language === 'en' ? "New Zealand" : "নিউজিল্যান্ড", image: "🇳🇿", programs: `200+ ${t.programs}`, link: "/study-new-zealand" },
+    { name: language === 'en' ? "South Korea" : "দক্ষিণ কোরিয়া", image: "🇰🇷", programs: `150+ ${t.programs}`, link: "/study-south-korea" },
     { name: language === 'en' ? "Europe" : "ইউরোপ", image: "🇪🇺", programs: `600+ ${t.programs}`, link: "/study-germany" },
   ];
 
