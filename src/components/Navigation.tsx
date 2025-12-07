@@ -7,13 +7,11 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { User } from "@supabase/supabase-js";
 import { toast } from "@/hooks/use-toast";
 import {
-  NavigationMenu,
-  NavigationMenuContent,
-  NavigationMenuItem,
-  NavigationMenuLink,
-  NavigationMenuList,
-  NavigationMenuTrigger,
-} from "@/components/ui/navigation-menu";
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import {
   Collapsible,
   CollapsibleContent,
@@ -142,186 +140,156 @@ export const Navigation = () => {
 
           {/* Desktop Navigation */}
           <div className="hidden lg:flex items-center gap-2">
-            <NavigationMenu>
-              <NavigationMenuList>
-                {/* Destination Menu */}
-                <NavigationMenuItem>
-                  <NavigationMenuTrigger className="text-foreground hover:text-primary font-medium">
-                    Destination
-                  </NavigationMenuTrigger>
-                  <NavigationMenuContent>
-                    <div className="grid w-[400px] gap-3 p-4">
-                      {destinations.map((item) => (
-                        item.href.startsWith('#') ? (
-                          <NavigationMenuLink
-                            key={item.name}
-                            href={item.href}
-                            className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
-                          >
-                            <div className="text-sm font-medium leading-none">{item.name}</div>
-                          </NavigationMenuLink>
-                        ) : (
-                          <Link
-                            key={item.name}
-                            to={item.href}
-                            className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
-                          >
-                            <div className="text-sm font-medium leading-none">{item.name}</div>
-                          </Link>
-                        )
-                      ))}
-                    </div>
-                  </NavigationMenuContent>
-                </NavigationMenuItem>
-
-                {/* Student Services Menu */}
-                <NavigationMenuItem>
-                  <NavigationMenuTrigger className="text-foreground hover:text-primary font-medium">
-                    Student Services
-                  </NavigationMenuTrigger>
-                  <NavigationMenuContent>
-                    <div className="grid w-[400px] gap-3 p-4">
-                      {studentServices.map((item) => (
-                        <Link
-                          key={item.name}
-                          to={item.href}
-                          className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
-                        >
-                          <div className="text-sm font-medium leading-none">{item.name}</div>
-                        </Link>
-                      ))}
-                    </div>
-                  </NavigationMenuContent>
-                </NavigationMenuItem>
-
-                {/* Free Resources Menu */}
-                <NavigationMenuItem>
-                  <NavigationMenuTrigger className="text-foreground hover:text-primary font-medium">
-                    Free Resources
-                  </NavigationMenuTrigger>
-                  <NavigationMenuContent>
-                    <div className="grid w-[300px] gap-3 p-4">
-                      {freeResources.map((item) => (
-                        item.external ? (
-                          <a
-                            key={item.name}
-                            href={item.href}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
-                          >
-                            <div className="text-sm font-medium leading-none">{item.name}</div>
-                          </a>
-                        ) : (
-                          <Link
-                            key={item.name}
-                            to={item.href}
-                            className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
-                          >
-                            <div className="text-sm font-medium leading-none">{item.name}</div>
-                          </Link>
-                        )
-                      ))}
-                    </div>
-                  </NavigationMenuContent>
-                </NavigationMenuItem>
-
-                {/* Latest Updates Menu */}
-                <NavigationMenuItem>
-                  <NavigationMenuTrigger className="text-foreground hover:text-primary font-medium">
-                    Latest Updates
-                  </NavigationMenuTrigger>
-                  <NavigationMenuContent>
-                    <div className="grid w-[300px] gap-3 p-4">
-                      {latestUpdates.map((item) => (
-                        <NavigationMenuLink
-                          key={item.name}
-                          href={item.href}
-                          className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
-                        >
-                          <div className="text-sm font-medium leading-none">{item.name}</div>
-                        </NavigationMenuLink>
-                      ))}
-                    </div>
-                  </NavigationMenuContent>
-                </NavigationMenuItem>
-
-                {/* Free Consultation */}
-                <NavigationMenuItem>
-                  <a
-                    href="#consultation"
-                    className="group inline-flex h-10 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50"
-                  >
-                    Free Consultation
-                  </a>
-                </NavigationMenuItem>
-
-                {/* Student Dashboard Link */}
-                {user && !isAdmin && (
-                  <NavigationMenuItem>
-                    <Button 
-                      variant="default"
-                      size="sm"
-                      asChild
-                    >
-                      <Link to="/portal">
-                        My Dashboard
+            {/* Destination Menu */}
+            <DropdownMenu>
+              <DropdownMenuTrigger className="group inline-flex h-10 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none text-foreground">
+                Destination
+                <ChevronDown className="relative top-[1px] ml-1 h-3 w-3 transition duration-200 group-data-[state=open]:rotate-180" />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="start" className="w-[220px]">
+                {destinations.map((item) => (
+                  <DropdownMenuItem key={item.name} asChild>
+                    {item.href.startsWith('#') ? (
+                      <a href={item.href} className="cursor-pointer">
+                        {item.name}
+                      </a>
+                    ) : (
+                      <Link to={item.href} className="cursor-pointer">
+                        {item.name}
                       </Link>
-                    </Button>
-                  </NavigationMenuItem>
-                )}
+                    )}
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
 
-                {/* Admin Link */}
-                {isAdmin && (
-                  <NavigationMenuItem>
-                    <Button 
-                      variant="ghost"
-                      size="sm"
-                      asChild
-                    >
-                      <Link to="/admin">
-                        <Shield className="w-4 h-4 mr-2" />
-                        Admin
+            {/* Student Services Menu */}
+            <DropdownMenu>
+              <DropdownMenuTrigger className="group inline-flex h-10 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none text-foreground">
+                Student Services
+                <ChevronDown className="relative top-[1px] ml-1 h-3 w-3 transition duration-200 group-data-[state=open]:rotate-180" />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="start" className="w-[220px]">
+                {studentServices.map((item) => (
+                  <DropdownMenuItem key={item.name} asChild>
+                    <Link to={item.href} className="cursor-pointer">
+                      {item.name}
+                    </Link>
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+
+            {/* Free Resources Menu */}
+            <DropdownMenu>
+              <DropdownMenuTrigger className="group inline-flex h-10 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none text-foreground">
+                Free Resources
+                <ChevronDown className="relative top-[1px] ml-1 h-3 w-3 transition duration-200 group-data-[state=open]:rotate-180" />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="start" className="w-[180px]">
+                {freeResources.map((item) => (
+                  <DropdownMenuItem key={item.name} asChild>
+                    {item.external ? (
+                      <a href={item.href} target="_blank" rel="noopener noreferrer" className="cursor-pointer">
+                        {item.name}
+                      </a>
+                    ) : (
+                      <Link to={item.href} className="cursor-pointer">
+                        {item.name}
                       </Link>
-                    </Button>
-                  </NavigationMenuItem>
-                )}
+                    )}
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
 
-                {/* Language Switcher */}
-                <NavigationMenuItem>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => setLanguage(language === 'en' ? 'bn' : 'en')}
-                    className="flex items-center gap-2"
-                  >
-                    <Languages className="w-4 h-4" />
-                    {language === 'en' ? 'বাংলা' : 'English'}
-                  </Button>
-                </NavigationMenuItem>
+            {/* Latest Updates Menu */}
+            <DropdownMenu>
+              <DropdownMenuTrigger className="group inline-flex h-10 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none text-foreground">
+                Latest Updates
+                <ChevronDown className="relative top-[1px] ml-1 h-3 w-3 transition duration-200 group-data-[state=open]:rotate-180" />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="start" className="w-[180px]">
+                {latestUpdates.map((item) => (
+                  <DropdownMenuItem key={item.name} asChild>
+                    {item.href.startsWith('#') ? (
+                      <a href={item.href} className="cursor-pointer">
+                        {item.name}
+                      </a>
+                    ) : (
+                      <Link to={item.href} className="cursor-pointer">
+                        {item.name}
+                      </Link>
+                    )}
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
 
-                {/* Auth Button */}
-                <NavigationMenuItem>
-                  {user ? (
-                    <Button 
-                      onClick={handleLogout}
-                      variant="outline"
-                      className="gap-2 rounded-full ml-2"
-                    >
-                      <LogOut className="h-4 w-4" />
-                      Sign Out
-                    </Button>
-                  ) : (
-                    <Button 
-                      asChild
-                      className="bg-secondary hover:bg-secondary/90 text-primary font-semibold rounded-full ml-2"
-                    >
-                      <Link to="/login">Sign up/Log in</Link>
-                    </Button>
-                  )}
-                </NavigationMenuItem>
-              </NavigationMenuList>
-            </NavigationMenu>
+            {/* Free Consultation */}
+            <a
+              href="#consultation"
+              className="inline-flex h-10 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none text-foreground"
+            >
+              Free Consultation
+            </a>
+
+            {/* Student Dashboard Link */}
+            {user && !isAdmin && (
+              <Button 
+                variant="default"
+                size="sm"
+                asChild
+              >
+                <Link to="/portal">
+                  My Dashboard
+                </Link>
+              </Button>
+            )}
+
+            {/* Admin Link */}
+            {isAdmin && (
+              <Button 
+                variant="ghost"
+                size="sm"
+                asChild
+              >
+                <Link to="/admin">
+                  <Shield className="w-4 h-4 mr-2" />
+                  Admin
+                </Link>
+              </Button>
+            )}
+
+            {/* Language Switcher */}
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setLanguage(language === 'en' ? 'bn' : 'en')}
+              className="flex items-center gap-2"
+            >
+              <Languages className="w-4 h-4" />
+              {language === 'en' ? 'বাংলা' : 'English'}
+            </Button>
+
+            {/* Auth Button */}
+            {user ? (
+              <Button 
+                onClick={handleLogout}
+                variant="outline"
+                className="gap-2 rounded-full ml-2"
+              >
+                <LogOut className="h-4 w-4" />
+                Sign Out
+              </Button>
+            ) : (
+              <Button 
+                asChild
+                className="bg-secondary hover:bg-secondary/90 text-primary font-semibold rounded-full ml-2"
+              >
+                <Link to="/login">Sign up/Log in</Link>
+              </Button>
+            )}
           </div>
 
           {/* Mobile Menu Button */}
