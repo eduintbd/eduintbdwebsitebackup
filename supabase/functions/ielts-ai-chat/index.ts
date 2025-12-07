@@ -56,7 +56,7 @@ Be friendly, supportive, and concise. Use bullet points for clarity when listing
       }
       if (response.status === 402) {
         return new Response(
-          JSON.stringify({ error: "Service temporarily unavailable. Please contact support." }),
+          JSON.stringify({ error: "AI credits exhausted. Please add credits to your Lovable workspace in Settings → Workspace → Usage." }),
           { status: 402, headers: { ...corsHeaders, "Content-Type": "application/json" } }
         );
       }
