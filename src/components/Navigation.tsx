@@ -97,6 +97,7 @@ export const Navigation = () => {
     { name: "Study in Australia", href: "/study-australia" },
     { name: "Study in Germany", href: "/study-germany" },
     { name: "Study in New Zealand", href: "/study-new-zealand" },
+    { name: "Study in South Korea", href: "/study-south-korea" },
   ];
 
   const studentServices = [
