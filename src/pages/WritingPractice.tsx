@@ -128,40 +128,80 @@ Make it about a current societal issue. Timestamp: ${Date.now()}`,
       
       let topicData: Topic;
 
+      // Generate fallback chart data based on random chart type
+      const generateFallbackChartData = (type: string) => {
+        if (type === "pie") {
+          return {
+            chartType: "pie" as const,
+            chartData: [
+              { name: "Housing", value: 32 },
+              { name: "Food", value: 25 },
+              { name: "Transport", value: 18 },
+              { name: "Healthcare", value: 12 },
+              { name: "Entertainment", value: 8 },
+              { name: "Other", value: 5 },
+            ],
+            chartData2: [
+              { name: "Housing", value: 28 },
+              { name: "Food", value: 20 },
+              { name: "Transport", value: 22 },
+              { name: "Healthcare", value: 15 },
+              { name: "Entertainment", value: 10 },
+              { name: "Other", value: 5 },
+            ],
+            chartLabels: { title: "2000", title2: "2020", yAxis: "Percentage (%)" },
+          };
+        } else if (type === "bar") {
+          return {
+            chartType: "bar" as const,
+            chartData: [
+              { name: "Healthcare", value: 45, value2: 62 },
+              { name: "Finance", value: 38, value2: 55 },
+              { name: "Retail", value: 28, value2: 48 },
+              { name: "Manufacturing", value: 22, value2: 40 },
+              { name: "Education", value: 15, value2: 35 },
+            ],
+            chartLabels: { title: "AI Adoption by Sector", xAxis: "Sector", yAxis: "Adoption Rate (%)" },
+          };
+        } else {
+          return {
+            chartType: "line" as const,
+            chartData: [
+              { name: "2015", value: 12, value2: 18 },
+              { name: "2016", value: 15, value2: 22 },
+              { name: "2017", value: 20, value2: 28 },
+              { name: "2018", value: 28, value2: 35 },
+              { name: "2019", value: 38, value2: 45 },
+              { name: "2020", value: 52, value2: 58 },
+            ],
+            chartLabels: { title: "Internet Usage Over Time", xAxis: "Year", yAxis: "Percentage (%)" },
+          };
+        }
+      };
+
       try {
         const jsonMatch = data.response.match(/\{[\s\S]*\}/);
         if (jsonMatch) {
           topicData = JSON.parse(jsonMatch[0]);
+          // Ensure chart data exists for Task 1 - if AI didn't provide it, add fallback
+          if (taskNumber === 1 && !topicData.chartData) {
+            const fallback = generateFallbackChartData(topicData.chartType || randomChartType);
+            topicData = { ...topicData, ...fallback };
+          }
         } else {
           throw new Error("No JSON found");
         }
       } catch {
         // Fallback with sample data
+        const fallback = generateFallbackChartData(randomChartType);
         topicData = {
           task: taskNumber,
           topic: taskNumber === 1 
-            ? "The pie charts below show the distribution of household expenditure in a country in 2000 and 2020. Summarise the information by selecting and reporting the main features, and make comparisons where relevant."
+            ? `The ${randomChartType} chart(s) below show the distribution of household expenditure in a country in 2000 and 2020. Summarise the information by selecting and reporting the main features, and make comparisons where relevant.`
             : data.response || "Some people believe that technology has made our lives more complex. To what extent do you agree or disagree?",
-          type: taskNumber === 1 ? "Pie Chart" : "Opinion Essay",
+          type: taskNumber === 1 ? (randomChartType === 'pie' ? 'Pie Chart' : randomChartType === 'bar' ? 'Bar Chart' : 'Line Graph') : "Opinion Essay",
           minWords: taskNumber === 1 ? 150 : 250,
-          chartType: taskNumber === 1 ? "pie" : undefined,
-          chartData: taskNumber === 1 ? [
-            { name: "Housing", value: 32 },
-            { name: "Food", value: 25 },
-            { name: "Transport", value: 18 },
-            { name: "Healthcare", value: 12 },
-            { name: "Entertainment", value: 8 },
-            { name: "Other", value: 5 },
-          ] : undefined,
-          chartData2: taskNumber === 1 ? [
-            { name: "Housing", value: 28 },
-            { name: "Food", value: 20 },
-            { name: "Transport", value: 22 },
-            { name: "Healthcare", value: 15 },
-            { name: "Entertainment", value: 10 },
-            { name: "Other", value: 5 },
-          ] : undefined,
-          chartLabels: taskNumber === 1 ? { title: "2000", title2: "2020", yAxis: "Percentage (%)" } : undefined,
+          ...(taskNumber === 1 ? fallback : {}),
         };
       }
 
