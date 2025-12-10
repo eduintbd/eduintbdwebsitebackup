@@ -82,31 +82,31 @@ const IELTSMaterials = () => {
       <Navigation />
       <main className="flex-1">
         {/* Hero Section */}
-        <section className="relative py-16 px-4 bg-gradient-to-br from-primary/5 via-background to-secondary/5">
+        <section className="relative py-8 sm:py-12 md:py-16 px-4 bg-gradient-to-br from-primary/5 via-background to-secondary/5">
           <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-5" />
           <div className="max-w-5xl mx-auto text-center relative z-10">
-            <h1 className="text-4xl md:text-5xl font-bold mb-4">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-3 md:mb-4">
               Comprehensive <span className="text-primary">IELTS Materials</span>
             </h1>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+            <p className="text-sm sm:text-base md:text-lg text-muted-foreground max-w-2xl mx-auto px-2">
               Access 500K+ practice questions across all IELTS modules with authentic exam patterns
             </p>
           </div>
         </section>
 
         {/* Materials Section */}
-        <section className="py-12 px-4 max-w-5xl mx-auto">
+        <section className="py-6 sm:py-8 md:py-12 px-3 sm:px-4 max-w-5xl mx-auto">
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className="grid w-full grid-cols-4 mb-8">
+            <TabsList className="grid w-full grid-cols-4 mb-4 sm:mb-6 md:mb-8 h-auto p-1">
               {modules.map((module) => {
                 const Icon = module.icon;
                 return (
                   <TabsTrigger 
                     key={module.id} 
                     value={module.id}
-                    className="flex items-center gap-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
+                    className="flex items-center justify-center gap-1 sm:gap-2 py-2 px-1 sm:px-3 text-xs sm:text-sm data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
                   >
-                    <Icon className="w-4 h-4" />
+                    <Icon className="w-4 h-4 flex-shrink-0" />
                     <span className="hidden sm:inline capitalize">{module.id}</span>
                   </TabsTrigger>
                 );
@@ -118,44 +118,44 @@ const IELTSMaterials = () => {
               return (
                 <TabsContent key={module.id} value={module.id}>
                   <Card className="border-2">
-                    <CardContent className="p-8">
-                      <div className="flex flex-col md:flex-row gap-6">
+                    <CardContent className="p-4 sm:p-6 md:p-8">
+                      <div className="flex flex-col gap-4 sm:gap-6">
                         {/* Module Info */}
-                        <div className="flex-1 space-y-6">
-                          <div className="flex items-start gap-4">
-                            <div className={`p-4 rounded-xl ${module.bgColor}`}>
-                              <Icon className={`w-8 h-8 ${module.color}`} />
+                        <div className="flex-1 space-y-4 sm:space-y-6">
+                          <div className="flex flex-col sm:flex-row items-start gap-3 sm:gap-4">
+                            <div className={`p-3 sm:p-4 rounded-xl ${module.bgColor} flex-shrink-0`}>
+                              <Icon className={`w-6 h-6 sm:w-8 sm:h-8 ${module.color}`} />
                             </div>
                             <div>
-                              <h2 className="text-2xl font-bold">{module.title}</h2>
-                              <p className="text-muted-foreground mt-1">{module.description}</p>
+                              <h2 className="text-lg sm:text-xl md:text-2xl font-bold">{module.title}</h2>
+                              <p className="text-sm sm:text-base text-muted-foreground mt-1">{module.description}</p>
                             </div>
                           </div>
 
                           {/* Stats */}
-                          <div className="grid grid-cols-3 gap-4">
-                            <div className="text-center p-4 bg-muted/50 rounded-xl">
-                              <p className={`text-2xl font-bold ${module.color}`}>{module.stats.questions}</p>
-                              <p className="text-sm text-muted-foreground">Questions</p>
+                          <div className="grid grid-cols-3 gap-2 sm:gap-4">
+                            <div className="text-center p-2 sm:p-4 bg-muted/50 rounded-lg sm:rounded-xl">
+                              <p className={`text-base sm:text-xl md:text-2xl font-bold ${module.color}`}>{module.stats.questions}</p>
+                              <p className="text-xs sm:text-sm text-muted-foreground">Questions</p>
                             </div>
-                            <div className="text-center p-4 bg-muted/50 rounded-xl">
-                              <p className={`text-2xl font-bold ${module.color}`}>{module.stats.tests}</p>
-                              <p className="text-sm text-muted-foreground">Tests</p>
+                            <div className="text-center p-2 sm:p-4 bg-muted/50 rounded-lg sm:rounded-xl">
+                              <p className={`text-base sm:text-xl md:text-2xl font-bold ${module.color}`}>{module.stats.tests}</p>
+                              <p className="text-xs sm:text-sm text-muted-foreground">Tests</p>
                             </div>
-                            <div className="text-center p-4 bg-muted/50 rounded-xl">
-                              <p className={`text-2xl font-bold ${module.color}`}>{module.stats.time}</p>
-                              <p className="text-sm text-muted-foreground">Time</p>
+                            <div className="text-center p-2 sm:p-4 bg-muted/50 rounded-lg sm:rounded-xl">
+                              <p className={`text-base sm:text-xl md:text-2xl font-bold ${module.color}`}>{module.stats.time}</p>
+                              <p className="text-xs sm:text-sm text-muted-foreground">Time</p>
                             </div>
                           </div>
 
                           {/* Features */}
                           <div>
-                            <h3 className="font-semibold mb-3">What's Included:</h3>
-                            <div className="grid grid-cols-2 gap-2">
+                            <h3 className="font-semibold mb-2 sm:mb-3 text-sm sm:text-base">What's Included:</h3>
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5 sm:gap-2">
                               {module.features.map((feature, idx) => (
                                 <div key={idx} className="flex items-center gap-2">
-                                  <div className={`w-2 h-2 rounded-full ${module.color.replace('text-', 'bg-')}`} />
-                                  <span className="text-sm">{feature}</span>
+                                  <div className={`w-2 h-2 rounded-full flex-shrink-0 ${module.color.replace('text-', 'bg-')}`} />
+                                  <span className="text-xs sm:text-sm">{feature}</span>
                                 </div>
                               ))}
                             </div>
@@ -164,7 +164,7 @@ const IELTSMaterials = () => {
                           {/* CTA */}
                           <Button 
                             size="lg" 
-                            className="w-full"
+                            className="w-full text-sm sm:text-base"
                             onClick={() => navigate(module.route)}
                           >
                             <Play className="w-4 h-4 mr-2" />
@@ -180,26 +180,26 @@ const IELTSMaterials = () => {
           </Tabs>
 
           {/* Quick Stats */}
-          <div className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-4">
-            <Card className="p-6 text-center bg-gradient-to-br from-emerald-500/10 to-emerald-500/5">
-              <FileText className="w-8 h-8 mx-auto mb-2 text-emerald-500" />
-              <p className="text-2xl font-bold">500K+</p>
-              <p className="text-sm text-muted-foreground">Practice Questions</p>
+          <div className="mt-6 sm:mt-8 md:mt-12 grid grid-cols-2 md:grid-cols-4 gap-2 sm:gap-3 md:gap-4">
+            <Card className="p-3 sm:p-4 md:p-6 text-center bg-gradient-to-br from-emerald-500/10 to-emerald-500/5">
+              <FileText className="w-6 h-6 sm:w-8 sm:h-8 mx-auto mb-1 sm:mb-2 text-emerald-500" />
+              <p className="text-lg sm:text-xl md:text-2xl font-bold">500K+</p>
+              <p className="text-xs sm:text-sm text-muted-foreground">Practice Questions</p>
             </Card>
-            <Card className="p-6 text-center bg-gradient-to-br from-blue-500/10 to-blue-500/5">
-              <CheckCircle className="w-8 h-8 mx-auto mb-2 text-blue-500" />
-              <p className="text-2xl font-bold">5,000+</p>
-              <p className="text-sm text-muted-foreground">Mock Tests</p>
+            <Card className="p-3 sm:p-4 md:p-6 text-center bg-gradient-to-br from-blue-500/10 to-blue-500/5">
+              <CheckCircle className="w-6 h-6 sm:w-8 sm:h-8 mx-auto mb-1 sm:mb-2 text-blue-500" />
+              <p className="text-lg sm:text-xl md:text-2xl font-bold">5,000+</p>
+              <p className="text-xs sm:text-sm text-muted-foreground">Mock Tests</p>
             </Card>
-            <Card className="p-6 text-center bg-gradient-to-br from-purple-500/10 to-purple-500/5">
-              <Clock className="w-8 h-8 mx-auto mb-2 text-purple-500" />
-              <p className="text-2xl font-bold">24/7</p>
-              <p className="text-sm text-muted-foreground">AI Feedback</p>
+            <Card className="p-3 sm:p-4 md:p-6 text-center bg-gradient-to-br from-purple-500/10 to-purple-500/5">
+              <Clock className="w-6 h-6 sm:w-8 sm:h-8 mx-auto mb-1 sm:mb-2 text-purple-500" />
+              <p className="text-lg sm:text-xl md:text-2xl font-bold">24/7</p>
+              <p className="text-xs sm:text-sm text-muted-foreground">AI Feedback</p>
             </Card>
-            <Card className="p-6 text-center bg-gradient-to-br from-rose-500/10 to-rose-500/5">
-              <BookOpen className="w-8 h-8 mx-auto mb-2 text-rose-500" />
-              <p className="text-2xl font-bold">Daily</p>
-              <p className="text-sm text-muted-foreground">New Content</p>
+            <Card className="p-3 sm:p-4 md:p-6 text-center bg-gradient-to-br from-rose-500/10 to-rose-500/5">
+              <BookOpen className="w-6 h-6 sm:w-8 sm:h-8 mx-auto mb-1 sm:mb-2 text-rose-500" />
+              <p className="text-lg sm:text-xl md:text-2xl font-bold">Daily</p>
+              <p className="text-xs sm:text-sm text-muted-foreground">New Content</p>
             </Card>
           </div>
         </section>
