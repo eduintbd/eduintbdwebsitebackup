@@ -80,15 +80,15 @@ const IELTSMaterials = () => {
   return (
     <div className="min-h-screen flex flex-col">
       <Navigation />
-      <main className="flex-1">
+      <main className="flex-1 pt-16 sm:pt-20">
         {/* Hero Section */}
-        <section className="relative py-8 sm:py-12 md:py-16 px-4 bg-gradient-to-br from-primary/5 via-background to-secondary/5">
+        <section className="relative py-6 sm:py-10 md:py-14 px-4 bg-gradient-to-br from-primary/5 via-background to-secondary/5">
           <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-5" />
-          <div className="max-w-5xl mx-auto text-center relative z-10">
-            <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-3 md:mb-4">
+          <div className="max-w-5xl mx-auto text-center relative z-10 px-2">
+            <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold mb-2 sm:mb-3 md:mb-4 leading-tight">
               Comprehensive <span className="text-primary">IELTS Materials</span>
             </h1>
-            <p className="text-sm sm:text-base md:text-lg text-muted-foreground max-w-2xl mx-auto px-2">
+            <p className="text-xs sm:text-sm md:text-base lg:text-lg text-muted-foreground max-w-2xl mx-auto">
               Access 500K+ practice questions across all IELTS modules with authentic exam patterns
             </p>
           </div>
