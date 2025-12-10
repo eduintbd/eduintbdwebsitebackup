@@ -10,6 +10,7 @@ import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { BookOpen, Clock, Sparkles, Loader2, CheckCircle, XCircle } from "lucide-react";
 import { toast } from "sonner";
+import { useSavePracticeSession } from "@/hooks/useSavePracticeSession";
 
 interface Question {
   id: number;
@@ -33,6 +34,7 @@ const ReadingPractice = () => {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [score, setScore] = useState(0);
   const [startTime, setStartTime] = useState<number>(Date.now());
+  const { saveSession } = useSavePracticeSession();
 
   const generateContent = async () => {
     setIsGenerating(true);
@@ -121,7 +123,7 @@ Make it completely unique and realistic for IELTS Academic.`,
     setAnswers(prev => ({ ...prev, [questionId]: answer }));
   };
 
-  const submitAnswers = () => {
+  const submitAnswers = async () => {
     if (!content) return;
 
     const correctCount = content.questions.filter(
@@ -134,7 +136,18 @@ Make it completely unique and realistic for IELTS Academic.`,
 
     setScore(correctCount);
     setIsSubmitted(true);
-    const timeTaken = Math.floor((Date.now() - startTime) / 60000);
+    const durationSeconds = Math.floor((Date.now() - startTime) / 1000);
+    const timeTaken = Math.floor(durationSeconds / 60);
+    
+    // Save to database
+    await saveSession({
+      moduleType: "reading",
+      totalQuestions: content.questions.length,
+      correctAnswers: correctCount,
+      durationSeconds,
+      metadata: { title: content.title }
+    });
+    
     toast.success(`You scored ${correctCount}/${content.questions.length} in ${timeTaken} minutes!`);
   };
 

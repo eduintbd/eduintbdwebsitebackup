@@ -11,6 +11,7 @@ import { Progress } from "@/components/ui/progress";
 import { PenTool, Clock, FileText, Sparkles, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, LineChart, Line } from "recharts";
+import { useSavePracticeSession } from "@/hooks/useSavePracticeSession";
 
 interface ChartData {
   name: string;
@@ -61,6 +62,7 @@ const WritingPractice = () => {
   const [task1Feedback, setTask1Feedback] = useState<Feedback | null>(null);
   const [task2Feedback, setTask2Feedback] = useState<Feedback | null>(null);
   const [startTime, setStartTime] = useState<number>(Date.now());
+  const { saveSession } = useSavePracticeSession();
 
   const generateTopic = async (taskNumber: 1 | 2) => {
     setIsGenerating(true);
@@ -381,6 +383,29 @@ Return as JSON: {"taskAchievement": X.X, "coherenceCohesion": X.X, "lexicalResou
         } else {
           setTask2Feedback(feedback);
         }
+        
+        // Save to database - convert band score to percentage (band 9 = 100%)
+        const scorePercentage = (feedback.overallBand / 9) * 100;
+        const durationSeconds = Math.floor((Date.now() - startTime) / 1000);
+        
+        await saveSession({
+          moduleType: "writing",
+          totalQuestions: 1,
+          correctAnswers: 1,
+          durationSeconds,
+          metadata: { 
+            taskNumber, 
+            topic: topic.topic,
+            overallBand: feedback.overallBand,
+            taskAchievement: feedback.taskAchievement,
+            coherenceCohesion: feedback.coherenceCohesion,
+            lexicalResource: feedback.lexicalResource,
+            grammaticalRange: feedback.grammaticalRange,
+            wordCount,
+            scorePercentage: Math.round(scorePercentage)
+          }
+        });
+        
         toast.success("Evaluation complete!");
       } else {
         throw new Error("Invalid response");
