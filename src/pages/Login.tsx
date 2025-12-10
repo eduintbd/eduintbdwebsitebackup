@@ -114,6 +114,26 @@ export default function Login() {
     }
   };
 
+  // Generate a random temporary password
+  const generateTemporaryPassword = () => {
+    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789';
+    const specialChars = '@#$%&*!';
+    let password = '';
+    
+    // Generate 8 random characters
+    for (let i = 0; i < 8; i++) {
+      password += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    
+    // Add a special character
+    password += specialChars.charAt(Math.floor(Math.random() * specialChars.length));
+    
+    // Add a number to ensure complexity
+    password += Math.floor(Math.random() * 10);
+    
+    return password;
+  };
+
   const handleEmailAuth = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
@@ -129,11 +149,14 @@ export default function Login() {
         });
 
         const fullPhone = `${signupData.countryCode}${signupData.phone}`;
+        
+        // Generate a temporary password for the student
+        const temporaryPassword = generateTemporaryPassword();
 
-        // Create auth user
+        // Create auth user with temporary password
         const { data, error } = await supabase.auth.signUp({
           email,
-          password,
+          password: temporaryPassword,
           options: {
             emailRedirectTo: `${window.location.origin}/portal`,
           },
@@ -162,7 +185,7 @@ export default function Login() {
             console.error('Error creating application:', dbError);
           }
 
-          // Send welcome email with feature highlights
+          // Send welcome email with temporary password
           try {
             await supabase.functions.invoke('send-confirmation-email', {
               body: {
@@ -172,6 +195,7 @@ export default function Login() {
                 studyDestination: signupData.destination,
                 studyYear: signupData.year,
                 details: validatedData.details,
+                temporaryPassword: temporaryPassword,
               },
             });
             console.log('Welcome email sent successfully');
@@ -486,34 +510,10 @@ export default function Login() {
                       />
                     </div>
 
-                    <div className="space-y-2">
-                      <Label htmlFor="password">Password *</Label>
-                      <div className="relative">
-                        <Input
-                          id="password"
-                          type={showPassword ? "text" : "password"}
-                          placeholder="Enter your password"
-                          value={password}
-                          onChange={(e) => setPassword(e.target.value)}
-                          required
-                          minLength={6}
-                          className="pr-10"
-                        />
-                        <Button
-                          type="button"
-                          variant="ghost"
-                          size="sm"
-                          className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
-                          onClick={() => setShowPassword(!showPassword)}
-                          aria-label={showPassword ? "Hide password" : "Show password"}
-                        >
-                          {showPassword ? (
-                            <EyeOff className="h-4 w-4 text-muted-foreground" />
-                          ) : (
-                            <Eye className="h-4 w-4 text-muted-foreground" />
-                          )}
-                        </Button>
-                      </div>
+                    <div style={{backgroundColor: '#fef3c7', borderRadius: '8px', padding: '16px', marginTop: '8px', border: '1px solid #f59e0b'}}>
+                      <p style={{margin: 0, color: '#92400e', fontSize: '14px', lineHeight: '1.6'}}>
+                        <strong>🔑 Note:</strong> A temporary password will be generated and sent to your email. You can change it after your first login.
+                      </p>
                     </div>
 
                     <Button type="submit" className="w-full h-11 text-base" disabled={isLoading}>
