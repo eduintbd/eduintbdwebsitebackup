@@ -398,34 +398,34 @@ Return as JSON: {"taskAchievement": X.X, "coherenceCohesion": X.X, "lexicalResou
 
   const renderFeedbackCard = (feedback: Feedback) => (
     <Card className="mt-4 border-primary/20">
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <Sparkles className="h-5 w-5 text-primary" />
+      <CardHeader className="p-4 sm:p-6">
+        <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
+          <Sparkles className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
           Your IELTS Band Score: {feedback.overallBand}
         </CardTitle>
       </CardHeader>
-      <CardContent className="space-y-4">
-        <div className="grid grid-cols-2 gap-4">
+      <CardContent className="space-y-3 sm:space-y-4 p-4 sm:p-6 pt-0 sm:pt-0">
+        <div className="grid grid-cols-2 gap-2 sm:gap-4">
           <div>
-            <p className="text-sm text-muted-foreground">Task Achievement</p>
-            <p className="text-2xl font-bold">{feedback.taskAchievement}</p>
+            <p className="text-xs sm:text-sm text-muted-foreground">Task Achievement</p>
+            <p className="text-xl sm:text-2xl font-bold">{feedback.taskAchievement}</p>
           </div>
           <div>
-            <p className="text-sm text-muted-foreground">Coherence & Cohesion</p>
-            <p className="text-2xl font-bold">{feedback.coherenceCohesion}</p>
+            <p className="text-xs sm:text-sm text-muted-foreground">Coherence & Cohesion</p>
+            <p className="text-xl sm:text-2xl font-bold">{feedback.coherenceCohesion}</p>
           </div>
           <div>
-            <p className="text-sm text-muted-foreground">Lexical Resource</p>
-            <p className="text-2xl font-bold">{feedback.lexicalResource}</p>
+            <p className="text-xs sm:text-sm text-muted-foreground">Lexical Resource</p>
+            <p className="text-xl sm:text-2xl font-bold">{feedback.lexicalResource}</p>
           </div>
           <div>
-            <p className="text-sm text-muted-foreground">Grammar Range & Accuracy</p>
-            <p className="text-2xl font-bold">{feedback.grammaticalRange}</p>
+            <p className="text-xs sm:text-sm text-muted-foreground">Grammar Range & Accuracy</p>
+            <p className="text-xl sm:text-2xl font-bold">{feedback.grammaticalRange}</p>
           </div>
         </div>
-        <div className="pt-4 border-t">
-          <h4 className="font-semibold mb-2">Detailed Feedback:</h4>
-          <p className="text-sm whitespace-pre-wrap">{feedback.feedback}</p>
+        <div className="pt-3 sm:pt-4 border-t">
+          <h4 className="font-semibold mb-2 text-sm sm:text-base">Detailed Feedback:</h4>
+          <p className="text-xs sm:text-sm whitespace-pre-wrap">{feedback.feedback}</p>
         </div>
       </CardContent>
     </Card>
@@ -434,42 +434,44 @@ Return as JSON: {"taskAchievement": X.X, "coherenceCohesion": X.X, "lexicalResou
   return (
     <div className="min-h-screen flex flex-col">
       <Navigation />
-      <main className="flex-1 pt-24 pb-12 px-4 max-w-7xl mx-auto w-full">
-        <div className="space-y-6">
-          <div className="text-center space-y-2">
-            <h1 className="text-4xl font-bold flex items-center justify-center gap-3">
-              <PenTool className="h-10 w-10 text-primary" />
-              IELTS Writing Practice
-            </h1>
-            <p className="text-xl text-muted-foreground">
+      <main className="flex-1 py-6 sm:py-8 md:py-12 px-3 sm:px-4 max-w-7xl mx-auto w-full">
+        <div className="space-y-4 sm:space-y-6">
+          <div className="text-center space-y-2 px-2">
+            <div className="flex flex-col items-center justify-center gap-2">
+              <PenTool className="h-8 w-8 sm:h-10 sm:w-10 text-primary flex-shrink-0" />
+              <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold leading-tight">
+                IELTS Writing Practice
+              </h1>
+            </div>
+            <p className="text-sm sm:text-base md:text-lg text-muted-foreground">
               Unlimited AI-generated topics with instant band score feedback
             </p>
           </div>
 
           <Tabs value={activeTask.toString()} onValueChange={(v) => setActiveTask(parseInt(v) as 1 | 2)}>
-            <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger value="1">Task 1 (150+ words)</TabsTrigger>
-              <TabsTrigger value="2">Task 2 (250+ words)</TabsTrigger>
+            <TabsList className="grid w-full grid-cols-2 mb-4">
+              <TabsTrigger value="1" className="text-xs sm:text-sm">Task 1 (150+ words)</TabsTrigger>
+              <TabsTrigger value="2" className="text-xs sm:text-sm">Task 2 (250+ words)</TabsTrigger>
             </TabsList>
 
             <TabsContent value="1" className="space-y-4">
               <Card>
-                <CardHeader>
-                  <div className="flex items-center justify-between">
-                    <CardTitle>Task 1: Academic Writing</CardTitle>
-                    <Button onClick={() => generateTopic(1)} disabled={isGenerating}>
+                <CardHeader className="p-4 sm:p-6">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-4">
+                    <CardTitle className="text-base sm:text-lg">Task 1: Academic Writing</CardTitle>
+                    <Button onClick={() => generateTopic(1)} disabled={isGenerating} className="w-full sm:w-auto text-sm">
                       {isGenerating ? <Loader2 className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}
                       <span className="ml-2">Generate New Topic</span>
                     </Button>
                   </div>
                 </CardHeader>
-                <CardContent className="space-y-4">
+                <CardContent className="space-y-3 sm:space-y-4 p-4 sm:p-6 pt-0 sm:pt-0">
                   {task1Topic ? (
                     <>
-                      <div className="p-4 bg-secondary/20 rounded-lg">
-                        <Badge className="mb-2">{task1Topic.type}</Badge>
-                        <p className="text-lg">{task1Topic.topic}</p>
-                        <p className="text-sm text-muted-foreground mt-2">
+                      <div className="p-3 sm:p-4 bg-secondary/20 rounded-lg">
+                        <Badge className="mb-2 text-xs">{task1Topic.type}</Badge>
+                        <p className="text-sm sm:text-base md:text-lg">{task1Topic.topic}</p>
+                        <p className="text-xs sm:text-sm text-muted-foreground mt-2">
                           Minimum {task1Topic.minWords} words • Recommended time: 20 minutes
                         </p>
                       </div>
@@ -477,22 +479,22 @@ Return as JSON: {"taskAchievement": X.X, "coherenceCohesion": X.X, "lexicalResou
                       {/* Render the chart visualization */}
                       {task1Topic.chartData && (
                         <Card className="border-dashed">
-                          <CardContent className="pt-4">
+                          <CardContent className="pt-4 p-2 sm:p-4">
                             {renderChart(task1Topic)}
                           </CardContent>
                         </Card>
                       )}
 
                       <div className="space-y-2">
-                        <div className="flex items-center justify-between">
+                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 sm:gap-4">
                           <label className="text-sm font-medium">Your Response:</label>
-                          <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                          <div className="flex items-center gap-3 sm:gap-4 text-xs sm:text-sm text-muted-foreground">
                             <span className="flex items-center gap-1">
-                              <FileText className="h-4 w-4" />
+                              <FileText className="h-3 w-3 sm:h-4 sm:w-4" />
                               {getWordCount(task1Response)} words
                             </span>
                             <span className="flex items-center gap-1">
-                              <Clock className="h-4 w-4" />
+                              <Clock className="h-3 w-3 sm:h-4 sm:w-4" />
                               {Math.floor((Date.now() - startTime) / 60000)} min
                             </span>
                           </div>
@@ -501,7 +503,7 @@ Return as JSON: {"taskAchievement": X.X, "coherenceCohesion": X.X, "lexicalResou
                           value={task1Response}
                           onChange={(e) => setTask1Response(e.target.value)}
                           placeholder="Start writing your response here..."
-                          className="min-h-[300px] font-mono"
+                          className="min-h-[200px] sm:min-h-[300px] font-mono text-sm"
                         />
                         {task1Topic.minWords && (
                           <Progress 
@@ -514,17 +516,17 @@ Return as JSON: {"taskAchievement": X.X, "coherenceCohesion": X.X, "lexicalResou
                       <Button 
                         onClick={() => evaluateResponse(1)} 
                         disabled={isEvaluating || getWordCount(task1Response) < task1Topic.minWords}
-                        className="w-full"
+                        className="w-full text-sm sm:text-base"
                         size="lg"
                       >
                         {isEvaluating ? (
                           <>
-                            <Loader2 className="h-5 w-5 animate-spin mr-2" />
+                            <Loader2 className="h-4 w-4 sm:h-5 sm:w-5 animate-spin mr-2" />
                             Evaluating...
                           </>
                         ) : (
                           <>
-                            <Sparkles className="h-5 w-5 mr-2" />
+                            <Sparkles className="h-4 w-4 sm:h-5 sm:w-5 mr-2" />
                             Get AI Evaluation & Band Score
                           </>
                         )}
@@ -533,12 +535,12 @@ Return as JSON: {"taskAchievement": X.X, "coherenceCohesion": X.X, "lexicalResou
                       {task1Feedback && renderFeedbackCard(task1Feedback)}
                     </>
                   ) : (
-                    <div className="text-center py-12">
-                      <PenTool className="h-16 w-16 mx-auto text-muted-foreground mb-4" />
-                      <p className="text-muted-foreground mb-4">
+                    <div className="text-center py-8 sm:py-12">
+                      <PenTool className="h-12 w-12 sm:h-16 sm:w-16 mx-auto text-muted-foreground mb-3 sm:mb-4" />
+                      <p className="text-sm sm:text-base text-muted-foreground mb-4 px-2">
                         Click "Generate New Topic" to start practicing
                       </p>
-                      <Button onClick={() => generateTopic(1)} disabled={isGenerating}>
+                      <Button onClick={() => generateTopic(1)} disabled={isGenerating} className="text-sm">
                         {isGenerating ? <Loader2 className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}
                         <span className="ml-2">Generate Task 1 Topic</span>
                       </Button>
@@ -550,36 +552,36 @@ Return as JSON: {"taskAchievement": X.X, "coherenceCohesion": X.X, "lexicalResou
 
             <TabsContent value="2" className="space-y-4">
               <Card>
-                <CardHeader>
-                  <div className="flex items-center justify-between">
-                    <CardTitle>Task 2: Essay Writing</CardTitle>
-                    <Button onClick={() => generateTopic(2)} disabled={isGenerating}>
+                <CardHeader className="p-4 sm:p-6">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-4">
+                    <CardTitle className="text-base sm:text-lg">Task 2: Essay Writing</CardTitle>
+                    <Button onClick={() => generateTopic(2)} disabled={isGenerating} className="w-full sm:w-auto text-sm">
                       {isGenerating ? <Loader2 className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}
                       <span className="ml-2">Generate New Topic</span>
                     </Button>
                   </div>
                 </CardHeader>
-                <CardContent className="space-y-4">
+                <CardContent className="space-y-3 sm:space-y-4 p-4 sm:p-6 pt-0 sm:pt-0">
                   {task2Topic ? (
                     <>
-                      <div className="p-4 bg-secondary/20 rounded-lg">
-                        <Badge className="mb-2">{task2Topic.type}</Badge>
-                        <p className="text-lg">{task2Topic.topic}</p>
-                        <p className="text-sm text-muted-foreground mt-2">
+                      <div className="p-3 sm:p-4 bg-secondary/20 rounded-lg">
+                        <Badge className="mb-2 text-xs">{task2Topic.type}</Badge>
+                        <p className="text-sm sm:text-base md:text-lg">{task2Topic.topic}</p>
+                        <p className="text-xs sm:text-sm text-muted-foreground mt-2">
                           Minimum {task2Topic.minWords} words • Recommended time: 40 minutes
                         </p>
                       </div>
 
                       <div className="space-y-2">
-                        <div className="flex items-center justify-between">
+                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 sm:gap-4">
                           <label className="text-sm font-medium">Your Response:</label>
-                          <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                          <div className="flex items-center gap-3 sm:gap-4 text-xs sm:text-sm text-muted-foreground">
                             <span className="flex items-center gap-1">
-                              <FileText className="h-4 w-4" />
+                              <FileText className="h-3 w-3 sm:h-4 sm:w-4" />
                               {getWordCount(task2Response)} words
                             </span>
                             <span className="flex items-center gap-1">
-                              <Clock className="h-4 w-4" />
+                              <Clock className="h-3 w-3 sm:h-4 sm:w-4" />
                               {Math.floor((Date.now() - startTime) / 60000)} min
                             </span>
                           </div>
@@ -588,7 +590,7 @@ Return as JSON: {"taskAchievement": X.X, "coherenceCohesion": X.X, "lexicalResou
                           value={task2Response}
                           onChange={(e) => setTask2Response(e.target.value)}
                           placeholder="Start writing your response here..."
-                          className="min-h-[400px] font-mono"
+                          className="min-h-[250px] sm:min-h-[400px] font-mono text-sm"
                         />
                         {task2Topic.minWords && (
                           <Progress 
@@ -601,17 +603,17 @@ Return as JSON: {"taskAchievement": X.X, "coherenceCohesion": X.X, "lexicalResou
                       <Button 
                         onClick={() => evaluateResponse(2)} 
                         disabled={isEvaluating || getWordCount(task2Response) < task2Topic.minWords}
-                        className="w-full"
+                        className="w-full text-sm sm:text-base"
                         size="lg"
                       >
                         {isEvaluating ? (
                           <>
-                            <Loader2 className="h-5 w-5 animate-spin mr-2" />
+                            <Loader2 className="h-4 w-4 sm:h-5 sm:w-5 animate-spin mr-2" />
                             Evaluating...
                           </>
                         ) : (
                           <>
-                            <Sparkles className="h-5 w-5 mr-2" />
+                            <Sparkles className="h-4 w-4 sm:h-5 sm:w-5 mr-2" />
                             Get AI Evaluation & Band Score
                           </>
                         )}
@@ -620,12 +622,12 @@ Return as JSON: {"taskAchievement": X.X, "coherenceCohesion": X.X, "lexicalResou
                       {task2Feedback && renderFeedbackCard(task2Feedback)}
                     </>
                   ) : (
-                    <div className="text-center py-12">
-                      <PenTool className="h-16 w-16 mx-auto text-muted-foreground mb-4" />
-                      <p className="text-muted-foreground mb-4">
+                    <div className="text-center py-8 sm:py-12">
+                      <PenTool className="h-12 w-12 sm:h-16 sm:w-16 mx-auto text-muted-foreground mb-3 sm:mb-4" />
+                      <p className="text-sm sm:text-base text-muted-foreground mb-4 px-2">
                         Click "Generate New Topic" to start practicing
                       </p>
-                      <Button onClick={() => generateTopic(2)} disabled={isGenerating}>
+                      <Button onClick={() => generateTopic(2)} disabled={isGenerating} className="text-sm">
                         {isGenerating ? <Loader2 className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}
                         <span className="ml-2">Generate Task 2 Topic</span>
                       </Button>
@@ -637,9 +639,9 @@ Return as JSON: {"taskAchievement": X.X, "coherenceCohesion": X.X, "lexicalResou
           </Tabs>
 
           <Card className="bg-secondary/10">
-            <CardContent className="pt-6">
-              <h3 className="font-semibold mb-2">IELTS Writing Tips:</h3>
-              <ul className="space-y-1 text-sm text-muted-foreground">
+            <CardContent className="p-4 sm:pt-6">
+              <h3 className="font-semibold mb-2 text-sm sm:text-base">IELTS Writing Tips:</h3>
+              <ul className="space-y-1 text-xs sm:text-sm text-muted-foreground">
                 <li>• Task 1: Spend 20 minutes, write at least 150 words describing data accurately</li>
                 <li>• Task 2: Spend 40 minutes, write at least 250 words with clear arguments</li>
                 <li>• Use a variety of sentence structures and advanced vocabulary</li>
