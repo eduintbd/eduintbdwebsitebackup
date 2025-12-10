@@ -15,7 +15,6 @@ import {
   LayoutDashboard
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { AdvisorConnection } from "@/components/portal/AdvisorConnection";
 import { ConversationHistory } from "@/components/portal/ConversationHistory";
 import { SavedResources } from "@/components/portal/SavedResources";
@@ -28,6 +27,7 @@ import { ProgressAnalytics } from "@/components/portal/ProgressAnalytics";
 import { TaskChecklist } from "@/components/portal/TaskChecklist";
 import { MobileNav } from "@/components/portal/MobileNav";
 import { IELTSProgressDashboard } from "@/components/portal/IELTSProgressDashboard";
+import { ProfileAvatar } from "@/components/portal/ProfileAvatar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export default function Portal() {
@@ -110,13 +110,8 @@ export default function Portal() {
     }
   };
 
-  const getInitials = (name: string) => {
-    return name
-      .split(' ')
-      .map(n => n[0])
-      .join('')
-      .toUpperCase()
-      .slice(0, 2);
+  const handleAvatarUpdate = (url: string) => {
+    setApplication((prev: any) => ({ ...prev, avatar_url: url }));
   };
 
   const getStatusBadge = (status: string) => {
@@ -170,11 +165,13 @@ export default function Portal() {
         {/* Welcome Header */}
         <div className="mb-4 sm:mb-6 md:mb-8">
           <div className="flex items-center gap-3 sm:gap-4 md:gap-6">
-            <Avatar className="h-12 w-12 sm:h-16 sm:w-16 md:h-20 md:w-20 bg-primary text-primary-foreground flex-shrink-0">
-              <AvatarFallback className="text-base sm:text-lg md:text-2xl font-semibold">
-                {getInitials(application.name)}
-              </AvatarFallback>
-            </Avatar>
+            <ProfileAvatar
+              name={application.name}
+              avatarUrl={application.avatar_url}
+              studentId={application.id}
+              onAvatarUpdate={handleAvatarUpdate}
+              size="lg"
+            />
             <div className="flex-1 min-w-0">
               <h1 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold mb-0.5 sm:mb-1 truncate">
                 Welcome back, {application.name.split(' ')[0]}!
