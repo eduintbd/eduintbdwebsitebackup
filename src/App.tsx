@@ -12,6 +12,10 @@ import IELTSModule from "./pages/IELTSModule";
 import IELTSMaterials from "./pages/IELTSMaterials";
 import GamifiedLearning from "./pages/GamifiedLearning";
 import IELTSAnalytics from "./pages/IELTSAnalytics";
+import VocabularyRace from "./pages/games/VocabularyRace";
+import GrammarBattle from "./pages/games/GrammarBattle";
+import ListeningPuzzle from "./pages/games/ListeningPuzzle";
+import ReadingSprint from "./pages/games/ReadingSprint";
 import AIBuddy from "./pages/AIBuddy";
 import WritingPractice from "./pages/WritingPractice";
 import ListeningPractice from "./pages/ListeningPractice";
@@ -124,6 +128,10 @@ const App = () => (
           <Route path="/ielts/materials" element={<IELTSMaterials />} />
           <Route path="/ielts/gamified" element={<GamifiedLearning />} />
           <Route path="/ielts/analytics" element={<IELTSAnalytics />} />
+          <Route path="/ielts/games/vocabulary-race" element={<VocabularyRace />} />
+          <Route path="/ielts/games/grammar-battle" element={<GrammarBattle />} />
+          <Route path="/ielts/games/listening-puzzle" element={<ListeningPuzzle />} />
+          <Route path="/ielts/games/reading-sprint" element={<ReadingSprint />} />
           <Route path="/ielts/ai-buddy" element={<AIBuddy />} />
           <Route path="/ielts/writing" element={<WritingPractice />} />
           <Route path="/ielts/listening" element={<ListeningPractice />} />
