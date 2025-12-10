@@ -170,30 +170,30 @@ const IELTSAnalytics = () => {
   return (
     <div className="min-h-screen flex flex-col">
       <Navigation />
-      <main className="flex-1">
+      <main className="flex-1 pt-16 sm:pt-20">
         {/* Hero Section */}
-        <section className="relative py-16 px-4 bg-gradient-to-br from-primary/5 via-background to-secondary/5">
+        <section className="relative py-6 sm:py-10 md:py-14 px-4 bg-gradient-to-br from-primary/5 via-background to-secondary/5">
           <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-5" />
-          <div className="max-w-5xl mx-auto text-center relative z-10">
-            <h1 className="text-4xl md:text-5xl font-bold mb-4">
+          <div className="max-w-5xl mx-auto text-center relative z-10 px-2">
+            <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold mb-2 sm:mb-3 md:mb-4 leading-tight">
               Advanced <span className="text-primary">Analytics Dashboard</span>
             </h1>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+            <p className="text-xs sm:text-sm md:text-base lg:text-lg text-muted-foreground max-w-2xl mx-auto">
               Track your progress with detailed insights, performance graphs, and comprehensive reports
             </p>
           </div>
         </section>
 
         {/* Data-Driven Banner */}
-        <section className="py-8 px-4 bg-muted/30">
+        <section className="py-4 sm:py-6 md:py-8 px-4 bg-muted/30">
           <div className="max-w-5xl mx-auto">
             <Card className="border-2 border-primary/20 bg-gradient-to-r from-primary/5 to-secondary/5">
-              <CardContent className="p-6 text-center">
+              <CardContent className="p-4 sm:p-6 text-center">
                 <div className="flex items-center justify-center gap-2 mb-2">
-                  <TrendingUp className="w-5 h-5 text-primary" />
-                  <Badge variant="secondary">Data-Driven Learning</Badge>
+                  <TrendingUp className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
+                  <Badge variant="secondary" className="text-xs sm:text-sm">Data-Driven Learning</Badge>
                 </div>
-                <p className="text-muted-foreground">
+                <p className="text-xs sm:text-sm md:text-base text-muted-foreground">
                   Make informed decisions about your study plan with comprehensive analytics and insights
                 </p>
               </CardContent>
@@ -202,18 +202,18 @@ const IELTSAnalytics = () => {
         </section>
 
         {/* Features Grid */}
-        <section className="py-12 px-4 max-w-5xl mx-auto">
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <section className="py-8 sm:py-10 md:py-12 px-4 max-w-5xl mx-auto">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
             {features.map((feature, idx) => {
               const Icon = feature.icon;
               return (
                 <Card key={idx} className="hover:shadow-lg transition-shadow">
-                  <CardContent className="p-6">
-                    <div className={`inline-flex p-3 rounded-xl ${feature.bgColor} mb-4`}>
-                      <Icon className={`w-6 h-6 ${feature.color}`} />
+                  <CardContent className="p-4 sm:p-6">
+                    <div className={`inline-flex p-2 sm:p-3 rounded-xl ${feature.bgColor} mb-3 sm:mb-4`}>
+                      <Icon className={`w-5 h-5 sm:w-6 sm:h-6 ${feature.color}`} />
                     </div>
-                    <h3 className="font-bold text-lg mb-2">{feature.title}</h3>
-                    <p className="text-sm text-muted-foreground">{feature.description}</p>
+                    <h3 className="font-bold text-base sm:text-lg mb-1 sm:mb-2">{feature.title}</h3>
+                    <p className="text-xs sm:text-sm text-muted-foreground">{feature.description}</p>
                   </CardContent>
                 </Card>
               );
@@ -223,69 +223,69 @@ const IELTSAnalytics = () => {
 
         {/* User Analytics (if logged in) */}
         {user && analytics ? (
-          <section className="py-12 px-4 bg-muted/30">
+          <section className="py-8 sm:py-10 md:py-12 px-4 bg-muted/30">
             <div className="max-w-5xl mx-auto">
-              <h2 className="text-2xl font-bold mb-6">Your Performance</h2>
+              <h2 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6">Your Performance</h2>
               
               {/* Stats Grid */}
-              <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-8">
-                <Card className="p-4 text-center">
-                  <Clock className="w-6 h-6 mx-auto mb-2 text-blue-500" />
-                  <p className="text-2xl font-bold">{analytics.totalTime}</p>
-                  <p className="text-xs text-muted-foreground">Minutes Studied</p>
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3 sm:gap-4 mb-6 sm:mb-8">
+                <Card className="p-3 sm:p-4 text-center">
+                  <Clock className="w-5 h-5 sm:w-6 sm:h-6 mx-auto mb-1 sm:mb-2 text-blue-500" />
+                  <p className="text-lg sm:text-xl md:text-2xl font-bold">{analytics.totalTime}</p>
+                  <p className="text-[10px] sm:text-xs text-muted-foreground">Minutes Studied</p>
                 </Card>
-                <Card className="p-4 text-center">
-                  <CheckCircle className="w-6 h-6 mx-auto mb-2 text-emerald-500" />
-                  <p className="text-2xl font-bold">{analytics.totalSessions}</p>
-                  <p className="text-xs text-muted-foreground">Sessions</p>
+                <Card className="p-3 sm:p-4 text-center">
+                  <CheckCircle className="w-5 h-5 sm:w-6 sm:h-6 mx-auto mb-1 sm:mb-2 text-emerald-500" />
+                  <p className="text-lg sm:text-xl md:text-2xl font-bold">{analytics.totalSessions}</p>
+                  <p className="text-[10px] sm:text-xs text-muted-foreground">Sessions</p>
                 </Card>
-                <Card className="p-4 text-center">
-                  <TrendingUp className="w-6 h-6 mx-auto mb-2 text-purple-500" />
-                  <p className="text-2xl font-bold">{analytics.avgScore}%</p>
-                  <p className="text-xs text-muted-foreground">Avg Score</p>
+                <Card className="p-3 sm:p-4 text-center">
+                  <TrendingUp className="w-5 h-5 sm:w-6 sm:h-6 mx-auto mb-1 sm:mb-2 text-purple-500" />
+                  <p className="text-lg sm:text-xl md:text-2xl font-bold">{analytics.avgScore}%</p>
+                  <p className="text-[10px] sm:text-xs text-muted-foreground">Avg Score</p>
                 </Card>
-                <Card className="p-4 text-center">
-                  <Target className="w-6 h-6 mx-auto mb-2 text-amber-500" />
-                  <p className="text-2xl font-bold">{analytics.bestScore}%</p>
-                  <p className="text-xs text-muted-foreground">Best Score</p>
+                <Card className="p-3 sm:p-4 text-center">
+                  <Target className="w-5 h-5 sm:w-6 sm:h-6 mx-auto mb-1 sm:mb-2 text-amber-500" />
+                  <p className="text-lg sm:text-xl md:text-2xl font-bold">{analytics.bestScore}%</p>
+                  <p className="text-[10px] sm:text-xs text-muted-foreground">Best Score</p>
                 </Card>
-                <Card className="p-4 text-center">
-                  <Flame className="w-6 h-6 mx-auto mb-2 text-orange-500" />
-                  <p className="text-2xl font-bold">{analytics.streak}</p>
-                  <p className="text-xs text-muted-foreground">Day Streak</p>
+                <Card className="p-3 sm:p-4 text-center col-span-2 sm:col-span-1">
+                  <Flame className="w-5 h-5 sm:w-6 sm:h-6 mx-auto mb-1 sm:mb-2 text-orange-500" />
+                  <p className="text-lg sm:text-xl md:text-2xl font-bold">{analytics.streak}</p>
+                  <p className="text-[10px] sm:text-xs text-muted-foreground">Day Streak</p>
                 </Card>
               </div>
 
               {/* Predicted Band Score */}
-              <Card className="p-6 mb-8 bg-gradient-to-r from-primary/10 to-secondary/10">
-                <div className="flex items-center justify-between">
+              <Card className="p-4 sm:p-6 mb-6 sm:mb-8 bg-gradient-to-r from-primary/10 to-secondary/10">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-0">
                   <div>
-                    <h3 className="font-bold text-lg">Predicted Band Score</h3>
-                    <p className="text-sm text-muted-foreground">Based on your current performance</p>
+                    <h3 className="font-bold text-base sm:text-lg">Predicted Band Score</h3>
+                    <p className="text-xs sm:text-sm text-muted-foreground">Based on your current performance</p>
                   </div>
-                  <div className="text-right">
-                    <p className="text-4xl font-bold text-primary">{predictBandScore()}</p>
-                    <p className="text-sm text-muted-foreground">IELTS Band</p>
+                  <div className="text-left sm:text-right">
+                    <p className="text-2xl sm:text-3xl md:text-4xl font-bold text-primary">{predictBandScore()}</p>
+                    <p className="text-xs sm:text-sm text-muted-foreground">IELTS Band</p>
                   </div>
                 </div>
               </Card>
 
               {/* Module Performance */}
-              <Card className="p-6">
-                <h3 className="font-bold text-lg mb-4">Module Performance</h3>
-                <div className="space-y-4">
+              <Card className="p-4 sm:p-6">
+                <h3 className="font-bold text-base sm:text-lg mb-3 sm:mb-4">Module Performance</h3>
+                <div className="space-y-3 sm:space-y-4">
                   {['reading', 'writing', 'listening', 'speaking'].map((module) => {
                     const moduleData = analytics.modulePerformance.find(m => m.module_type === module);
                     const score = moduleData?.avg_score || 0;
                     return (
-                      <div key={module} className="space-y-2">
+                      <div key={module} className="space-y-1 sm:space-y-2">
                         <div className="flex items-center justify-between">
-                          <span className="capitalize font-medium">{module}</span>
-                          <span className="text-sm text-muted-foreground">
+                          <span className="capitalize font-medium text-sm sm:text-base">{module}</span>
+                          <span className="text-xs sm:text-sm text-muted-foreground">
                             {Math.round(score)}% ({moduleData?.attempts || 0} attempts)
                           </span>
                         </div>
-                        <div className="relative h-3 bg-muted rounded-full overflow-hidden">
+                        <div className="relative h-2 sm:h-3 bg-muted rounded-full overflow-hidden">
                           <div 
                             className={`absolute inset-y-0 left-0 ${getModuleColor(module)} rounded-full transition-all`}
                             style={{ width: `${score}%` }}
@@ -299,15 +299,15 @@ const IELTSAnalytics = () => {
             </div>
           </section>
         ) : (
-          <section className="py-12 px-4">
+          <section className="py-8 sm:py-10 md:py-12 px-4">
             <div className="max-w-3xl mx-auto">
-              <Card className="p-8 text-center">
-                <Lock className="w-12 h-12 mx-auto mb-4 text-muted-foreground" />
-                <h3 className="text-xl font-bold mb-2">Sign in to View Your Analytics</h3>
-                <p className="text-muted-foreground mb-6">
+              <Card className="p-6 sm:p-8 text-center">
+                <Lock className="w-10 h-10 sm:w-12 sm:h-12 mx-auto mb-3 sm:mb-4 text-muted-foreground" />
+                <h3 className="text-lg sm:text-xl font-bold mb-2">Sign in to View Your Analytics</h3>
+                <p className="text-xs sm:text-sm md:text-base text-muted-foreground mb-4 sm:mb-6">
                   Track your progress, view detailed performance metrics, and get AI-powered insights
                 </p>
-                <Button size="lg" onClick={() => navigate("/login")}>
+                <Button size="lg" className="w-full sm:w-auto" onClick={() => navigate("/login")}>
                   Sign In Now
                 </Button>
               </Card>
@@ -316,26 +316,26 @@ const IELTSAnalytics = () => {
         )}
 
         {/* What's Included */}
-        <section className="py-12 px-4 max-w-5xl mx-auto">
-          <h2 className="text-2xl font-bold mb-6">Your Analytics Include</h2>
-          <div className="grid md:grid-cols-2 gap-6">
-            <Card className="p-6">
-              <h3 className="font-bold text-lg mb-4">Performance Metrics</h3>
+        <section className="py-8 sm:py-10 md:py-12 px-4 max-w-5xl mx-auto">
+          <h2 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6">Your Analytics Include</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+            <Card className="p-4 sm:p-6">
+              <h3 className="font-bold text-base sm:text-lg mb-3 sm:mb-4">Performance Metrics</h3>
               <ul className="space-y-2">
                 {["Overall band score tracking", "Module-wise performance", "Question type analysis", "Time management insights"].map((item, idx) => (
-                  <li key={idx} className="flex items-center gap-2 text-sm">
-                    <CheckCircle className="w-4 h-4 text-emerald-500" />
+                  <li key={idx} className="flex items-center gap-2 text-xs sm:text-sm">
+                    <CheckCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-emerald-500 flex-shrink-0" />
                     {item}
                   </li>
                 ))}
               </ul>
             </Card>
-            <Card className="p-6">
-              <h3 className="font-bold text-lg mb-4">Progress Reports</h3>
+            <Card className="p-4 sm:p-6">
+              <h3 className="font-bold text-base sm:text-lg mb-3 sm:mb-4">Progress Reports</h3>
               <ul className="space-y-2">
                 {["Weekly performance summaries", "Monthly progress reports", "Strength & weakness analysis", "Personalized recommendations"].map((item, idx) => (
-                  <li key={idx} className="flex items-center gap-2 text-sm">
-                    <CheckCircle className="w-4 h-4 text-blue-500" />
+                  <li key={idx} className="flex items-center gap-2 text-xs sm:text-sm">
+                    <CheckCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-blue-500 flex-shrink-0" />
                     {item}
                   </li>
                 ))}
@@ -345,13 +345,13 @@ const IELTSAnalytics = () => {
         </section>
 
         {/* CTA */}
-        <section className="py-12 px-4 bg-gradient-to-r from-primary/10 to-secondary/10">
+        <section className="py-8 sm:py-10 md:py-12 px-4 bg-gradient-to-r from-primary/10 to-secondary/10">
           <div className="max-w-3xl mx-auto text-center">
-            <h2 className="text-3xl font-bold mb-4">Ready to Track Your Progress?</h2>
-            <p className="text-muted-foreground mb-6">
+            <h2 className="text-xl sm:text-2xl md:text-3xl font-bold mb-3 sm:mb-4">Ready to Track Your Progress?</h2>
+            <p className="text-xs sm:text-sm md:text-base text-muted-foreground mb-4 sm:mb-6">
               Start practicing and watch your analytics grow
             </p>
-            <Button size="lg" onClick={() => navigate("/ielts/materials")}>
+            <Button size="lg" className="w-full sm:w-auto" onClick={() => navigate("/ielts/materials")}>
               View Your Dashboard
             </Button>
           </div>
