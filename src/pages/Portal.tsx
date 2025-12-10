@@ -163,23 +163,23 @@ export default function Portal() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-br from-background to-muted/20 pb-20 md:pb-0">
+    <div className="min-h-screen flex flex-col bg-gradient-to-br from-background to-muted/20 pb-24 md:pb-0">
       <Navigation />
       
-      <main className="flex-1 w-full mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-4 sm:py-6 md:py-8 max-w-[1600px]">
+      <main className="flex-1 w-full mx-auto px-4 sm:px-6 lg:px-8 pt-20 sm:pt-24 pb-6 sm:pb-8 max-w-[1600px]">
         {/* Welcome Header */}
-        <div className="mb-6 sm:mb-8">
-          <div className="flex items-center gap-4 sm:gap-5 md:gap-6">
-            <Avatar className="h-16 w-16 sm:h-18 sm:w-18 md:h-20 md:w-20 bg-primary text-primary-foreground flex-shrink-0">
-              <AvatarFallback className="text-lg sm:text-xl md:text-2xl font-semibold">
+        <div className="mb-4 sm:mb-6 md:mb-8">
+          <div className="flex items-center gap-3 sm:gap-4 md:gap-6">
+            <Avatar className="h-12 w-12 sm:h-16 sm:w-16 md:h-20 md:w-20 bg-primary text-primary-foreground flex-shrink-0">
+              <AvatarFallback className="text-base sm:text-lg md:text-2xl font-semibold">
                 {getInitials(application.name)}
               </AvatarFallback>
             </Avatar>
-            <div className="flex-1 overflow-hidden">
-              <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold mb-1">
+            <div className="flex-1 min-w-0">
+              <h1 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold mb-0.5 sm:mb-1 truncate">
                 Welcome back, {application.name.split(' ')[0]}!
               </h1>
-              <p className="text-sm sm:text-base md:text-lg text-muted-foreground">
+              <p className="text-xs sm:text-sm md:text-base text-muted-foreground">
                 Track your study abroad journey
               </p>
             </div>
@@ -187,89 +187,89 @@ export default function Portal() {
         </div>
 
         {/* Stats Overview */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 mb-6">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3 md:gap-4 mb-4 sm:mb-6">
           <Card className="overflow-hidden hover:shadow-lg transition-shadow">
-            <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0 p-4">
-              <CardTitle className="text-sm font-medium">Status</CardTitle>
-              <FileText className="h-4 w-4 text-muted-foreground" />
+            <CardHeader className="flex flex-row items-center justify-between pb-1 sm:pb-2 space-y-0 p-2 sm:p-3 md:p-4">
+              <CardTitle className="text-xs sm:text-sm font-medium">Status</CardTitle>
+              <FileText className="h-3 w-3 sm:h-4 sm:w-4 text-muted-foreground" />
             </CardHeader>
-            <CardContent className="p-4 pt-0">
-              <div className="text-xl font-bold mb-1">{getStatusBadge(application.application_status || 'submitted')}</div>
-              <p className="text-xs text-muted-foreground">Current stage</p>
+            <CardContent className="p-2 sm:p-3 md:p-4 pt-0">
+              <div className="text-sm sm:text-base md:text-xl font-bold mb-0.5 sm:mb-1">{getStatusBadge(application.application_status || 'submitted')}</div>
+              <p className="text-[10px] sm:text-xs text-muted-foreground">Current stage</p>
             </CardContent>
           </Card>
 
           <Card className="overflow-hidden hover:shadow-lg transition-shadow">
-            <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0 p-4">
-              <CardTitle className="text-sm font-medium">Destination</CardTitle>
-              <Plane className="h-4 w-4 text-muted-foreground" />
+            <CardHeader className="flex flex-row items-center justify-between pb-1 sm:pb-2 space-y-0 p-2 sm:p-3 md:p-4">
+              <CardTitle className="text-xs sm:text-sm font-medium">Destination</CardTitle>
+              <Plane className="h-3 w-3 sm:h-4 sm:w-4 text-muted-foreground" />
             </CardHeader>
-            <CardContent className="p-4 pt-0">
-              <div className="text-xl font-bold mb-1 truncate">{application.study_destination || 'Not set'}</div>
-              <p className="text-xs text-muted-foreground">Study country</p>
+            <CardContent className="p-2 sm:p-3 md:p-4 pt-0">
+              <div className="text-sm sm:text-base md:text-xl font-bold mb-0.5 sm:mb-1 truncate">{application.study_destination || 'Not set'}</div>
+              <p className="text-[10px] sm:text-xs text-muted-foreground">Study country</p>
             </CardContent>
           </Card>
 
           <Card className="overflow-hidden hover:shadow-lg transition-shadow">
-            <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0 p-4">
-              <CardTitle className="text-sm font-medium">Next Session</CardTitle>
-              <Calendar className="h-4 w-4 text-muted-foreground" />
+            <CardHeader className="flex flex-row items-center justify-between pb-1 sm:pb-2 space-y-0 p-2 sm:p-3 md:p-4">
+              <CardTitle className="text-xs sm:text-sm font-medium">Next Session</CardTitle>
+              <Calendar className="h-3 w-3 sm:h-4 sm:w-4 text-muted-foreground" />
             </CardHeader>
-            <CardContent className="p-4 pt-0">
-              <div className="text-xl font-bold mb-1 truncate">
+            <CardContent className="p-2 sm:p-3 md:p-4 pt-0">
+              <div className="text-sm sm:text-base md:text-xl font-bold mb-0.5 sm:mb-1 truncate">
                 {application.session_date ? new Date(application.session_date).toLocaleDateString() : 'Not scheduled'}
               </div>
-              <p className="text-xs text-muted-foreground">Consultation</p>
+              <p className="text-[10px] sm:text-xs text-muted-foreground">Consultation</p>
             </CardContent>
           </Card>
 
           <Card className="overflow-hidden hover:shadow-lg transition-shadow">
-            <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0 p-4">
-              <CardTitle className="text-sm font-medium">Messages</CardTitle>
-              <Bell className="h-4 w-4 text-muted-foreground" />
+            <CardHeader className="flex flex-row items-center justify-between pb-1 sm:pb-2 space-y-0 p-2 sm:p-3 md:p-4">
+              <CardTitle className="text-xs sm:text-sm font-medium">Messages</CardTitle>
+              <Bell className="h-3 w-3 sm:h-4 sm:w-4 text-muted-foreground" />
             </CardHeader>
-            <CardContent className="p-4 pt-0">
-              <div className="text-xl font-bold mb-1">
+            <CardContent className="p-2 sm:p-3 md:p-4 pt-0">
+              <div className="text-sm sm:text-base md:text-xl font-bold mb-0.5 sm:mb-1">
                 {messages.filter(m => !m.read_at && m.sender_type === 'admin').length}
               </div>
-              <p className="text-xs text-muted-foreground">Unread</p>
+              <p className="text-[10px] sm:text-xs text-muted-foreground">Unread</p>
             </CardContent>
           </Card>
         </div>
 
         {/* Tabs Navigation - Desktop */}
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="hidden md:inline-flex w-full justify-start bg-muted/50 p-1 flex-wrap">
-            <TabsTrigger value="overview" className="flex items-center gap-2">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4 sm:space-y-6">
+          <TabsList className="hidden md:inline-flex w-full justify-start bg-muted/50 p-1 flex-wrap gap-1">
+            <TabsTrigger value="overview" className="flex items-center gap-2 text-sm">
               <LayoutDashboard className="h-4 w-4" />
               Overview
             </TabsTrigger>
-            <TabsTrigger value="ielts" className="flex items-center gap-2">
+            <TabsTrigger value="ielts" className="flex items-center gap-2 text-sm">
               <GraduationCap className="h-4 w-4" />
               IELTS Progress
             </TabsTrigger>
-            <TabsTrigger value="timeline" className="flex items-center gap-2">
+            <TabsTrigger value="timeline" className="flex items-center gap-2 text-sm">
               <Calendar className="h-4 w-4" />
               Timeline
             </TabsTrigger>
-            <TabsTrigger value="documents" className="flex items-center gap-2">
+            <TabsTrigger value="documents" className="flex items-center gap-2 text-sm">
               <FileText className="h-4 w-4" />
               Documents
             </TabsTrigger>
-            <TabsTrigger value="messages" className="flex items-center gap-2">
+            <TabsTrigger value="messages" className="flex items-center gap-2 text-sm">
               <Bell className="h-4 w-4" />
               Messages
             </TabsTrigger>
-            <TabsTrigger value="profile" className="flex items-center gap-2">
+            <TabsTrigger value="profile" className="flex items-center gap-2 text-sm">
               <GraduationCap className="h-4 w-4" />
               Profile
             </TabsTrigger>
           </TabsList>
 
           {/* Overview Tab */}
-          <TabsContent value="overview" className="space-y-6">
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-              <div className="lg:col-span-2 space-y-6">
+          <TabsContent value="overview" className="space-y-4 sm:space-y-6">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
+              <div className="lg:col-span-2 space-y-4 sm:space-y-6">
                 <ProgressAnalytics application={application} />
                 <TaskChecklist application={application} />
                 <ConversationHistory
@@ -279,7 +279,7 @@ export default function Portal() {
                   onMessageSent={handleMessageSent}
                 />
               </div>
-              <div className="space-y-6">
+              <div className="space-y-4 sm:space-y-6">
                 <AdvisorConnection
                   studentPhone={application.phone}
                   studentEmail={application.email}
@@ -290,15 +290,15 @@ export default function Portal() {
                   sessionNotes={application.session_notes}
                 />
                 <Card className="bg-gradient-to-br from-primary/5 to-primary/10 border-primary/20">
-                  <CardHeader className="p-4">
-                    <CardTitle className="flex items-center gap-2 text-lg">
-                      <GraduationCap className="h-5 w-5" />
+                  <CardHeader className="p-3 sm:p-4">
+                    <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
+                      <GraduationCap className="h-4 w-4 sm:h-5 sm:w-5" />
                       IELTS Portal
                     </CardTitle>
                     <CardDescription className="text-xs">Access your preparation</CardDescription>
                   </CardHeader>
-                  <CardContent className="p-4 pt-0">
-                    <Button asChild className="w-full">
+                  <CardContent className="p-3 sm:p-4 pt-0">
+                    <Button asChild className="w-full text-sm">
                       <Link to="/ielts-learning">Access Portal</Link>
                     </Button>
                   </CardContent>
@@ -309,26 +309,26 @@ export default function Portal() {
           </TabsContent>
 
           {/* IELTS Progress Tab */}
-          <TabsContent value="ielts" className="space-y-6">
+          <TabsContent value="ielts" className="space-y-4 sm:space-y-6">
             <IELTSProgressDashboard />
           </TabsContent>
 
           {/* Timeline Tab */}
-          <TabsContent value="timeline" className="space-y-6">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <TabsContent value="timeline" className="space-y-4 sm:space-y-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
               <TimelineView application={application} />
               <ProgressAnalytics application={application} />
             </div>
           </TabsContent>
 
           {/* Documents Tab */}
-          <TabsContent value="documents" className="space-y-6">
+          <TabsContent value="documents" className="space-y-4 sm:space-y-6">
             <DocumentCenter application={application} />
           </TabsContent>
 
           {/* Messages Tab */}
-          <TabsContent value="messages" className="space-y-6">
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <TabsContent value="messages" className="space-y-4 sm:space-y-6">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
               <div className="lg:col-span-2">
                 <ConversationHistory
                   messages={messages}
@@ -344,7 +344,7 @@ export default function Portal() {
           </TabsContent>
 
           {/* Profile Tab */}
-          <TabsContent value="profile" className="space-y-6">
+          <TabsContent value="profile" className="space-y-4 sm:space-y-6">
             <ProfileSection application={application} />
           </TabsContent>
         </Tabs>
