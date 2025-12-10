@@ -9,6 +9,7 @@ import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Headphones, Play, Pause, RotateCcw, FileText, Sparkles, Loader2, CheckCircle, XCircle } from "lucide-react";
 import { toast } from "sonner";
+import { useSavePracticeSession } from "@/hooks/useSavePracticeSession";
 
 interface Question {
   id: number;
@@ -34,12 +35,15 @@ const ListeningPractice = () => {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [score, setScore] = useState(0);
   const [speechSynthesis, setSpeechSynthesis] = useState<SpeechSynthesisUtterance | null>(null);
+  const [startTime, setStartTime] = useState<number>(Date.now());
+  const { saveSession } = useSavePracticeSession();
 
   const generateContent = async () => {
     setIsGenerating(true);
     setIsSubmitted(false);
     setAnswers({});
     setShowTranscript(false);
+    setStartTime(Date.now());
     try {
       const response = await fetch(
         `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/ielts-ai-chat`,
@@ -131,7 +135,7 @@ Make it completely unique and realistic for IELTS Academic.`,
     setAnswers(prev => ({ ...prev, [questionId]: answer }));
   };
 
-  const submitAnswers = () => {
+  const submitAnswers = async () => {
     if (!content) return;
 
     const correctCount = content.questions.filter(
@@ -140,6 +144,18 @@ Make it completely unique and realistic for IELTS Academic.`,
 
     setScore(correctCount);
     setIsSubmitted(true);
+    
+    const durationSeconds = Math.floor((Date.now() - startTime) / 1000);
+    
+    // Save to database
+    await saveSession({
+      moduleType: "listening",
+      totalQuestions: content.questions.length,
+      correctAnswers: correctCount,
+      durationSeconds,
+      metadata: { title: content.title, scenario: content.scenario }
+    });
+    
     toast.success(`You scored ${correctCount}/${content.questions.length}!`);
   };
 

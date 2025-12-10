@@ -1,4 +1,4 @@
-import { Home, FileText, Calendar, Bell, User, MessageSquare } from "lucide-react";
+import { Home, FileText, Calendar, Bell, User, MessageSquare, GraduationCap } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface MobileNavProps {
@@ -8,9 +8,9 @@ interface MobileNavProps {
 
 export function MobileNav({ activeTab, onTabChange }: MobileNavProps) {
   const navItems = [
-    { id: "overview", label: "Overview", icon: Home },
-    { id: "documents", label: "Documents", icon: FileText },
-    { id: "timeline", label: "Timeline", icon: Calendar },
+    { id: "overview", label: "Home", icon: Home },
+    { id: "ielts", label: "IELTS", icon: GraduationCap },
+    { id: "documents", label: "Docs", icon: FileText },
     { id: "messages", label: "Messages", icon: MessageSquare },
     { id: "profile", label: "Profile", icon: User },
   ];

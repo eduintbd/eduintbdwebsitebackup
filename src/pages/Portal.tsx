@@ -27,6 +27,7 @@ import { NotificationCenter } from "@/components/portal/NotificationCenter";
 import { ProgressAnalytics } from "@/components/portal/ProgressAnalytics";
 import { TaskChecklist } from "@/components/portal/TaskChecklist";
 import { MobileNav } from "@/components/portal/MobileNav";
+import { IELTSProgressDashboard } from "@/components/portal/IELTSProgressDashboard";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export default function Portal() {
@@ -238,10 +239,14 @@ export default function Portal() {
 
         {/* Tabs Navigation - Desktop */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="hidden md:inline-flex w-full justify-start bg-muted/50 p-1">
+          <TabsList className="hidden md:inline-flex w-full justify-start bg-muted/50 p-1 flex-wrap">
             <TabsTrigger value="overview" className="flex items-center gap-2">
               <LayoutDashboard className="h-4 w-4" />
               Overview
+            </TabsTrigger>
+            <TabsTrigger value="ielts" className="flex items-center gap-2">
+              <GraduationCap className="h-4 w-4" />
+              IELTS Progress
             </TabsTrigger>
             <TabsTrigger value="timeline" className="flex items-center gap-2">
               <Calendar className="h-4 w-4" />
@@ -301,6 +306,11 @@ export default function Portal() {
                 <SavedResources studentId={application.id} />
               </div>
             </div>
+          </TabsContent>
+
+          {/* IELTS Progress Tab */}
+          <TabsContent value="ielts" className="space-y-6">
+            <IELTSProgressDashboard />
           </TabsContent>
 
           {/* Timeline Tab */}

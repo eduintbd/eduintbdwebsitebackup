@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Mic, Square, Play, Sparkles, Loader2, Clock } from "lucide-react";
 import { toast } from "sonner";
+import { useSavePracticeSession } from "@/hooks/useSavePracticeSession";
 
 interface Topic {
   part: number;
@@ -46,6 +47,7 @@ const SpeakingPractice = () => {
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const recognitionRef = useRef<any>(null);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const { saveSession } = useSavePracticeSession();
 
   useEffect(() => {
     // Initialize speech recognition
@@ -241,6 +243,27 @@ Return as JSON: {"fluencyCoherence": X.X, "lexicalResource": X.X, "grammaticalRa
       if (jsonMatch) {
         const feedbackData = JSON.parse(jsonMatch[0]);
         setFeedback(prev => ({ ...prev, [part]: feedbackData }));
+        
+        // Save to database - convert band score to percentage (band 9 = 100%)
+        const scorePercentage = (feedbackData.overallBand / 9) * 100;
+        
+        await saveSession({
+          moduleType: "speaking",
+          totalQuestions: topic.questions.length,
+          correctAnswers: topic.questions.length,
+          durationSeconds: recordingTime,
+          metadata: { 
+            part, 
+            topic: topic.topic,
+            overallBand: feedbackData.overallBand,
+            fluencyCoherence: feedbackData.fluencyCoherence,
+            lexicalResource: feedbackData.lexicalResource,
+            grammaticalRange: feedbackData.grammaticalRange,
+            pronunciation: feedbackData.pronunciation,
+            scorePercentage: Math.round(scorePercentage)
+          }
+        });
+        
         toast.success("Evaluation complete!");
       } else {
         throw new Error("Invalid response");
