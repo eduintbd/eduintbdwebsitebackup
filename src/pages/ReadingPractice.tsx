@@ -101,6 +101,10 @@ Make it completely unique and realistic for IELTS Academic.`,
       const jsonMatch = data.response.match(/\{[\s\S]*\}/);
       if (jsonMatch) {
         const parsedContent = JSON.parse(jsonMatch[0]);
+        // Validate required fields exist
+        if (!parsedContent.title || !parsedContent.passage || !parsedContent.questions || !Array.isArray(parsedContent.questions) || parsedContent.questions.length === 0) {
+          throw new Error("Incomplete response - missing required fields");
+        }
         setContent(parsedContent);
         toast.success("New reading passage generated!");
       } else {
