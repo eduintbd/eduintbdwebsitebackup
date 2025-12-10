@@ -37,6 +37,7 @@ const handler = async (req: Request): Promise<Response> => {
     const { name, email, phone, studyDestination, studyYear, details, temporaryPassword }: EmailRequest = await req.json();
 
     console.log("Processing welcome email for:", email);
+    console.log("Received temporaryPassword:", temporaryPassword ? "YES (length: " + temporaryPassword.length + ")" : "NO");
 
     // Validate required fields
     if (!name || !email || !phone) {

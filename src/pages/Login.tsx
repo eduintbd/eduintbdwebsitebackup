@@ -185,29 +185,35 @@ export default function Login() {
             console.error('Error creating application:', dbError);
           }
 
-          // Send welcome email with temporary password
-          try {
-            await supabase.functions.invoke('send-confirmation-email', {
-              body: {
-                name: validatedData.name,
-                email: validatedData.email,
-                phone: fullPhone,
-                studyDestination: signupData.destination,
-                studyYear: signupData.year,
-                details: validatedData.details,
-                temporaryPassword: temporaryPassword,
-              },
-            });
-            console.log('Welcome email sent successfully');
-          } catch (emailError) {
-            console.error('Error sending welcome email:', emailError);
-            // Don't block signup flow if email fails
-          }
-
-          toast({
-            title: "Account Created Successfully",
-            description: "Welcome! Check your email for next steps.",
+          // Send welcome email with temporary password - await and log result
+          console.log('Sending welcome email with temporaryPassword:', temporaryPassword);
+          const emailResult = await supabase.functions.invoke('send-confirmation-email', {
+            body: {
+              name: validatedData.name,
+              email: validatedData.email,
+              phone: fullPhone,
+              studyDestination: signupData.destination,
+              studyYear: signupData.year,
+              details: validatedData.details,
+              temporaryPassword: temporaryPassword,
+            },
           });
+          
+          if (emailResult.error) {
+            console.error('Error sending welcome email:', emailResult.error);
+            toast({
+              title: "Account Created",
+              description: "Your account was created but we couldn't send the welcome email. Please contact support.",
+              variant: "destructive",
+            });
+          } else {
+            console.log('Welcome email sent successfully:', emailResult.data);
+            toast({
+              title: "Account Created Successfully",
+              description: "Check your email for your login credentials!",
+            });
+          }
+          
           navigate("/portal");
         } else {
           toast({
