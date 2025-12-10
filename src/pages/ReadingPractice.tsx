@@ -147,41 +147,41 @@ Make it completely unique and realistic for IELTS Academic.`,
   return (
     <div className="min-h-screen flex flex-col">
       <Navigation />
-      <main className="flex-1 py-12 px-4 max-w-7xl mx-auto w-full">
-        <div className="space-y-6">
+      <main className="flex-1 py-6 sm:py-8 md:py-12 px-3 sm:px-4 max-w-7xl mx-auto w-full">
+        <div className="space-y-4 sm:space-y-6">
           <div className="text-center space-y-2">
-            <h1 className="text-4xl font-bold flex items-center justify-center gap-3">
-              <BookOpen className="h-10 w-10 text-primary" />
-              IELTS Reading Practice
+            <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-3">
+              <BookOpen className="h-8 w-8 sm:h-10 sm:w-10 text-primary" />
+              <span>IELTS Reading Practice</span>
             </h1>
-            <p className="text-xl text-muted-foreground">
+            <p className="text-sm sm:text-base md:text-xl text-muted-foreground px-2">
               AI-generated passages with mixed question types
             </p>
           </div>
 
-          <div className="flex justify-center">
-            <Button onClick={generateContent} disabled={isGenerating} size="lg">
-              {isGenerating ? <Loader2 className="h-5 w-5 animate-spin" /> : <Sparkles className="h-5 w-5" />}
+          <div className="flex justify-center px-2">
+            <Button onClick={generateContent} disabled={isGenerating} size="lg" className="w-full sm:w-auto text-sm sm:text-base">
+              {isGenerating ? <Loader2 className="h-4 w-4 sm:h-5 sm:w-5 animate-spin" /> : <Sparkles className="h-4 w-4 sm:h-5 sm:w-5" />}
               <span className="ml-2">Generate New Reading Passage</span>
             </Button>
           </div>
 
           {content && (
-            <div className="grid md:grid-cols-2 gap-6">
-              <Card className="md:sticky md:top-4 h-fit">
-                <CardHeader>
-                  <div className="flex items-center justify-between">
-                    <CardTitle>{content.title}</CardTitle>
-                    <Badge variant="outline">
+            <div className="grid lg:grid-cols-2 gap-4 sm:gap-6">
+              <Card className="lg:sticky lg:top-4 h-fit">
+                <CardHeader className="p-4 sm:p-6">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                    <CardTitle className="text-base sm:text-lg md:text-xl">{content.title}</CardTitle>
+                    <Badge variant="outline" className="w-fit">
                       <Clock className="h-3 w-3 mr-1" />
                       {Math.floor((Date.now() - startTime) / 60000)} min
                     </Badge>
                   </div>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="p-4 sm:p-6 pt-0 sm:pt-0">
                   <div className="prose prose-sm max-w-none">
                     {content.passage.split('\n\n').map((para, idx) => (
-                      <p key={idx} className="mb-4 text-sm leading-relaxed">
+                      <p key={idx} className="mb-3 sm:mb-4 text-xs sm:text-sm leading-relaxed">
                         {para}
                       </p>
                     ))}
@@ -189,22 +189,22 @@ Make it completely unique and realistic for IELTS Academic.`,
                 </CardContent>
               </Card>
 
-              <div className="space-y-6">
+              <div className="space-y-4 sm:space-y-6">
                 <Card>
-                  <CardHeader>
-                    <CardTitle>Questions ({content.questions.length})</CardTitle>
+                  <CardHeader className="p-4 sm:p-6">
+                    <CardTitle className="text-base sm:text-lg">Questions ({content.questions.length})</CardTitle>
                   </CardHeader>
-                  <CardContent className="space-y-6">
+                  <CardContent className="space-y-4 sm:space-y-6 p-4 sm:p-6 pt-0 sm:pt-0">
                     {content.questions.map((question) => (
-                      <div key={question.id} className="space-y-3 p-4 border rounded-lg">
-                        <div className="flex items-start justify-between">
+                      <div key={question.id} className="space-y-2 sm:space-y-3 p-3 sm:p-4 border rounded-lg">
+                        <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-2">
                           <div className="flex-1">
-                            <Badge variant="outline" className="mb-2">
+                            <Badge variant="outline" className="mb-2 text-xs">
                               {question.type === "multiple-choice" ? "Multiple Choice" :
                                question.type === "true-false-not-given" ? "T/F/NG" :
                                "Fill in Blank"}
                             </Badge>
-                            <h3 className="font-medium">
+                            <h3 className="font-medium text-sm sm:text-base">
                               {question.id}. {question.question}
                             </h3>
                           </div>
@@ -272,30 +272,30 @@ Make it completely unique and realistic for IELTS Academic.`,
                       <Button 
                         onClick={submitAnswers}
                         disabled={Object.keys(answers).length < content.questions.length}
-                        className="w-full"
+                        className="w-full text-sm sm:text-base"
                         size="lg"
                       >
-                        <Sparkles className="h-5 w-5 mr-2" />
+                        <Sparkles className="h-4 w-4 sm:h-5 sm:w-5 mr-2" />
                         Submit Answers
                       </Button>
                     ) : (
                       <Card className="border-primary/20">
-                        <CardContent className="pt-6">
+                        <CardContent className="p-4 sm:pt-6">
                           <div className="text-center space-y-2">
-                            <h3 className="text-2xl font-bold">
+                            <h3 className="text-xl sm:text-2xl font-bold">
                               Your Score: {score}/{content.questions.length}
                             </h3>
-                            <p className="text-sm text-muted-foreground">
+                            <p className="text-xs sm:text-sm text-muted-foreground">
                               Time: {Math.floor((Date.now() - startTime) / 60000)} minutes
                             </p>
-                            <p className="text-muted-foreground">
+                            <p className="text-sm text-muted-foreground">
                               {score === content.questions.length
                                 ? "Perfect! Outstanding reading comprehension!"
                                 : score >= content.questions.length * 0.7
                                 ? "Great job! Keep practicing!"
                                 : "Good effort! Review the passage and try again."}
                             </p>
-                            <Button onClick={generateContent} className="mt-4">
+                            <Button onClick={generateContent} className="mt-4 text-sm">
                               <Sparkles className="h-4 w-4 mr-2" />
                               Try New Passage
                             </Button>
@@ -307,9 +307,9 @@ Make it completely unique and realistic for IELTS Academic.`,
                 </Card>
 
                 <Card className="bg-secondary/10">
-                  <CardContent className="pt-6">
-                    <h3 className="font-semibold mb-2">IELTS Reading Tips:</h3>
-                    <ul className="space-y-1 text-sm text-muted-foreground">
+                  <CardContent className="p-4 sm:pt-6">
+                    <h3 className="font-semibold mb-2 text-sm sm:text-base">IELTS Reading Tips:</h3>
+                    <ul className="space-y-1 text-xs sm:text-sm text-muted-foreground">
                       <li>• Skim the passage first to understand the main idea</li>
                       <li>• Read questions carefully before searching for answers</li>
                       <li>• For T/F/NG: True = statement matches passage, False = contradicts, NG = no information</li>
@@ -324,9 +324,9 @@ Make it completely unique and realistic for IELTS Academic.`,
 
           {!content && !isGenerating && (
             <Card>
-              <CardContent className="text-center py-12">
-                <BookOpen className="h-16 w-16 mx-auto text-muted-foreground mb-4" />
-                <p className="text-muted-foreground mb-4">
+              <CardContent className="text-center py-8 sm:py-12">
+                <BookOpen className="h-12 w-12 sm:h-16 sm:w-16 mx-auto text-muted-foreground mb-3 sm:mb-4" />
+                <p className="text-sm sm:text-base text-muted-foreground mb-4 px-2">
                   Click "Generate New Reading Passage" to start practicing
                 </p>
               </CardContent>
