@@ -149,12 +149,14 @@ Make it completely unique and realistic for IELTS Academic.`,
       <Navigation />
       <main className="flex-1 py-6 sm:py-8 md:py-12 px-3 sm:px-4 max-w-7xl mx-auto w-full">
         <div className="space-y-4 sm:space-y-6">
-          <div className="text-center space-y-2">
-            <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-3">
-              <BookOpen className="h-8 w-8 sm:h-10 sm:w-10 text-primary" />
-              <span>IELTS Reading Practice</span>
-            </h1>
-            <p className="text-sm sm:text-base md:text-xl text-muted-foreground px-2">
+          <div className="text-center space-y-2 px-2">
+            <div className="flex flex-col items-center justify-center gap-2">
+              <BookOpen className="h-8 w-8 sm:h-10 sm:w-10 text-primary flex-shrink-0" />
+              <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold leading-tight">
+                IELTS Reading Practice
+              </h1>
+            </div>
+            <p className="text-sm sm:text-base md:text-lg text-muted-foreground">
               AI-generated passages with mixed question types
             </p>
           </div>
