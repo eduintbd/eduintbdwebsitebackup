@@ -466,6 +466,7 @@ export type Database = {
           admin_notes: string | null
           application_status: string | null
           assigned_counselor: string | null
+          avatar_url: string | null
           budget: string | null
           cas_received: boolean | null
           competitor_universities: string | null
@@ -511,6 +512,7 @@ export type Database = {
           admin_notes?: string | null
           application_status?: string | null
           assigned_counselor?: string | null
+          avatar_url?: string | null
           budget?: string | null
           cas_received?: boolean | null
           competitor_universities?: string | null
@@ -556,6 +558,7 @@ export type Database = {
           admin_notes?: string | null
           application_status?: string | null
           assigned_counselor?: string | null
+          avatar_url?: string | null
           budget?: string | null
           cas_received?: boolean | null
           competitor_universities?: string | null
