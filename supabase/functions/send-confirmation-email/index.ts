@@ -16,6 +16,7 @@ interface EmailRequest {
   studyDestination?: string;
   studyYear?: string;
   details?: string;
+  temporaryPassword?: string;
 }
 
 function escapeHtml(unsafe: string): string {
@@ -33,7 +34,7 @@ const handler = async (req: Request): Promise<Response> => {
   }
 
   try {
-    const { name, email, phone, studyDestination, studyYear, details }: EmailRequest = await req.json();
+    const { name, email, phone, studyDestination, studyYear, details, temporaryPassword }: EmailRequest = await req.json();
 
     console.log("Processing welcome email for:", email);
 
@@ -53,6 +54,7 @@ const handler = async (req: Request): Promise<Response> => {
     const safePhone = escapeHtml(phone);
     const safeDestination = studyDestination ? escapeHtml(studyDestination) : "Not specified";
     const safeYear = studyYear ? escapeHtml(studyYear) : "Not specified";
+    const safePassword = temporaryPassword ? escapeHtml(temporaryPassword) : null;
 
     const emailHtml = `
       <!DOCTYPE html>
@@ -120,7 +122,30 @@ const handler = async (req: Request): Promise<Response> => {
                       <p style="margin: 0 0 15px; color: #333333; font-size: 16px; line-height: 1.6;">
                         To access your personalized student portal, please visit our login page and sign in using:
                       </p>
+                      
+                      ${safePassword ? `
+                      <div style="background-color: #fef3c7; border: 2px solid #f59e0b; border-radius: 8px; padding: 20px; margin: 20px 0;">
+                        <h3 style="margin: 0 0 10px; color: #92400e; font-size: 16px; font-weight: 700;">
+                          🔑 Your Temporary Login Credentials
+                        </h3>
+                        <table style="width: 100%;">
+                          <tr>
+                            <td style="padding: 5px 0; color: #92400e; font-size: 14px;">Email:</td>
+                            <td style="padding: 5px 0; color: #78350f; font-size: 14px; font-weight: 600;">${safeEmail}</td>
+                          </tr>
+                          <tr>
+                            <td style="padding: 5px 0; color: #92400e; font-size: 14px;">Temporary Password:</td>
+                            <td style="padding: 5px 0; color: #78350f; font-size: 14px; font-weight: 600; font-family: monospace; background-color: #fef9c3; padding: 4px 8px; border-radius: 4px;">${safePassword}</td>
+                          </tr>
+                        </table>
+                        <p style="margin: 10px 0 0; color: #92400e; font-size: 13px; font-style: italic;">
+                          ⚠️ Please change your password after your first login for security.
+                        </p>
+                      </div>
+                      ` : ''}
+                      
                       <ul style="margin: 0 0 20px; padding-left: 20px; color: #333333; font-size: 16px; line-height: 1.8;">
+                        ${safePassword ? `<li><strong>Email & Password</strong> (Use the credentials above)</li>` : ''}
                         <li><strong>Google Sign-in</strong> (Quickest option - one click!)</li>
                       </ul>
                       <p style="margin: 0 0 20px; color: #64748b; font-size: 14px; line-height: 1.6;">
