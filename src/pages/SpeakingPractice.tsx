@@ -407,7 +407,7 @@ Return as JSON: {"fluencyCoherence": X.X, "lexicalResource": X.X, "grammaticalRa
   return (
     <div className="min-h-screen flex flex-col">
       <Navigation />
-      <main className="flex-1 py-6 sm:py-8 md:py-12 px-3 sm:px-4 max-w-7xl mx-auto w-full">
+      <main className="flex-1 pt-20 sm:pt-24 pb-6 sm:pb-8 md:pb-12 px-3 sm:px-4 max-w-7xl mx-auto w-full">
         <div className="space-y-4 sm:space-y-6">
           <div className="text-center space-y-2 px-2">
             <div className="flex flex-col items-center justify-center gap-2">
