@@ -230,18 +230,18 @@ Make it about a current societal issue. Timestamp: ${Date.now()}`,
 
     if (topic.chartType === "pie") {
       return (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 my-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 my-4 sm:my-6">
           <div>
-            <h4 className="text-center font-medium mb-2">{topic.chartLabels?.title || "Dataset 1"}</h4>
-            <ResponsiveContainer width="100%" height={280}>
+            <h4 className="text-center font-medium mb-2 text-sm sm:text-base">{topic.chartLabels?.title || "Dataset 1"}</h4>
+            <ResponsiveContainer width="100%" height={220} className="sm:!h-[280px]">
               <PieChart>
                 <Pie
                   data={topic.chartData}
                   cx="50%"
                   cy="50%"
-                  labelLine={true}
-                  label={({ name, value }) => `${name}: ${value}%`}
-                  outerRadius={90}
+                  labelLine={false}
+                  label={({ name, value }) => `${value}%`}
+                  outerRadius={70}
                   fill="#8884d8"
                   dataKey="value"
                 >
@@ -250,22 +250,22 @@ Make it about a current societal issue. Timestamp: ${Date.now()}`,
                   ))}
                 </Pie>
                 <Tooltip />
-                <Legend />
+                <Legend wrapperStyle={{ fontSize: '12px' }} />
               </PieChart>
             </ResponsiveContainer>
           </div>
           {topic.chartData2 && (
             <div>
-              <h4 className="text-center font-medium mb-2">{topic.chartLabels?.title2 || "Dataset 2"}</h4>
-              <ResponsiveContainer width="100%" height={280}>
+              <h4 className="text-center font-medium mb-2 text-sm sm:text-base">{topic.chartLabels?.title2 || "Dataset 2"}</h4>
+              <ResponsiveContainer width="100%" height={220} className="sm:!h-[280px]">
                 <PieChart>
                   <Pie
                     data={topic.chartData2}
                     cx="50%"
                     cy="50%"
-                    labelLine={true}
-                    label={({ name, value }) => `${name}: ${value}%`}
-                    outerRadius={90}
+                    labelLine={false}
+                    label={({ name, value }) => `${value}%`}
+                    outerRadius={70}
                     fill="#82ca9d"
                     dataKey="value"
                   >
@@ -274,7 +274,7 @@ Make it about a current societal issue. Timestamp: ${Date.now()}`,
                     ))}
                   </Pie>
                   <Tooltip />
-                  <Legend />
+                  <Legend wrapperStyle={{ fontSize: '12px' }} />
                 </PieChart>
               </ResponsiveContainer>
             </div>
@@ -285,14 +285,14 @@ Make it about a current societal issue. Timestamp: ${Date.now()}`,
 
     if (topic.chartType === "bar") {
       return (
-        <div className="my-6">
-          <ResponsiveContainer width="100%" height={300}>
-            <BarChart data={topic.chartData}>
+        <div className="my-4 sm:my-6">
+          <ResponsiveContainer width="100%" height={250} className="sm:!h-[300px]">
+            <BarChart data={topic.chartData} margin={{ top: 5, right: 10, left: 0, bottom: 5 }}>
               <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="name" />
-              <YAxis label={{ value: topic.chartLabels?.yAxis || "Value", angle: -90, position: 'insideLeft' }} />
+              <XAxis dataKey="name" tick={{ fontSize: 11 }} interval={0} angle={-20} textAnchor="end" height={60} />
+              <YAxis tick={{ fontSize: 11 }} label={{ value: topic.chartLabels?.yAxis || "Value", angle: -90, position: 'insideLeft', fontSize: 11 }} />
               <Tooltip />
-              <Legend />
+              <Legend wrapperStyle={{ fontSize: '12px' }} />
               <Bar dataKey="value" fill="hsl(var(--primary))" name={topic.chartLabels?.title || "Value"} />
             </BarChart>
           </ResponsiveContainer>
@@ -302,14 +302,14 @@ Make it about a current societal issue. Timestamp: ${Date.now()}`,
 
     if (topic.chartType === "line") {
       return (
-        <div className="my-6">
-          <ResponsiveContainer width="100%" height={300}>
-            <LineChart data={topic.chartData}>
+        <div className="my-4 sm:my-6">
+          <ResponsiveContainer width="100%" height={250} className="sm:!h-[300px]">
+            <LineChart data={topic.chartData} margin={{ top: 5, right: 10, left: 0, bottom: 5 }}>
               <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="name" />
-              <YAxis label={{ value: topic.chartLabels?.yAxis || "Value", angle: -90, position: 'insideLeft' }} />
+              <XAxis dataKey="name" tick={{ fontSize: 11 }} />
+              <YAxis tick={{ fontSize: 11 }} label={{ value: topic.chartLabels?.yAxis || "Value", angle: -90, position: 'insideLeft', fontSize: 11 }} />
               <Tooltip />
-              <Legend />
+              <Legend wrapperStyle={{ fontSize: '12px' }} />
               <Line type="monotone" dataKey="value" stroke="hsl(var(--primary))" strokeWidth={2} name={topic.chartLabels?.title || "Value"} />
             </LineChart>
           </ResponsiveContainer>
