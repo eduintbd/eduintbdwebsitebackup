@@ -40,10 +40,12 @@ export function GoalSetting({ user, goals, onGoalsUpdate }: GoalSettingProps) {
   const [saving, setSaving] = useState(false);
 
   const goalTypes = [
-    { value: "target_score", label: "IELTS Target Score", icon: "🎯", hasTargetValue: true, hasModuleType: true, targetLabel: "Target Band Score", targetPlaceholder: "e.g., 7.5" },
-    { value: "module_completion", label: "Module Completion", icon: "📝", hasTargetValue: true, hasModuleType: true, targetLabel: "Modules to Complete", targetPlaceholder: "e.g., 5", hasTargetDate: true },
-    { value: "daily_practice", label: "Daily Practice", icon: "🗣️", hasTargetValue: true, hasModuleType: true, targetLabel: "Minutes per Day", targetPlaceholder: "e.g., 30", hasTargetDate: true },
-    { value: "exam_date", label: "Exam Date Goal", icon: "📅", hasTargetValue: true, hasTargetDate: true, targetLabel: "Target Score", targetPlaceholder: "e.g., 7.0" },
+    { value: "ielts_score", label: "IELTS Target Score", icon: "🎯", hasTargetValue: true, hasModuleType: true, targetLabel: "Target Band Score", targetPlaceholder: "e.g., 7.5" },
+    { value: "application_deadline", label: "Application Deadline", icon: "📝", hasTargetValue: false, hasTargetDate: true, hasDescription: true },
+    { value: "visa_preparation", label: "Visa Preparation", icon: "📋", hasTargetValue: false, hasTargetDate: true, hasDescription: true },
+    { value: "scholarship_applications", label: "Scholarship Applications", icon: "💰", hasTargetValue: true, targetLabel: "Number of Applications", targetPlaceholder: "e.g., 5", hasTargetDate: true },
+    { value: "document_collection", label: "Document Collection", icon: "📁", hasTargetValue: true, targetLabel: "Documents to Collect", targetPlaceholder: "e.g., 10", hasTargetDate: true },
+    { value: "language_practice", label: "Language Practice", icon: "🗣️", hasTargetValue: true, hasModuleType: true, targetLabel: "Hours per Week", targetPlaceholder: "e.g., 10" },
   ];
 
   const moduleTypes = [
@@ -264,10 +266,12 @@ export function GoalSetting({ user, goals, onGoalsUpdate }: GoalSettingProps) {
                     <Label>Description</Label>
                     <Textarea 
                       placeholder={
-                        selectedGoalType.value === 'target_score' ? "e.g., Achieve band 7 in all modules for university admission" :
-                        selectedGoalType.value === 'module_completion' ? "e.g., Complete all Reading modules this week" :
-                        selectedGoalType.value === 'daily_practice' ? "e.g., Practice 30 minutes every day for Writing improvement" :
-                        selectedGoalType.value === 'exam_date' ? "e.g., Prepare for IELTS exam on March 15th" :
+                        selectedGoalType.value === 'ielts_score' ? "e.g., Achieve band 7 in all modules for university admission" :
+                        selectedGoalType.value === 'application_deadline' ? "e.g., Submit application to University of Toronto" :
+                        selectedGoalType.value === 'visa_preparation' ? "e.g., Complete visa documentation for UK student visa" :
+                        selectedGoalType.value === 'scholarship_applications' ? "e.g., Apply for Chevening and Commonwealth scholarships" :
+                        selectedGoalType.value === 'document_collection' ? "e.g., Gather transcripts, recommendation letters, and certificates" :
+                        selectedGoalType.value === 'language_practice' ? "e.g., Practice speaking with AI tutor 10 hours weekly" :
                         "Describe your goal..."
                       }
                       value={newGoal.description}
