@@ -60,6 +60,7 @@ import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsOfService from "./pages/TermsOfService";
 import BrandGuidelines from "./pages/BrandGuidelines";
 import { FloatingActions } from "./components/FloatingActions";
+import { Chatbot } from "./components/Chatbot";
 
 const queryClient = new QueryClient();
 
@@ -91,6 +92,7 @@ const App = () => (
       <BrowserRouter>
         <PageTracker />
         <FloatingActions />
+        <Chatbot />
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/study-usa" element={<StudyUSA />} />
