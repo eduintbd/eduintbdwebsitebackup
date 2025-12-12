@@ -108,14 +108,14 @@ export function StudentProfile({ studentId, onClose }: StudentProfileProps) {
           <ScrollArea className="flex-1">
             <div className="p-6">
               <Tabs defaultValue="overview" className="w-full">
-                <TabsList className="grid w-full grid-cols-7 mb-6">
-                  <TabsTrigger value="overview">Overview</TabsTrigger>
-                  <TabsTrigger value="ielts">IELTS</TabsTrigger>
-                  <TabsTrigger value="planner">Planner</TabsTrigger>
-                  <TabsTrigger value="communications">Comms</TabsTrigger>
-                  <TabsTrigger value="documents">Docs</TabsTrigger>
-                  <TabsTrigger value="notes">Notes</TabsTrigger>
-                  <TabsTrigger value="lifecycle">Lifecycle</TabsTrigger>
+                <TabsList className="flex flex-wrap gap-1 h-auto p-1 mb-6 sm:grid sm:grid-cols-4 lg:grid-cols-7">
+                  <TabsTrigger value="overview" className="text-xs sm:text-sm px-2 py-1.5">Overview</TabsTrigger>
+                  <TabsTrigger value="ielts" className="text-xs sm:text-sm px-2 py-1.5">IELTS</TabsTrigger>
+                  <TabsTrigger value="planner" className="text-xs sm:text-sm px-2 py-1.5">Planner</TabsTrigger>
+                  <TabsTrigger value="communications" className="text-xs sm:text-sm px-2 py-1.5">Comms</TabsTrigger>
+                  <TabsTrigger value="documents" className="text-xs sm:text-sm px-2 py-1.5">Docs</TabsTrigger>
+                  <TabsTrigger value="notes" className="text-xs sm:text-sm px-2 py-1.5">Notes</TabsTrigger>
+                  <TabsTrigger value="lifecycle" className="text-xs sm:text-sm px-2 py-1.5">Lifecycle</TabsTrigger>
                 </TabsList>
 
                 <TabsContent value="overview" className="space-y-6">
