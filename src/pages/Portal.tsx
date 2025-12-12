@@ -27,6 +27,7 @@ import { ProgressAnalytics } from "@/components/portal/ProgressAnalytics";
 import { TaskChecklist } from "@/components/portal/TaskChecklist";
 import { MobileNav } from "@/components/portal/MobileNav";
 import { IELTSProgressDashboard } from "@/components/portal/IELTSProgressDashboard";
+import { StudyPlannerSummary } from "@/components/portal/StudyPlannerSummary";
 import { ProfileAvatar } from "@/components/portal/ProfileAvatar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
@@ -241,6 +242,10 @@ export default function Portal() {
               <LayoutDashboard className="h-4 w-4" />
               Overview
             </TabsTrigger>
+            <TabsTrigger value="planner" className="flex items-center gap-2 text-sm">
+              <Calendar className="h-4 w-4" />
+              Study Planner
+            </TabsTrigger>
             <TabsTrigger value="ielts" className="flex items-center gap-2 text-sm">
               <GraduationCap className="h-4 w-4" />
               IELTS Progress
@@ -303,6 +308,11 @@ export default function Portal() {
                 <SavedResources studentId={application.id} />
               </div>
             </div>
+          </TabsContent>
+
+          {/* Study Planner Tab */}
+          <TabsContent value="planner" className="space-y-4 sm:space-y-6">
+            <StudyPlannerSummary />
           </TabsContent>
 
           {/* IELTS Progress Tab */}
