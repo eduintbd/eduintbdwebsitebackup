@@ -115,9 +115,9 @@ const GamifiedLearning = () => {
   return (
     <div className="min-h-screen flex flex-col">
       <Navigation />
-      <main className="flex-1">
+      <main className="flex-1 pt-16 sm:pt-20">
         {/* Hero Section */}
-        <section className="relative py-10 sm:py-16 px-4 bg-gradient-to-br from-primary/5 via-background to-secondary/5">
+        <section className="relative py-8 sm:py-12 px-4 bg-gradient-to-br from-primary/5 via-background to-secondary/5">
           <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-5" />
           <div className="max-w-5xl mx-auto text-center relative z-10">
             <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-3 sm:mb-4">
