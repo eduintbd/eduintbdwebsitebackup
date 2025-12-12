@@ -24,7 +24,7 @@ const Visa = () => {
               size="lg" 
               variant="golden"
               className="text-lg px-8 py-6"
-              onClick={() => window.location.href = '/#contact'}
+              onClick={() => window.location.href = '/#consultation'}
             >
               Get Started
             </Button>

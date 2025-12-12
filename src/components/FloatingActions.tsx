@@ -33,11 +33,11 @@ export const FloatingActions = () => {
   const handleEnquire = () => {
     // Check if we're already on homepage
     if (window.location.pathname === '/') {
-      const contactSection = document.querySelector("#contact");
-      if (contactSection) {
+      const consultationSection = document.querySelector("#consultation");
+      if (consultationSection) {
         const isMobile = window.innerWidth < 768;
         const offset = isMobile ? 100 : 0; // Account for mobile bottom bar
-        const elementPosition = contactSection.getBoundingClientRect().top + window.pageYOffset;
+        const elementPosition = consultationSection.getBoundingClientRect().top + window.pageYOffset;
         const offsetPosition = elementPosition - offset;
         
         window.scrollTo({
@@ -46,8 +46,8 @@ export const FloatingActions = () => {
         });
       }
     } else {
-      // Redirect to homepage contact section
-      window.location.href = '/#contact';
+      // Redirect to homepage consultation section
+      window.location.href = '/#consultation';
     }
   };
 
