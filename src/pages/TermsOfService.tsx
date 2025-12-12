@@ -163,7 +163,7 @@ const TermsOfService = () => {
             <ul className="list-none text-muted-foreground space-y-2">
               <li><strong>Email:</strong> info@eduintbd.com</li>
               <li><strong>Phone:</strong> +880 1898934855</li>
-              <li><strong>Address:</strong> Dhaka, Bangladesh</li>
+              <li><strong>Address:</strong> 264 Elephant Road, Bata Signal, Dhaka 1205</li>
             </ul>
           </section>
 

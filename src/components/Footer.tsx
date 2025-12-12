@@ -71,7 +71,7 @@ export const Footer = () => {
             <ul className="space-y-3">
               <li className="flex items-start gap-3 text-white/80 text-sm">
                 <MapPin className="w-5 h-5 flex-shrink-0 mt-0.5" />
-                <span>Dhaka, Bangladesh</span>
+                <span>264 Elephant Road, Bata Signal, Dhaka 1205</span>
               </li>
               <li className="flex items-center gap-3 text-white/80 text-sm">
                 <Phone className="w-5 h-5 flex-shrink-0" />
