@@ -32,6 +32,7 @@ export function StudyPlannerDashboard() {
   const navigate = useNavigate();
   const [user, setUser] = useState<any>(null);
   const [goals, setGoals] = useState<UserGoal[]>([]);
+  const [application, setApplication] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("overview");
 
@@ -44,6 +45,7 @@ export function StudyPlannerDashboard() {
     if (session?.user) {
       setUser(session.user);
       fetchGoals(session.user.id);
+      fetchApplication(session.user.email);
     }
     setLoading(false);
   };
@@ -57,6 +59,19 @@ export function StudyPlannerDashboard() {
     
     if (data) {
       setGoals(data);
+    }
+  };
+
+  const fetchApplication = async (email: string | undefined) => {
+    if (!email) return;
+    const { data } = await supabase
+      .from('student_applications')
+      .select('*')
+      .eq('email', email)
+      .maybeSingle();
+    
+    if (data) {
+      setApplication(data);
     }
   };
 
@@ -137,7 +152,7 @@ export function StudyPlannerDashboard() {
                 <CardDescription>Track your study abroad journey</CardDescription>
               </CardHeader>
               <CardContent className="space-y-6">
-                <ApplicationTimeline />
+                <ApplicationTimeline application={application} />
               </CardContent>
             </Card>
 
