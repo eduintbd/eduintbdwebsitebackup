@@ -8,6 +8,8 @@ import { StudentInfoGrid } from "./StudentInfoGrid";
 import { StudentCommunicationPanel } from "./StudentCommunicationPanel";
 import { DocumentUpload } from "../portal/DocumentUpload";
 import { StudentLifecycleView } from "./StudentLifecycleView";
+import { StudentIELTSProgress } from "./StudentIELTSProgress";
+import { StudentStudyPlanner } from "./StudentStudyPlanner";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Textarea } from "@/components/ui/textarea";
@@ -106,8 +108,10 @@ export function StudentProfile({ studentId, onClose }: StudentProfileProps) {
           <ScrollArea className="flex-1">
             <div className="p-6">
               <Tabs defaultValue="overview" className="w-full">
-                <TabsList className="grid w-full grid-cols-5 mb-6">
+                <TabsList className="grid w-full grid-cols-7 mb-6">
                   <TabsTrigger value="overview">Overview</TabsTrigger>
+                  <TabsTrigger value="ielts">IELTS</TabsTrigger>
+                  <TabsTrigger value="planner">Planner</TabsTrigger>
                   <TabsTrigger value="communications">Comms</TabsTrigger>
                   <TabsTrigger value="documents">Docs</TabsTrigger>
                   <TabsTrigger value="notes">Notes</TabsTrigger>
@@ -116,6 +120,14 @@ export function StudentProfile({ studentId, onClose }: StudentProfileProps) {
 
                 <TabsContent value="overview" className="space-y-6">
                   <StudentInfoGrid student={student} />
+                </TabsContent>
+
+                <TabsContent value="ielts" className="space-y-6">
+                  <StudentIELTSProgress studentEmail={student.email} />
+                </TabsContent>
+
+                <TabsContent value="planner" className="space-y-6">
+                  <StudentStudyPlanner studentEmail={student.email} />
                 </TabsContent>
 
                 <TabsContent value="communications">
