@@ -31,21 +31,36 @@ interface GoalSettingProps {
 export function GoalSetting({ user, goals, onGoalsUpdate }: GoalSettingProps) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [newGoal, setNewGoal] = useState({
-    goal_type: "ielts_score",
+    goal_type: "",
     target_value: "",
     target_date: "",
     description: "",
+    module_type: "",
   });
   const [saving, setSaving] = useState(false);
 
   const goalTypes = [
-    { value: "ielts_score", label: "IELTS Target Score", icon: "🎯" },
-    { value: "application_deadline", label: "Application Deadline", icon: "📝" },
-    { value: "visa_preparation", label: "Visa Preparation", icon: "📋" },
-    { value: "scholarship_applications", label: "Scholarship Applications", icon: "💰" },
-    { value: "document_collection", label: "Document Collection", icon: "📁" },
-    { value: "language_practice", label: "Language Practice", icon: "🗣️" },
+    { value: "ielts_score", label: "IELTS Target Score", icon: "🎯", hasTargetValue: true, hasModuleType: true, targetLabel: "Target Band Score", targetPlaceholder: "e.g., 7.5" },
+    { value: "application_deadline", label: "Application Deadline", icon: "📝", hasTargetValue: false, hasTargetDate: true, hasDescription: true },
+    { value: "visa_preparation", label: "Visa Preparation", icon: "📋", hasTargetValue: false, hasTargetDate: true, hasDescription: true },
+    { value: "scholarship_applications", label: "Scholarship Applications", icon: "💰", hasTargetValue: true, targetLabel: "Number of Applications", targetPlaceholder: "e.g., 5", hasTargetDate: true },
+    { value: "document_collection", label: "Document Collection", icon: "📁", hasTargetValue: true, targetLabel: "Documents to Collect", targetPlaceholder: "e.g., 10", hasTargetDate: true },
+    { value: "language_practice", label: "Language Practice", icon: "🗣️", hasTargetValue: true, hasModuleType: true, targetLabel: "Hours per Week", targetPlaceholder: "e.g., 10" },
   ];
+
+  const moduleTypes = [
+    { value: "reading", label: "Reading" },
+    { value: "writing", label: "Writing" },
+    { value: "listening", label: "Listening" },
+    { value: "speaking", label: "Speaking" },
+    { value: "all", label: "All Modules" },
+  ];
+
+  const getSelectedGoalType = () => goalTypes.find(g => g.value === newGoal.goal_type);
+
+  const resetForm = () => {
+    setNewGoal({ goal_type: "", target_value: "", target_date: "", description: "", module_type: "" });
+  };
 
   const handleCreateGoal = async () => {
     if (!user) {
@@ -57,31 +72,52 @@ export function GoalSetting({ user, goals, onGoalsUpdate }: GoalSettingProps) {
       return;
     }
 
-    setSaving(true);
-    const { error } = await supabase.from('study_goals').insert({
-      user_id: user.id,
-      goal_type: newGoal.goal_type,
-      target_value: newGoal.target_value ? parseFloat(newGoal.target_value) : null,
-      target_date: newGoal.target_date || null,
-      description: newGoal.description || null,
-      status: 'active',
-    });
-
-    setSaving(false);
-    if (error) {
+    if (!newGoal.goal_type) {
       toast({
-        title: "Error creating goal",
-        description: error.message,
+        title: "Select a goal type",
+        description: "Please select a goal type to continue",
         variant: "destructive",
       });
-    } else {
-      toast({
-        title: "Goal created!",
-        description: "Your study goal has been added.",
+      return;
+    }
+
+    setSaving(true);
+    try {
+      const { error } = await supabase.from('study_goals').insert({
+        user_id: user.id,
+        goal_type: newGoal.goal_type,
+        target_value: newGoal.target_value ? parseFloat(newGoal.target_value) : null,
+        target_date: newGoal.target_date || null,
+        description: newGoal.description || null,
+        module_type: newGoal.module_type || null,
+        status: 'active',
       });
-      setIsDialogOpen(false);
-      setNewGoal({ goal_type: "ielts_score", target_value: "", target_date: "", description: "" });
-      onGoalsUpdate();
+
+      if (error) {
+        console.error("Error creating goal:", error);
+        toast({
+          title: "Error creating goal",
+          description: error.message,
+          variant: "destructive",
+        });
+      } else {
+        toast({
+          title: "Goal created!",
+          description: "Your study goal has been added.",
+        });
+        setIsDialogOpen(false);
+        resetForm();
+        onGoalsUpdate();
+      }
+    } catch (err) {
+      console.error("Unexpected error:", err);
+      toast({
+        title: "Error",
+        description: "An unexpected error occurred. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setSaving(false);
     }
   };
 
@@ -139,6 +175,8 @@ export function GoalSetting({ user, goals, onGoalsUpdate }: GoalSettingProps) {
     }
   };
 
+  const selectedGoalType = getSelectedGoalType();
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -146,7 +184,7 @@ export function GoalSetting({ user, goals, onGoalsUpdate }: GoalSettingProps) {
           <h2 className="text-2xl font-bold">Your Study Goals</h2>
           <p className="text-muted-foreground">Set and track your study abroad milestones</p>
         </div>
-        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        <Dialog open={isDialogOpen} onOpenChange={(open) => { setIsDialogOpen(open); if (!open) resetForm(); }}>
           <DialogTrigger asChild>
             <Button>
               <Plus className="w-4 h-4 mr-2" />
@@ -160,10 +198,10 @@ export function GoalSetting({ user, goals, onGoalsUpdate }: GoalSettingProps) {
             </DialogHeader>
             <div className="space-y-4 pt-4">
               <div className="space-y-2">
-                <Label>Goal Type</Label>
-                <Select value={newGoal.goal_type} onValueChange={(v) => setNewGoal({ ...newGoal, goal_type: v })}>
+                <Label>Goal Type <span className="text-destructive">*</span></Label>
+                <Select value={newGoal.goal_type} onValueChange={(v) => setNewGoal({ ...newGoal, goal_type: v, target_value: "", module_type: "" })}>
                   <SelectTrigger>
-                    <SelectValue />
+                    <SelectValue placeholder="Select a goal type..." />
                   </SelectTrigger>
                   <SelectContent>
                     {goalTypes.map((type) => (
@@ -177,32 +215,72 @@ export function GoalSetting({ user, goals, onGoalsUpdate }: GoalSettingProps) {
                   </SelectContent>
                 </Select>
               </div>
-              <div className="space-y-2">
-                <Label>Target Value (optional)</Label>
-                <Input 
-                  type="number" 
-                  placeholder="e.g., 7.5 for IELTS score"
-                  value={newGoal.target_value}
-                  onChange={(e) => setNewGoal({ ...newGoal, target_value: e.target.value })}
-                />
-              </div>
-              <div className="space-y-2">
-                <Label>Target Date</Label>
-                <Input 
-                  type="date"
-                  value={newGoal.target_date}
-                  onChange={(e) => setNewGoal({ ...newGoal, target_date: e.target.value })}
-                />
-              </div>
-              <div className="space-y-2">
-                <Label>Description</Label>
-                <Textarea 
-                  placeholder="Describe your goal..."
-                  value={newGoal.description}
-                  onChange={(e) => setNewGoal({ ...newGoal, description: e.target.value })}
-                />
-              </div>
-              <Button onClick={handleCreateGoal} disabled={saving} className="w-full">
+
+              {/* Conditional fields based on goal type */}
+              {selectedGoalType && (
+                <>
+                  {selectedGoalType.hasModuleType && (
+                    <div className="space-y-2">
+                      <Label>Module Focus</Label>
+                      <Select value={newGoal.module_type} onValueChange={(v) => setNewGoal({ ...newGoal, module_type: v })}>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select module..." />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {moduleTypes.map((type) => (
+                            <SelectItem key={type.value} value={type.value}>{type.label}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  )}
+
+                  {selectedGoalType.hasTargetValue && (
+                    <div className="space-y-2">
+                      <Label>{selectedGoalType.targetLabel || "Target Value"}</Label>
+                      <Input 
+                        type="number" 
+                        step={selectedGoalType.value === 'ielts_score' ? '0.5' : '1'}
+                        min={selectedGoalType.value === 'ielts_score' ? '1' : '1'}
+                        max={selectedGoalType.value === 'ielts_score' ? '9' : undefined}
+                        placeholder={selectedGoalType.targetPlaceholder || "Enter target value"}
+                        value={newGoal.target_value}
+                        onChange={(e) => setNewGoal({ ...newGoal, target_value: e.target.value })}
+                      />
+                    </div>
+                  )}
+
+                  {selectedGoalType.hasTargetDate !== false && (
+                    <div className="space-y-2">
+                      <Label>Target Date</Label>
+                      <Input 
+                        type="date"
+                        min={new Date().toISOString().split('T')[0]}
+                        value={newGoal.target_date}
+                        onChange={(e) => setNewGoal({ ...newGoal, target_date: e.target.value })}
+                      />
+                    </div>
+                  )}
+
+                  <div className="space-y-2">
+                    <Label>Description</Label>
+                    <Textarea 
+                      placeholder={
+                        selectedGoalType.value === 'ielts_score' ? "e.g., Achieve band 7 in all modules for university admission" :
+                        selectedGoalType.value === 'application_deadline' ? "e.g., Submit application to University of Toronto" :
+                        selectedGoalType.value === 'visa_preparation' ? "e.g., Complete visa documentation for UK student visa" :
+                        selectedGoalType.value === 'scholarship_applications' ? "e.g., Apply for Chevening and Commonwealth scholarships" :
+                        selectedGoalType.value === 'document_collection' ? "e.g., Gather transcripts, recommendation letters, and certificates" :
+                        "Describe your goal..."
+                      }
+                      value={newGoal.description}
+                      onChange={(e) => setNewGoal({ ...newGoal, description: e.target.value })}
+                    />
+                  </div>
+                </>
+              )}
+
+              <Button onClick={handleCreateGoal} disabled={saving || !newGoal.goal_type} className="w-full">
                 {saving ? "Creating..." : "Create Goal"}
               </Button>
             </div>
