@@ -24,7 +24,7 @@ const StudyUK = () => {
               size="lg"
               variant="golden"
               className="px-8 py-6 text-lg"
-              onClick={() => window.location.href = '/#contact'}
+              onClick={() => window.location.href = '/#consultation'}
             >
               Get Started
             </Button>
