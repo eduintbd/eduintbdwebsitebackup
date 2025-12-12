@@ -59,6 +59,7 @@ import LocalConsultants from "./pages/blog/LocalConsultants";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsOfService from "./pages/TermsOfService";
 import BrandGuidelines from "./pages/BrandGuidelines";
+import { FloatingActions } from "./components/FloatingActions";
 
 const queryClient = new QueryClient();
 
@@ -89,6 +90,7 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <PageTracker />
+        <FloatingActions />
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/study-usa" element={<StudyUSA />} />
