@@ -226,13 +226,15 @@ export const Navigation = () => {
               </DropdownMenuContent>
             </DropdownMenu>
 
-            {/* Careers */}
-            <Link
-              to="/career"
+            {/* Careers - External Link */}
+            <a
+              href="https://eduintbdteam.lovable.app"
+              target="_blank"
+              rel="noopener noreferrer"
               className="inline-flex h-10 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none text-foreground"
             >
               Careers
-            </Link>
+            </a>
 
             {/* Student Dashboard Link */}
             {user && !isAdmin && (
@@ -413,13 +415,15 @@ export const Navigation = () => {
                 </CollapsibleContent>
               </Collapsible>
 
-              <Link 
-                to="/career" 
+              <a 
+                href="https://eduintbdteam.lovable.app"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="py-2 text-foreground hover:text-primary transition-colors font-medium text-sm"
                 onClick={() => setIsOpen(false)}
               >
                 Careers
-              </Link>
+              </a>
               {user && !isAdmin && (
                 <Link
                   to="/portal"
