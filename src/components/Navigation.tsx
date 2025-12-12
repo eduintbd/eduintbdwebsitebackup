@@ -226,13 +226,13 @@ export const Navigation = () => {
               </DropdownMenuContent>
             </DropdownMenu>
 
-            {/* Free Consultation */}
-            <a
-              href="#consultation"
+            {/* Careers */}
+            <Link
+              to="/career"
               className="inline-flex h-10 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none text-foreground"
             >
-              Free Consultation
-            </a>
+              Careers
+            </Link>
 
             {/* Student Dashboard Link */}
             {user && !isAdmin && (
@@ -413,13 +413,13 @@ export const Navigation = () => {
                 </CollapsibleContent>
               </Collapsible>
 
-              <a 
-                href="#consultation" 
+              <Link 
+                to="/career" 
                 className="py-2 text-foreground hover:text-primary transition-colors font-medium text-sm"
                 onClick={() => setIsOpen(false)}
               >
-                Free Consultation
-              </a>
+                Careers
+              </Link>
               {user && !isAdmin && (
                 <Link
                   to="/portal"
