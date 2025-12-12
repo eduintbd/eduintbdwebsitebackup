@@ -188,7 +188,7 @@ export default function AIAdvisor() {
                 Book a free consultation with our expert counselors
               </p>
               <Button variant="secondary" size="lg" asChild>
-                <a href="/#contact">Book Free Consultation</a>
+                <a href="/#consultation">Book Free Consultation</a>
               </Button>
             </CardContent>
           </Card>
