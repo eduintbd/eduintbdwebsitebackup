@@ -20,7 +20,7 @@ const AIBuddy = () => {
   const [messages, setMessages] = useState<Message[]>([
     {
       role: "assistant",
-      content: "Hello! I'm your AI Study Buddy for IELTS preparation. I can help you with strategies, answer questions, provide tips, and create personalized study plans. How can I assist you today?",
+      content: "Hello! I'm your AI IELTS Buddy for IELTS preparation. I can help you with strategies, answer questions, provide tips, and create personalized study plans. How can I assist you today?",
     },
   ]);
   const [input, setInput] = useState("");
@@ -85,7 +85,7 @@ const AIBuddy = () => {
                 <MessageSquare className="h-6 w-6 text-primary" />
               </div>
               <div>
-                <CardTitle className="text-2xl">AI Study Buddy</CardTitle>
+                <CardTitle className="text-2xl">AI IELTS Buddy</CardTitle>
                 <p className="text-sm text-muted-foreground">
                   Your personal IELTS mentor, powered by AI
                 </p>
