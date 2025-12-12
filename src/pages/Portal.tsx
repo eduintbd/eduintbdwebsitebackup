@@ -313,7 +313,7 @@ export default function Portal() {
           {/* Timeline Tab */}
           <TabsContent value="timeline" className="space-y-4 sm:space-y-6">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
-              <TimelineView application={application} />
+              <TimelineView application={application} onUpdate={() => loadApplication(user?.email)} />
               <ProgressAnalytics application={application} />
             </div>
           </TabsContent>
