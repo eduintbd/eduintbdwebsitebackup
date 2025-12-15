@@ -212,7 +212,7 @@ const handler = async (req: Request): Promise<Response> => {
                         <table role="presentation" style="margin: 0 auto;">
                           <tr>
                             <td style="padding: 0 10px;">
-                              <a href="${Deno.env.get('VITE_SUPABASE_URL')?.replace('.supabase.co', '.lovable.app') || 'https://eduintbd.lovable.app'}/login" 
+                              <a href="https://eduintbd.ai/login" 
                                  style="display: inline-block; padding: 14px 32px; background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%); color: #ffffff; text-decoration: none; border-radius: 6px; font-weight: 600; font-size: 16px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
                                 Login to Your Portal
                               </a>
