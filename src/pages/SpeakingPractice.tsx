@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Mic, Square, Play, Sparkles, Loader2, Clock } from "lucide-react";
+import { Mic, Square, Play, Sparkles, Loader2, Clock, ArrowLeft } from "lucide-react";
 import { toast } from "sonner";
 import { useSavePracticeSession } from "@/hooks/useSavePracticeSession";
 
@@ -409,6 +409,14 @@ Return as JSON: {"fluencyCoherence": X.X, "lexicalResource": X.X, "grammaticalRa
       <Navigation />
       <main className="flex-1 pt-20 sm:pt-24 pb-6 sm:pb-8 md:pb-12 px-3 sm:px-4 max-w-7xl mx-auto w-full">
         <div className="space-y-4 sm:space-y-6">
+          <Button
+            variant="ghost"
+            onClick={() => navigate("/ielts-learning")}
+            className="mb-2"
+          >
+            <ArrowLeft className="mr-2 h-4 w-4" />
+            Back to IELTS Learning
+          </Button>
           <div className="text-center space-y-2 px-2">
             <div className="flex flex-col items-center justify-center gap-2">
               <Mic className="h-8 w-8 sm:h-10 sm:w-10 text-primary flex-shrink-0" />
