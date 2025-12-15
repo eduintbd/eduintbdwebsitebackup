@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
-import { BookOpen, Clock, Sparkles, Loader2, CheckCircle, XCircle } from "lucide-react";
+import { BookOpen, Clock, Sparkles, Loader2, CheckCircle, XCircle, ArrowLeft } from "lucide-react";
 import { toast } from "sonner";
 import { useSavePracticeSession } from "@/hooks/useSavePracticeSession";
 
@@ -162,6 +162,14 @@ Make it completely unique and realistic for IELTS Academic.`,
       <Navigation />
       <main className="flex-1 pt-20 sm:pt-24 pb-6 sm:pb-8 md:pb-12 px-3 sm:px-4 max-w-7xl mx-auto w-full">
         <div className="space-y-4 sm:space-y-6">
+          <Button
+            variant="ghost"
+            onClick={() => navigate("/ielts-learning")}
+            className="mb-2"
+          >
+            <ArrowLeft className="mr-2 h-4 w-4" />
+            Back to IELTS Learning
+          </Button>
           <div className="text-center space-y-2 px-2">
             <div className="flex flex-col items-center justify-center gap-2">
               <BookOpen className="h-8 w-8 sm:h-10 sm:w-10 text-primary flex-shrink-0" />

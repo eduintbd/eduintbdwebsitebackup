@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
-import { BookOpen, PenTool, Headphones, Mic, Play, Clock, FileText, CheckCircle } from "lucide-react";
+import { BookOpen, PenTool, Headphones, Mic, Play, Clock, FileText, CheckCircle, ArrowLeft } from "lucide-react";
 
 const modules = [
   {
@@ -81,6 +81,17 @@ const IELTSMaterials = () => {
     <div className="min-h-screen flex flex-col">
       <Navigation />
       <main className="flex-1 pt-16 sm:pt-20">
+        {/* Back Button */}
+        <div className="max-w-5xl mx-auto px-4 pt-4">
+          <Button
+            variant="ghost"
+            onClick={() => navigate("/ielts-learning")}
+            className="mb-2"
+          >
+            <ArrowLeft className="mr-2 h-4 w-4" />
+            Back to IELTS Learning
+          </Button>
+        </div>
         {/* Hero Section */}
         <section className="relative py-6 sm:py-10 md:py-14 px-4 bg-gradient-to-br from-primary/5 via-background to-secondary/5">
           <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-5" />

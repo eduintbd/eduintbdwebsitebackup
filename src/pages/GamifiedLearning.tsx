@@ -8,7 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { 
   Trophy, Users, Gamepad2, Zap, Target, Shield, 
   BookOpen, Headphones, Clock, Star, Lock, Play,
-  Flame
+  Flame, ArrowLeft
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -116,6 +116,17 @@ const GamifiedLearning = () => {
     <div className="min-h-screen flex flex-col">
       <Navigation />
       <main className="flex-1 pt-16 sm:pt-20">
+        {/* Back Button */}
+        <div className="max-w-5xl mx-auto px-4 pt-4">
+          <Button
+            variant="ghost"
+            onClick={() => navigate("/ielts-learning")}
+            className="mb-2"
+          >
+            <ArrowLeft className="mr-2 h-4 w-4" />
+            Back to IELTS Learning
+          </Button>
+        </div>
         {/* Hero Section */}
         <section className="relative py-8 sm:py-12 px-4 bg-gradient-to-br from-primary/5 via-background to-secondary/5">
           <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-5" />
