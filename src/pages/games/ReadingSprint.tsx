@@ -16,7 +16,7 @@ interface ReadingQuestion {
   correct: string;
 }
 
-const readingQuestions: ReadingQuestion[] = [
+const baseReadingQuestions: ReadingQuestion[] = [
   {
     passage: "The Amazon rainforest, often referred to as the 'lungs of the Earth,' produces approximately 20% of the world's oxygen. However, deforestation has significantly reduced its size over the past few decades.",
     question: "What is the Amazon rainforest commonly called?",
@@ -49,6 +49,16 @@ const readingQuestions: ReadingQuestion[] = [
   },
 ];
 
+// Shuffle array utility function
+const shuffleArray = <T,>(array: T[]): T[] => {
+  const shuffled = [...array];
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  return shuffled;
+};
+
 const ReadingSprint = () => {
   const navigate = useNavigate();
   const { saveGameSession } = useGameProgress();
@@ -60,9 +70,10 @@ const ReadingSprint = () => {
   const [showResult, setShowResult] = useState(false);
   const [correctCount, setCorrectCount] = useState(0);
   const startTimeRef = useRef<number>(0);
+  const [shuffledQuestions, setShuffledQuestions] = useState<ReadingQuestion[]>([]);
 
-  const currentQuestion = readingQuestions[currentIndex];
-  const progress = ((currentIndex + 1) / readingQuestions.length) * 100;
+  const currentQuestion = shuffledQuestions[currentIndex];
+  const progress = shuffledQuestions.length > 0 ? ((currentIndex + 1) / shuffledQuestions.length) * 100 : 0;
 
   useEffect(() => {
     if (gameState !== "playing") return;
@@ -93,7 +104,7 @@ const ReadingSprint = () => {
     }
 
     setTimeout(() => {
-      if (currentIndex < readingQuestions.length - 1) {
+      if (currentIndex < shuffledQuestions.length - 1) {
         setCurrentIndex((prev) => prev + 1);
         setSelectedAnswer(null);
         setShowResult(false);
@@ -104,6 +115,12 @@ const ReadingSprint = () => {
   };
 
   const startGame = () => {
+    // Shuffle questions and options
+    const shuffled = shuffleArray(baseReadingQuestions).map(q => ({
+      ...q,
+      options: shuffleArray(q.options)
+    }));
+    setShuffledQuestions(shuffled);
     setGameState("playing");
     setCurrentIndex(0);
     setScore(0);
@@ -116,17 +133,17 @@ const ReadingSprint = () => {
 
   // Save progress when game finishes
   useEffect(() => {
-    if (gameState === "finished") {
+    if (gameState === "finished" && shuffledQuestions.length > 0) {
       const durationSeconds = Math.round((Date.now() - startTimeRef.current) / 1000);
       saveGameSession({
         gameType: "reading-sprint",
         score,
-        totalQuestions: readingQuestions.length,
+        totalQuestions: shuffledQuestions.length,
         correctAnswers: correctCount,
         durationSeconds,
       });
     }
-  }, [gameState, score, correctCount]);
+  }, [gameState, score, correctCount, shuffledQuestions.length]);
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
@@ -151,9 +168,9 @@ const ReadingSprint = () => {
               <p className="text-muted-foreground mb-6">
                 Read passages quickly and answer questions to earn points!
               </p>
-              <div className="grid grid-cols-3 gap-2 sm:gap-4 mb-6 text-center">
+                <div className="grid grid-cols-3 gap-2 sm:gap-4 mb-6 text-center">
                 <div className="p-3 sm:p-4 bg-muted rounded-lg">
-                  <p className="text-lg sm:text-2xl font-bold">5</p>
+                  <p className="text-lg sm:text-2xl font-bold">{baseReadingQuestions.length}</p>
                   <p className="text-xs sm:text-sm text-muted-foreground">Passages</p>
                 </div>
                 <div className="p-3 sm:p-4 bg-muted rounded-lg">
@@ -188,7 +205,7 @@ const ReadingSprint = () => {
 
               <Card className="p-4 sm:p-6">
                 <p className="text-xs sm:text-sm text-muted-foreground mb-2">
-                  Passage {currentIndex + 1} of {readingQuestions.length}
+                  Passage {currentIndex + 1} of {shuffledQuestions.length}
                 </p>
                 
                 <div className="p-3 sm:p-4 bg-muted/50 rounded-lg mb-4 sm:mb-6">

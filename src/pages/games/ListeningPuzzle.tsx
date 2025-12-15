@@ -15,7 +15,7 @@ interface ListeningItem {
   blanks: { word: string; position: number }[];
 }
 
-const listeningData: ListeningItem[] = [
+const baseListeningData: ListeningItem[] = [
   {
     text: "The university library is open from nine o'clock in the ___ until ten o'clock at ___.",
     blanks: [{ word: "morning", position: 0 }, { word: "night", position: 1 }]
@@ -38,6 +38,16 @@ const listeningData: ListeningItem[] = [
   },
 ];
 
+// Shuffle array utility function
+const shuffleArray = <T,>(array: T[]): T[] => {
+  const shuffled = [...array];
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  return shuffled;
+};
+
 const ListeningPuzzle = () => {
   const navigate = useNavigate();
   const { saveGameSession } = useGameProgress();
@@ -49,10 +59,11 @@ const ListeningPuzzle = () => {
   const [isPlaying, setIsPlaying] = useState(false);
   const speechRef = useRef<SpeechSynthesisUtterance | null>(null);
   const startTimeRef = useRef<number>(0);
-  const totalBlanks = listeningData.reduce((acc, item) => acc + item.blanks.length, 0);
-
-  const currentItem = listeningData[currentIndex];
-  const progress = ((currentIndex + 1) / listeningData.length) * 100;
+  const [shuffledQuestions, setShuffledQuestions] = useState<ListeningItem[]>([]);
+  
+  const totalBlanks = shuffledQuestions.reduce((acc, item) => acc + item.blanks.length, 0);
+  const currentItem = shuffledQuestions[currentIndex];
+  const progress = shuffledQuestions.length > 0 ? ((currentIndex + 1) / shuffledQuestions.length) * 100 : 0;
 
   useEffect(() => {
     if (currentItem) {
@@ -106,7 +117,7 @@ const ListeningPuzzle = () => {
     setScore((prev) => prev + correct * 100);
 
     setTimeout(() => {
-      if (currentIndex < listeningData.length - 1) {
+      if (currentIndex < shuffledQuestions.length - 1) {
         setCurrentIndex((prev) => prev + 1);
       } else {
         setGameState("finished");
@@ -115,6 +126,9 @@ const ListeningPuzzle = () => {
   };
 
   const startGame = () => {
+    // Shuffle questions
+    const shuffled = shuffleArray(baseListeningData);
+    setShuffledQuestions(shuffled);
     setGameState("playing");
     setCurrentIndex(0);
     setScore(0);
@@ -125,7 +139,7 @@ const ListeningPuzzle = () => {
 
   // Save progress when game finishes
   useEffect(() => {
-    if (gameState === "finished") {
+    if (gameState === "finished" && shuffledQuestions.length > 0) {
       const durationSeconds = Math.round((Date.now() - startTimeRef.current) / 1000);
       const correctAnswers = score / 100; // Each correct answer is 100 points
       saveGameSession({
@@ -136,7 +150,7 @@ const ListeningPuzzle = () => {
         durationSeconds,
       });
     }
-  }, [gameState, score, totalBlanks]);
+  }, [gameState, score, totalBlanks, shuffledQuestions.length]);
 
   const renderTextWithBlanks = () => {
     const parts = currentItem.text.split("___");
@@ -190,9 +204,9 @@ const ListeningPuzzle = () => {
               <p className="text-muted-foreground mb-6">
                 Listen to the audio and fill in the missing words!
               </p>
-              <div className="grid grid-cols-3 gap-2 sm:gap-4 mb-6 text-center">
+                <div className="grid grid-cols-3 gap-2 sm:gap-4 mb-6 text-center">
                 <div className="p-3 sm:p-4 bg-muted rounded-lg">
-                  <p className="text-lg sm:text-2xl font-bold">5</p>
+                  <p className="text-lg sm:text-2xl font-bold">{baseListeningData.length}</p>
                   <p className="text-xs sm:text-sm text-muted-foreground">Passages</p>
                 </div>
                 <div className="p-3 sm:p-4 bg-muted rounded-lg">
@@ -215,7 +229,7 @@ const ListeningPuzzle = () => {
             <div className="space-y-4 sm:space-y-6">
               <div className="flex items-center justify-between">
                 <Badge variant="outline" className="gap-1 text-sm sm:text-base">
-                  Passage {currentIndex + 1}/{listeningData.length}
+                  Passage {currentIndex + 1}/{shuffledQuestions.length}
                 </Badge>
                 <Badge className="bg-purple-500/10 text-purple-500 text-sm sm:text-base">
                   Score: {score}

@@ -15,7 +15,7 @@ interface GrammarQuestion {
   explanation: string;
 }
 
-const grammarQuestions: GrammarQuestion[] = [
+const baseGrammarQuestions: GrammarQuestion[] = [
   {
     sentence: "She ___ to the store yesterday.",
     options: ["go", "goes", "went", "gone"],
@@ -78,6 +78,16 @@ const grammarQuestions: GrammarQuestion[] = [
   },
 ];
 
+// Shuffle array utility function
+const shuffleArray = <T,>(array: T[]): T[] => {
+  const shuffled = [...array];
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  return shuffled;
+};
+
 const GrammarBattle = () => {
   const navigate = useNavigate();
   const { saveGameSession } = useGameProgress();
@@ -89,9 +99,10 @@ const GrammarBattle = () => {
   const [showExplanation, setShowExplanation] = useState(false);
   const [correctCount, setCorrectCount] = useState(0);
   const startTimeRef = useRef<number>(0);
+  const [shuffledQuestions, setShuffledQuestions] = useState<GrammarQuestion[]>([]);
 
-  const currentQuestion = grammarQuestions[currentIndex];
-  const progress = ((currentIndex + 1) / grammarQuestions.length) * 100;
+  const currentQuestion = shuffledQuestions[currentIndex];
+  const progress = shuffledQuestions.length > 0 ? ((currentIndex + 1) / shuffledQuestions.length) * 100 : 0;
 
   useEffect(() => {
     if (gameState !== "playing") return;
@@ -121,7 +132,7 @@ const GrammarBattle = () => {
     }
 
     setTimeout(() => {
-      if (currentIndex < grammarQuestions.length - 1) {
+      if (currentIndex < shuffledQuestions.length - 1) {
         setCurrentIndex((prev) => prev + 1);
         setSelectedAnswer(null);
         setShowExplanation(false);
@@ -132,6 +143,12 @@ const GrammarBattle = () => {
   };
 
   const startGame = () => {
+    // Shuffle questions and options
+    const shuffled = shuffleArray(baseGrammarQuestions).map(q => ({
+      ...q,
+      options: shuffleArray(q.options)
+    }));
+    setShuffledQuestions(shuffled);
     setGameState("playing");
     setCurrentIndex(0);
     setScore(0);
@@ -144,17 +161,17 @@ const GrammarBattle = () => {
 
   // Save progress when game finishes
   useEffect(() => {
-    if (gameState === "finished") {
+    if (gameState === "finished" && shuffledQuestions.length > 0) {
       const durationSeconds = Math.round((Date.now() - startTimeRef.current) / 1000);
       saveGameSession({
         gameType: "grammar-battle",
         score,
-        totalQuestions: grammarQuestions.length,
+        totalQuestions: shuffledQuestions.length,
         correctAnswers: correctCount,
         durationSeconds,
       });
     }
-  }, [gameState, score, correctCount]);
+  }, [gameState, score, correctCount, shuffledQuestions.length]);
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
@@ -179,9 +196,9 @@ const GrammarBattle = () => {
               <p className="text-muted-foreground mb-6">
                 Fix sentences and prove your grammar mastery!
               </p>
-              <div className="grid grid-cols-3 gap-2 sm:gap-4 mb-6 text-center">
+                <div className="grid grid-cols-3 gap-2 sm:gap-4 mb-6 text-center">
                 <div className="p-3 sm:p-4 bg-muted rounded-lg">
-                  <p className="text-lg sm:text-2xl font-bold">10</p>
+                  <p className="text-lg sm:text-2xl font-bold">{baseGrammarQuestions.length}</p>
                   <p className="text-xs sm:text-sm text-muted-foreground">Questions</p>
                 </div>
                 <div className="p-3 sm:p-4 bg-muted rounded-lg">
@@ -216,7 +233,7 @@ const GrammarBattle = () => {
 
               <Card className="p-4 sm:p-6">
                 <p className="text-xs sm:text-sm text-muted-foreground mb-2">
-                  Question {currentIndex + 1} of {grammarQuestions.length}
+                  Question {currentIndex + 1} of {shuffledQuestions.length}
                 </p>
                 <h2 className="text-lg sm:text-xl font-medium text-center mb-6 sm:mb-8">
                   {currentQuestion.sentence}
