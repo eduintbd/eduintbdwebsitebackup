@@ -47,6 +47,7 @@ export const ContactForm = () => {
     level: "",
     budget: "",
     reference_source: "",
+    referral_id: "",
     details: "",
     website: "", // Honeypot field - bots will fill this, humans won't see it
   });
@@ -86,7 +87,9 @@ export const ContactForm = () => {
           preferred_course: formData.preferred_course || null,
           level: formData.level || null,
           budget: formData.budget || null,
-          reference_source: formData.reference_source || null,
+          reference_source: formData.reference_source === 'referral' && formData.referral_id 
+            ? `referral:${formData.referral_id}` 
+            : formData.reference_source || null,
           details: validatedData.details || null,
         }]);
 
@@ -154,6 +157,7 @@ export const ContactForm = () => {
         level: "",
         budget: "",
         reference_source: "",
+        referral_id: "",
         details: "",
         website: "", // Reset honeypot field
       });
@@ -336,7 +340,7 @@ export const ContactForm = () => {
 
               <div className="space-y-2">
                 <Label htmlFor="reference_source" className="text-foreground font-medium">{language === 'en' ? 'How did you hear about us?' : 'আপনি আমাদের সম্পর্কে কীভাবে জানলেন?'}</Label>
-                <Select value={formData.reference_source} onValueChange={(value) => setFormData({...formData, reference_source: value})}>
+                <Select value={formData.reference_source} onValueChange={(value) => setFormData({...formData, reference_source: value, referral_id: value !== 'referral' ? '' : formData.referral_id})}>
                   <SelectTrigger className="h-12 rounded-xl border-border focus:border-secondary">
                     <SelectValue placeholder={language === 'en' ? 'Select source' : 'উৎস নির্বাচন করুন'} />
                   </SelectTrigger>
@@ -344,10 +348,24 @@ export const ContactForm = () => {
                     <SelectItem value="facebook">{language === 'en' ? 'Facebook' : 'ফেসবুক'}</SelectItem>
                     <SelectItem value="whatsapp">{language === 'en' ? 'WhatsApp' : 'হোয়াটসঅ্যাপ'}</SelectItem>
                     <SelectItem value="friend">{language === 'en' ? 'Friend' : 'বন্ধু'}</SelectItem>
+                    <SelectItem value="referral">{language === 'en' ? 'Referral' : 'রেফারেল'}</SelectItem>
                     <SelectItem value="other">{language === 'en' ? 'Other' : 'অন্যান্য'}</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
+
+              {formData.reference_source === 'referral' && (
+                <div className="space-y-2">
+                  <Label htmlFor="referral_id" className="text-foreground font-medium">{language === 'en' ? 'Referral ID' : 'রেফারেল আইডি'}</Label>
+                  <Input 
+                    id="referral_id" 
+                    placeholder={language === 'en' ? 'Enter referral ID' : 'রেফারেল আইডি লিখুন'}
+                    value={formData.referral_id}
+                    onChange={(e) => setFormData({...formData, referral_id: e.target.value})}
+                    className="h-12 rounded-xl border-border focus:border-secondary"
+                  />
+                </div>
+              )}
 
               <div className="space-y-2">
                 <Label htmlFor="details" className="text-foreground font-medium">
