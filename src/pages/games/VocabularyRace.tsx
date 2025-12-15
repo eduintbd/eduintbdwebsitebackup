@@ -15,7 +15,7 @@ interface VocabWord {
   options: string[];
 }
 
-const vocabularyData: VocabWord[] = [
+const baseVocabularyData: VocabWord[] = [
   { word: "Ubiquitous", meaning: "Present everywhere", options: ["Present everywhere", "Very rare", "Extremely loud", "Completely silent"] },
   { word: "Ephemeral", meaning: "Lasting for a very short time", options: ["Lasting forever", "Lasting for a very short time", "Very expensive", "Highly decorated"] },
   { word: "Pragmatic", meaning: "Dealing with things sensibly", options: ["Idealistic", "Dealing with things sensibly", "Very emotional", "Highly creative"] },
@@ -27,6 +27,16 @@ const vocabularyData: VocabWord[] = [
   { word: "Diligent", meaning: "Having careful and persistent effort", options: ["Very lazy", "Having careful and persistent effort", "Extremely fast", "Very careless"] },
   { word: "Innovative", meaning: "Featuring new methods or ideas", options: ["Very traditional", "Featuring new methods or ideas", "Extremely old", "Very common"] },
 ];
+
+// Shuffle array utility function
+const shuffleArray = <T,>(array: T[]): T[] => {
+  const shuffled = [...array];
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  return shuffled;
+};
 
 const VocabularyRace = () => {
   const navigate = useNavigate();
@@ -41,8 +51,10 @@ const VocabularyRace = () => {
   const [streak, setStreak] = useState(0);
   const [correctCount, setCorrectCount] = useState(0);
   const startTimeRef = useRef<number>(0);
-  const currentWord = vocabularyData[currentIndex];
-  const progress = ((currentIndex + 1) / vocabularyData.length) * 100;
+  const [shuffledQuestions, setShuffledQuestions] = useState<VocabWord[]>([]);
+  
+  const currentWord = shuffledQuestions[currentIndex];
+  const progress = shuffledQuestions.length > 0 ? ((currentIndex + 1) / shuffledQuestions.length) * 100 : 0;
 
   useEffect(() => {
     if (gameState !== "playing") return;
@@ -77,7 +89,7 @@ const VocabularyRace = () => {
     }
 
     setTimeout(() => {
-      if (currentIndex < vocabularyData.length - 1) {
+      if (currentIndex < shuffledQuestions.length - 1) {
         setCurrentIndex((prev) => prev + 1);
         setSelectedAnswer(null);
         setIsCorrect(null);
@@ -85,9 +97,15 @@ const VocabularyRace = () => {
         setGameState("finished");
       }
     }, 1000);
-  }, [currentIndex, currentWord.meaning, selectedAnswer, streak, timeLeft]);
+  }, [currentIndex, currentWord?.meaning, selectedAnswer, streak, timeLeft, shuffledQuestions.length]);
 
   const startGame = () => {
+    // Shuffle questions and options
+    const shuffled = shuffleArray(baseVocabularyData).map(word => ({
+      ...word,
+      options: shuffleArray(word.options)
+    }));
+    setShuffledQuestions(shuffled);
     setGameState("playing");
     setCurrentIndex(0);
     setScore(0);
@@ -105,17 +123,17 @@ const VocabularyRace = () => {
 
   // Save progress when game finishes
   useEffect(() => {
-    if (gameState === "finished") {
+    if (gameState === "finished" && shuffledQuestions.length > 0) {
       const durationSeconds = Math.round((Date.now() - startTimeRef.current) / 1000);
       saveGameSession({
         gameType: "vocabulary-race",
         score,
-        totalQuestions: vocabularyData.length,
+        totalQuestions: shuffledQuestions.length,
         correctAnswers: correctCount,
         durationSeconds,
       });
     }
-  }, [gameState, score, correctCount]);
+  }, [gameState, score, correctCount, shuffledQuestions.length]);
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
@@ -140,9 +158,9 @@ const VocabularyRace = () => {
               <p className="text-muted-foreground mb-6">
                 Match words with their correct meanings as fast as you can!
               </p>
-              <div className="grid grid-cols-3 gap-2 sm:gap-4 mb-6 text-center">
+                <div className="grid grid-cols-3 gap-2 sm:gap-4 mb-6 text-center">
                 <div className="p-3 sm:p-4 bg-muted rounded-lg">
-                  <p className="text-lg sm:text-2xl font-bold">10</p>
+                  <p className="text-lg sm:text-2xl font-bold">{baseVocabularyData.length}</p>
                   <p className="text-xs sm:text-sm text-muted-foreground">Words</p>
                 </div>
                 <div className="p-3 sm:p-4 bg-muted rounded-lg">
@@ -184,7 +202,7 @@ const VocabularyRace = () => {
 
               <Card className="p-4 sm:p-6">
                 <p className="text-xs sm:text-sm text-muted-foreground mb-2">
-                  Word {currentIndex + 1} of {vocabularyData.length}
+                  Word {currentIndex + 1} of {shuffledQuestions.length}
                 </p>
                 <h2 className="text-2xl sm:text-3xl font-bold text-center mb-6 sm:mb-8 text-primary">
                   {currentWord.word}
