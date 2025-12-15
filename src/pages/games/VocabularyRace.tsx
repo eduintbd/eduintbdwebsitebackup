@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { Navigation } from "@/components/Navigation";
 import { Footer } from "@/components/Footer";
@@ -8,7 +8,7 @@ import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, Zap, Timer, Trophy, CheckCircle, XCircle, RotateCcw } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-
+import { useGameProgress } from "@/hooks/useGameProgress";
 interface VocabWord {
   word: string;
   meaning: string;
@@ -31,6 +31,7 @@ const vocabularyData: VocabWord[] = [
 const VocabularyRace = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { saveGameSession } = useGameProgress();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [score, setScore] = useState(0);
   const [timeLeft, setTimeLeft] = useState(60);
@@ -38,7 +39,8 @@ const VocabularyRace = () => {
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
   const [streak, setStreak] = useState(0);
-
+  const [correctCount, setCorrectCount] = useState(0);
+  const startTimeRef = useRef<number>(0);
   const currentWord = vocabularyData[currentIndex];
   const progress = ((currentIndex + 1) / vocabularyData.length) * 100;
 
@@ -69,6 +71,7 @@ const VocabularyRace = () => {
       const bonusPoints = streak >= 3 ? 20 : streak >= 2 ? 10 : 0;
       setScore((prev) => prev + 50 + bonusPoints + Math.floor(timeLeft / 10));
       setStreak((prev) => prev + 1);
+      setCorrectCount((prev) => prev + 1);
     } else {
       setStreak(0);
     }
@@ -92,11 +95,27 @@ const VocabularyRace = () => {
     setSelectedAnswer(null);
     setIsCorrect(null);
     setStreak(0);
+    setCorrectCount(0);
+    startTimeRef.current = Date.now();
   };
 
   const restartGame = () => {
     startGame();
   };
+
+  // Save progress when game finishes
+  useEffect(() => {
+    if (gameState === "finished") {
+      const durationSeconds = Math.round((Date.now() - startTimeRef.current) / 1000);
+      saveGameSession({
+        gameType: "vocabulary-race",
+        score,
+        totalQuestions: vocabularyData.length,
+        correctAnswers: correctCount,
+        durationSeconds,
+      });
+    }
+  }, [gameState, score, correctCount]);
 
   return (
     <div className="min-h-screen flex flex-col bg-background">

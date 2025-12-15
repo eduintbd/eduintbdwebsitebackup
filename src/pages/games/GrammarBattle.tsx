@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { Navigation } from "@/components/Navigation";
 import { Footer } from "@/components/Footer";
@@ -7,7 +7,7 @@ import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, Shield, Timer, Trophy, CheckCircle, XCircle, RotateCcw } from "lucide-react";
-
+import { useGameProgress } from "@/hooks/useGameProgress";
 interface GrammarQuestion {
   sentence: string;
   options: string[];
@@ -80,12 +80,15 @@ const grammarQuestions: GrammarQuestion[] = [
 
 const GrammarBattle = () => {
   const navigate = useNavigate();
+  const { saveGameSession } = useGameProgress();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [score, setScore] = useState(0);
   const [timeLeft, setTimeLeft] = useState(120);
   const [gameState, setGameState] = useState<"ready" | "playing" | "finished">("ready");
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
   const [showExplanation, setShowExplanation] = useState(false);
+  const [correctCount, setCorrectCount] = useState(0);
+  const startTimeRef = useRef<number>(0);
 
   const currentQuestion = grammarQuestions[currentIndex];
   const progress = ((currentIndex + 1) / grammarQuestions.length) * 100;
@@ -114,6 +117,7 @@ const GrammarBattle = () => {
     
     if (answer === currentQuestion.correct) {
       setScore((prev) => prev + 80);
+      setCorrectCount((prev) => prev + 1);
     }
 
     setTimeout(() => {
@@ -134,7 +138,23 @@ const GrammarBattle = () => {
     setTimeLeft(120);
     setSelectedAnswer(null);
     setShowExplanation(false);
+    setCorrectCount(0);
+    startTimeRef.current = Date.now();
   };
+
+  // Save progress when game finishes
+  useEffect(() => {
+    if (gameState === "finished") {
+      const durationSeconds = Math.round((Date.now() - startTimeRef.current) / 1000);
+      saveGameSession({
+        gameType: "grammar-battle",
+        score,
+        totalQuestions: grammarQuestions.length,
+        correctAnswers: correctCount,
+        durationSeconds,
+      });
+    }
+  }, [gameState, score, correctCount]);
 
   return (
     <div className="min-h-screen flex flex-col bg-background">

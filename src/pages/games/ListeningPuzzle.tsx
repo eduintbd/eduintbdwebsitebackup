@@ -8,6 +8,7 @@ import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { ArrowLeft, Headphones, Timer, Trophy, Volume2, RotateCcw, Play, Pause } from "lucide-react";
+import { useGameProgress } from "@/hooks/useGameProgress";
 
 interface ListeningItem {
   text: string;
@@ -39,6 +40,7 @@ const listeningData: ListeningItem[] = [
 
 const ListeningPuzzle = () => {
   const navigate = useNavigate();
+  const { saveGameSession } = useGameProgress();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [score, setScore] = useState(0);
   const [gameState, setGameState] = useState<"ready" | "playing" | "finished">("ready");
@@ -46,6 +48,8 @@ const ListeningPuzzle = () => {
   const [submitted, setSubmitted] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const speechRef = useRef<SpeechSynthesisUtterance | null>(null);
+  const startTimeRef = useRef<number>(0);
+  const totalBlanks = listeningData.reduce((acc, item) => acc + item.blanks.length, 0);
 
   const currentItem = listeningData[currentIndex];
   const progress = ((currentIndex + 1) / listeningData.length) * 100;
@@ -116,7 +120,23 @@ const ListeningPuzzle = () => {
     setScore(0);
     setAnswers([]);
     setSubmitted(false);
+    startTimeRef.current = Date.now();
   };
+
+  // Save progress when game finishes
+  useEffect(() => {
+    if (gameState === "finished") {
+      const durationSeconds = Math.round((Date.now() - startTimeRef.current) / 1000);
+      const correctAnswers = score / 100; // Each correct answer is 100 points
+      saveGameSession({
+        gameType: "listening-puzzle",
+        score,
+        totalQuestions: totalBlanks,
+        correctAnswers,
+        durationSeconds,
+      });
+    }
+  }, [gameState, score, totalBlanks]);
 
   const renderTextWithBlanks = () => {
     const parts = currentItem.text.split("___");
