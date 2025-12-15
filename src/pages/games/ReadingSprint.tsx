@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { Navigation } from "@/components/Navigation";
 import { Footer } from "@/components/Footer";
@@ -7,6 +7,7 @@ import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, BookOpen, Timer, Trophy, CheckCircle, XCircle, RotateCcw } from "lucide-react";
+import { useGameProgress } from "@/hooks/useGameProgress";
 
 interface ReadingQuestion {
   passage: string;
@@ -50,12 +51,15 @@ const readingQuestions: ReadingQuestion[] = [
 
 const ReadingSprint = () => {
   const navigate = useNavigate();
+  const { saveGameSession } = useGameProgress();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [score, setScore] = useState(0);
   const [timeLeft, setTimeLeft] = useState(180);
   const [gameState, setGameState] = useState<"ready" | "playing" | "finished">("ready");
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
   const [showResult, setShowResult] = useState(false);
+  const [correctCount, setCorrectCount] = useState(0);
+  const startTimeRef = useRef<number>(0);
 
   const currentQuestion = readingQuestions[currentIndex];
   const progress = ((currentIndex + 1) / readingQuestions.length) * 100;
@@ -85,6 +89,7 @@ const ReadingSprint = () => {
     if (answer === currentQuestion.correct) {
       const timeBonus = Math.floor(timeLeft / 5);
       setScore((prev) => prev + 150 + timeBonus);
+      setCorrectCount((prev) => prev + 1);
     }
 
     setTimeout(() => {
@@ -105,7 +110,23 @@ const ReadingSprint = () => {
     setTimeLeft(180);
     setSelectedAnswer(null);
     setShowResult(false);
+    setCorrectCount(0);
+    startTimeRef.current = Date.now();
   };
+
+  // Save progress when game finishes
+  useEffect(() => {
+    if (gameState === "finished") {
+      const durationSeconds = Math.round((Date.now() - startTimeRef.current) / 1000);
+      saveGameSession({
+        gameType: "reading-sprint",
+        score,
+        totalQuestions: readingQuestions.length,
+        correctAnswers: correctCount,
+        durationSeconds,
+      });
+    }
+  }, [gameState, score, correctCount]);
 
   return (
     <div className="min-h-screen flex flex-col bg-background">

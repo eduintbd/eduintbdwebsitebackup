@@ -5,12 +5,13 @@ import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Progress } from "@/components/ui/progress";
 import { 
   Trophy, Users, Gamepad2, Zap, Target, Shield, 
   BookOpen, Headphones, Clock, Star, Lock, Play,
-  Flame, ArrowLeft
+  Flame, ArrowLeft, CheckCircle
 } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
+import { useGameProgress } from "@/hooks/useGameProgress";
 
 const games = [
   {
@@ -63,15 +64,6 @@ const games = [
   }
 ];
 
-const achievements = [
-  { id: 1, title: "First Steps", description: "Complete your first practice", icon: "🎯", unlocked: false },
-  { id: 2, title: "Speed Demon", description: "Finish 10 exercises in under 5 minutes", icon: "⚡", unlocked: false },
-  { id: 3, title: "Perfect Score", description: "Get 100% on any module", icon: "🏆", unlocked: false },
-  { id: 4, title: "Streak Master", description: "Maintain a 30-day study streak", icon: "🔥", unlocked: false },
-  { id: 5, title: "Vocabulary King", description: "Learn 500 new words", icon: "📚", unlocked: false },
-  { id: 6, title: "Grammar Guru", description: "Complete all grammar exercises", icon: "✨", unlocked: false },
-];
-
 const benefits = [
   {
     title: "Increased Motivation",
@@ -97,8 +89,7 @@ const benefits = [
 
 const GamifiedLearning = () => {
   const navigate = useNavigate();
-  const [userPoints, setUserPoints] = useState(0);
-
+  const { gameStats, achievements, isLoading } = useGameProgress();
   const getDifficultyColor = (difficulty: string) => {
     switch (difficulty) {
       case "Easy": return "bg-green-500/10 text-green-500";
@@ -143,21 +134,26 @@ const GamifiedLearning = () => {
         {/* Stats Banner */}
         <section className="py-6 sm:py-8 px-4 bg-muted/30">
           <div className="max-w-5xl mx-auto">
-            <div className="grid grid-cols-3 gap-3 sm:gap-6">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-6">
               <Card className="p-3 sm:p-6 text-center border-2 border-primary/20">
                 <Trophy className="w-6 h-6 sm:w-10 sm:h-10 mx-auto mb-2 sm:mb-3 text-yellow-500" />
-                <p className="text-xl sm:text-3xl font-bold text-primary">50+</p>
+                <p className="text-xl sm:text-3xl font-bold text-primary">{gameStats?.totalGamesPlayed || 0}</p>
+                <p className="text-xs sm:text-sm text-muted-foreground">Games Played</p>
+              </Card>
+              <Card className="p-3 sm:p-6 text-center border-2 border-primary/20">
+                <Star className="w-6 h-6 sm:w-10 sm:h-10 mx-auto mb-2 sm:mb-3 text-yellow-500" />
+                <p className="text-xl sm:text-3xl font-bold text-primary">{gameStats?.totalPoints || 0}</p>
+                <p className="text-xs sm:text-sm text-muted-foreground">Total Points</p>
+              </Card>
+              <Card className="p-3 sm:p-6 text-center border-2 border-primary/20">
+                <CheckCircle className="w-6 h-6 sm:w-10 sm:h-10 mx-auto mb-2 sm:mb-3 text-green-500" />
+                <p className="text-xl sm:text-3xl font-bold text-primary">{gameStats?.perfectScores || 0}</p>
+                <p className="text-xs sm:text-sm text-muted-foreground">Perfect Scores</p>
+              </Card>
+              <Card className="p-3 sm:p-6 text-center border-2 border-primary/20">
+                <Flame className="w-6 h-6 sm:w-10 sm:h-10 mx-auto mb-2 sm:mb-3 text-orange-500" />
+                <p className="text-xl sm:text-3xl font-bold text-primary">{achievements.filter(a => a.unlocked).length}</p>
                 <p className="text-xs sm:text-sm text-muted-foreground">Achievements</p>
-              </Card>
-              <Card className="p-3 sm:p-6 text-center border-2 border-primary/20">
-                <Users className="w-6 h-6 sm:w-10 sm:h-10 mx-auto mb-2 sm:mb-3 text-blue-500" />
-                <p className="text-xl sm:text-3xl font-bold text-primary">Global</p>
-                <p className="text-xs sm:text-sm text-muted-foreground">Leaderboards</p>
-              </Card>
-              <Card className="p-3 sm:p-6 text-center border-2 border-primary/20">
-                <Gamepad2 className="w-6 h-6 sm:w-10 sm:h-10 mx-auto mb-2 sm:mb-3 text-purple-500" />
-                <p className="text-xl sm:text-3xl font-bold text-primary">20+</p>
-                <p className="text-xs sm:text-sm text-muted-foreground">Fun Games</p>
               </Card>
             </div>
           </div>
@@ -216,21 +212,35 @@ const GamifiedLearning = () => {
         <section className="py-8 sm:py-12 px-4 bg-muted/30">
           <div className="max-w-5xl mx-auto">
             <h2 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6">Achievements to Unlock</h2>
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4">
-              {achievements.map((achievement) => (
-                <Card 
-                  key={achievement.id} 
-                  className={`p-3 sm:p-4 text-center ${achievement.unlocked ? '' : 'opacity-60'}`}
-                >
-                  <div className="text-2xl sm:text-4xl mb-1 sm:mb-2">{achievement.icon}</div>
-                  <h3 className="font-semibold text-xs sm:text-sm">{achievement.title}</h3>
-                  <p className="text-[10px] sm:text-xs text-muted-foreground mt-1 line-clamp-2">{achievement.description}</p>
-                  {!achievement.unlocked && (
-                    <Lock className="w-3 h-3 sm:w-4 sm:h-4 mx-auto mt-1 sm:mt-2 text-muted-foreground" />
-                  )}
-                </Card>
-              ))}
-            </div>
+            {isLoading ? (
+              <div className="text-center py-8 text-muted-foreground">Loading achievements...</div>
+            ) : (
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4">
+                {achievements.map((achievement) => (
+                  <Card 
+                    key={achievement.id} 
+                    className={`p-3 sm:p-4 text-center transition-all ${achievement.unlocked ? 'border-primary/50 bg-primary/5' : 'opacity-60'}`}
+                  >
+                    <div className="text-2xl sm:text-4xl mb-1 sm:mb-2">{achievement.icon}</div>
+                    <h3 className="font-semibold text-xs sm:text-sm">{achievement.title}</h3>
+                    <p className="text-[10px] sm:text-xs text-muted-foreground mt-1 line-clamp-2">{achievement.description}</p>
+                    {achievement.unlocked ? (
+                      <CheckCircle className="w-3 h-3 sm:w-4 sm:h-4 mx-auto mt-1 sm:mt-2 text-green-500" />
+                    ) : (
+                      <>
+                        <Progress 
+                          value={((achievement.progress || 0) / (achievement.target || 1)) * 100} 
+                          className="h-1 mt-2" 
+                        />
+                        <p className="text-[10px] text-muted-foreground mt-1">
+                          {achievement.progress || 0}/{achievement.target}
+                        </p>
+                      </>
+                    )}
+                  </Card>
+                ))}
+              </div>
+            )}
           </div>
         </section>
 
