@@ -17,6 +17,9 @@ interface Question {
   type: "multiple-choice" | "true-false-not-given" | "fill-in-blank";
   question: string;
   options?: string[];
+}
+
+interface QuestionWithAnswer extends Question {
   correctAnswer: string;
 }
 
@@ -26,9 +29,16 @@ interface ReadingContent {
   questions: Question[];
 }
 
+interface ReadingContentWithAnswers {
+  title: string;
+  passage: string;
+  questions: QuestionWithAnswer[];
+}
+
 const ReadingPractice = () => {
   const navigate = useNavigate();
   const [content, setContent] = useState<ReadingContent | null>(null);
+  const [correctAnswers, setCorrectAnswers] = useState<Record<number, string>>({});
   const [isGenerating, setIsGenerating] = useState(false);
   const [answers, setAnswers] = useState<Record<number, string>>({});
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -40,6 +50,7 @@ const ReadingPractice = () => {
     setIsGenerating(true);
     setIsSubmitted(false);
     setAnswers({});
+    setCorrectAnswers({});
     setStartTime(Date.now());
     try {
       const response = await fetch(
@@ -100,19 +111,45 @@ Make it completely unique and realistic for IELTS Academic.`,
       );
 
       const data = await response.json();
+      
+      // Check for API errors first
+      if (data.error) {
+        toast.error(data.error);
+        return;
+      }
+      
+      if (!data.response) {
+        throw new Error("No response from AI");
+      }
+      
       const jsonMatch = data.response.match(/\{[\s\S]*\}/);
       if (jsonMatch) {
-        const parsedContent = JSON.parse(jsonMatch[0]);
+        const parsedContent: ReadingContentWithAnswers = JSON.parse(jsonMatch[0]);
         // Validate required fields exist
         if (!parsedContent.title || !parsedContent.passage || !parsedContent.questions || !Array.isArray(parsedContent.questions) || parsedContent.questions.length === 0) {
           throw new Error("Incomplete response - missing required fields");
         }
-        setContent(parsedContent);
+        
+        // Extract correct answers and store separately (security: don't expose in main state)
+        const answersMap: Record<number, string> = {};
+        const questionsWithoutAnswers: Question[] = parsedContent.questions.map(q => {
+          answersMap[q.id] = q.correctAnswer;
+          const { correctAnswer, ...questionWithoutAnswer } = q;
+          return questionWithoutAnswer;
+        });
+        
+        setCorrectAnswers(answersMap);
+        setContent({
+          title: parsedContent.title,
+          passage: parsedContent.passage,
+          questions: questionsWithoutAnswers
+        });
         toast.success("New reading passage generated!");
       } else {
-        throw new Error("Invalid response");
+        throw new Error("Invalid response format");
       }
     } catch (error) {
+      console.error("Content generation error:", error);
       toast.error("Failed to generate content. Please try again.");
     } finally {
       setIsGenerating(false);
@@ -129,8 +166,8 @@ Make it completely unique and realistic for IELTS Academic.`,
     const correctCount = content.questions.filter(
       q => {
         const userAnswer = answers[q.id]?.toLowerCase().trim();
-        const correctAnswer = q.correctAnswer.toLowerCase().trim();
-        return userAnswer === correctAnswer;
+        const correct = correctAnswers[q.id]?.toLowerCase().trim();
+        return userAnswer === correct;
       }
     ).length;
 
@@ -152,9 +189,8 @@ Make it completely unique and realistic for IELTS Academic.`,
   };
 
   const isAnswerCorrect = (questionId: number) => {
-    const question = content?.questions.find(q => q.id === questionId);
-    if (!question) return false;
-    return answers[questionId]?.toLowerCase().trim() === question.correctAnswer.toLowerCase().trim();
+    if (!isSubmitted) return false;
+    return answers[questionId]?.toLowerCase().trim() === correctAnswers[questionId]?.toLowerCase().trim();
   };
 
   return (
@@ -259,7 +295,7 @@ Make it completely unique and realistic for IELTS Academic.`,
                             />
                             {isSubmitted && !isAnswerCorrect(question.id) && (
                               <p className="text-sm text-green-600">
-                                Correct answer: {question.correctAnswer}
+                                Correct answer: {correctAnswers[question.id]}
                               </p>
                             )}
                           </div>
@@ -275,7 +311,7 @@ Make it completely unique and realistic for IELTS Academic.`,
                                 <Label 
                                   htmlFor={`q${question.id}-${idx}`}
                                   className={`cursor-pointer ${
-                                    isSubmitted && option === question.correctAnswer
+                                    isSubmitted && option === correctAnswers[question.id]
                                       ? "text-green-600 font-semibold"
                                       : isSubmitted && answers[question.id] === option && !isAnswerCorrect(question.id)
                                       ? "text-destructive"
