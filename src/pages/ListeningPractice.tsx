@@ -15,6 +15,9 @@ interface Question {
   id: number;
   question: string;
   options: string[];
+}
+
+interface QuestionWithAnswer extends Question {
   correctAnswer: string;
 }
 
@@ -25,9 +28,17 @@ interface ListeningContent {
   questions: Question[];
 }
 
+interface ListeningContentWithAnswers {
+  title: string;
+  scenario: string;
+  transcript: string;
+  questions: QuestionWithAnswer[];
+}
+
 const ListeningPractice = () => {
   const navigate = useNavigate();
   const [content, setContent] = useState<ListeningContent | null>(null);
+  const [correctAnswers, setCorrectAnswers] = useState<Record<number, string>>({});
   const [isGenerating, setIsGenerating] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [showTranscript, setShowTranscript] = useState(false);
@@ -42,6 +53,7 @@ const ListeningPractice = () => {
     setIsGenerating(true);
     setIsSubmitted(false);
     setAnswers({});
+    setCorrectAnswers({});
     setShowTranscript(false);
     setStartTime(Date.now());
     try {
@@ -88,15 +100,42 @@ Make it completely unique and realistic for IELTS Academic.`,
       );
 
       const data = await response.json();
+      
+      // Check for API errors first
+      if (data.error) {
+        toast.error(data.error);
+        return;
+      }
+      
+      if (!data.response) {
+        throw new Error("No response from AI");
+      }
+      
       const jsonMatch = data.response.match(/\{[\s\S]*\}/);
       if (jsonMatch) {
-        const parsedContent = JSON.parse(jsonMatch[0]);
-        setContent(parsedContent);
+        const parsedContent: ListeningContentWithAnswers = JSON.parse(jsonMatch[0]);
+        
+        // Extract correct answers and store separately (security: don't expose in main state)
+        const answersMap: Record<number, string> = {};
+        const questionsWithoutAnswers: Question[] = parsedContent.questions.map(q => {
+          answersMap[q.id] = q.correctAnswer;
+          const { correctAnswer, ...questionWithoutAnswer } = q;
+          return questionWithoutAnswer;
+        });
+        
+        setCorrectAnswers(answersMap);
+        setContent({
+          title: parsedContent.title,
+          scenario: parsedContent.scenario,
+          transcript: parsedContent.transcript,
+          questions: questionsWithoutAnswers
+        });
         toast.success("New listening content generated!");
       } else {
-        throw new Error("Invalid response");
+        throw new Error("Invalid response format");
       }
     } catch (error) {
+      console.error("Content generation error:", error);
       toast.error("Failed to generate content. Please try again.");
     } finally {
       setIsGenerating(false);
@@ -139,7 +178,7 @@ Make it completely unique and realistic for IELTS Academic.`,
     if (!content) return;
 
     const correctCount = content.questions.filter(
-      q => answers[q.id] === q.correctAnswer
+      q => answers[q.id] === correctAnswers[q.id]
     ).length;
 
     setScore(correctCount);
@@ -267,8 +306,8 @@ Make it completely unique and realistic for IELTS Academic.`,
                           {question.id}. {question.question}
                         </h3>
                         {isSubmitted && (
-                          <Badge variant={answers[question.id] === question.correctAnswer ? "default" : "destructive"} className="w-fit">
-                            {answers[question.id] === question.correctAnswer ? (
+                          <Badge variant={answers[question.id] === correctAnswers[question.id] ? "default" : "destructive"} className="w-fit">
+                            {answers[question.id] === correctAnswers[question.id] ? (
                               <CheckCircle className="h-4 w-4" />
                             ) : (
                               <XCircle className="h-4 w-4" />
@@ -287,9 +326,9 @@ Make it completely unique and realistic for IELTS Academic.`,
                             <Label 
                               htmlFor={`q${question.id}-${idx}`}
                               className={`cursor-pointer text-sm sm:text-base ${
-                                isSubmitted && option === question.correctAnswer
+                                isSubmitted && option === correctAnswers[question.id]
                                   ? "text-green-600 font-semibold"
-                                  : isSubmitted && answers[question.id] === option && option !== question.correctAnswer
+                                  : isSubmitted && answers[question.id] === option && option !== correctAnswers[question.id]
                                   ? "text-destructive"
                                   : ""
                               }`}
