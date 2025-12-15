@@ -74,8 +74,14 @@ export function DocumentUpload({ userId, userEmail, documents, onDocumentsChange
 
     setUploading(true);
     try {
+      // Get the authenticated user's ID for storage path (RLS requires auth.uid())
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        throw new Error("You must be logged in to upload documents");
+      }
+      
       const fileExt = file.name.split('.').pop();
-      const fileName = `${userId}/${documentName.trim()}-${Date.now()}.${fileExt}`;
+      const fileName = `${user.id}/${documentName.trim()}-${Date.now()}.${fileExt}`;
 
       const { error: uploadError } = await supabase.storage
         .from('student-documents')
