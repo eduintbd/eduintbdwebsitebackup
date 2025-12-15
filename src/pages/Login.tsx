@@ -51,6 +51,7 @@ export default function Login() {
     level: "",
     budget: "",
     reference_source: "",
+    referral_id: "",
     details: "",
   });
   const { toast } = useToast();
@@ -177,7 +178,9 @@ export default function Login() {
               preferred_course: signupData.preferred_course || null,
               level: signupData.level || null,
               budget: signupData.budget || null,
-              reference_source: signupData.reference_source || null,
+              reference_source: signupData.reference_source === 'referral' && signupData.referral_id 
+                ? `referral:${signupData.referral_id}` 
+                : signupData.reference_source || null,
               details: validatedData.details || null,
             }]);
 
@@ -491,7 +494,7 @@ export default function Login() {
 
                     <div className="space-y-2">
                       <Label htmlFor="reference_source">How did you hear about us?</Label>
-                      <Select value={signupData.reference_source} onValueChange={(value) => setSignupData({...signupData, reference_source: value})}>
+                      <Select value={signupData.reference_source} onValueChange={(value) => setSignupData({...signupData, reference_source: value, referral_id: value !== 'referral' ? '' : signupData.referral_id})}>
                         <SelectTrigger>
                           <SelectValue placeholder="Select source" />
                         </SelectTrigger>
@@ -499,10 +502,23 @@ export default function Login() {
                           <SelectItem value="facebook">Facebook</SelectItem>
                           <SelectItem value="whatsapp">WhatsApp</SelectItem>
                           <SelectItem value="friend">Friend</SelectItem>
+                          <SelectItem value="referral">Referral</SelectItem>
                           <SelectItem value="other">Other</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
+
+                    {signupData.reference_source === 'referral' && (
+                      <div className="space-y-2">
+                        <Label htmlFor="referral_id">Referral ID</Label>
+                        <Input
+                          id="referral_id"
+                          placeholder="Enter referral ID"
+                          value={signupData.referral_id}
+                          onChange={(e) => setSignupData({...signupData, referral_id: e.target.value})}
+                        />
+                      </div>
+                    )}
 
                     <div className="space-y-2">
                       <Label htmlFor="details">Brief Details About You (Max 300 words)</Label>
