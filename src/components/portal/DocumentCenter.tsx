@@ -1,16 +1,14 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { FileText, Upload, Download, CheckCircle2, Clock, AlertCircle } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { FileText, CheckCircle2, Clock, AlertCircle } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { useToast } from "@/hooks/use-toast";
+import { DocumentUpload } from "./DocumentUpload";
 
 interface DocumentCenterProps {
   application: any;
+  onUpdate?: () => void;
 }
 
-export function DocumentCenter({ application }: DocumentCenterProps) {
-  const { toast } = useToast();
-
+export function DocumentCenter({ application, onUpdate }: DocumentCenterProps) {
   const requiredDocuments = [
     {
       name: "Passport Copy",
@@ -44,13 +42,6 @@ export function DocumentCenter({ application }: DocumentCenterProps) {
     },
   ];
 
-  const handleUpload = () => {
-    toast({
-      title: "Upload Feature",
-      description: "Document upload functionality will be available soon. Please contact your advisor.",
-    });
-  };
-
   const getStatusIcon = (status: string) => {
     switch (status) {
       case "uploaded":
@@ -62,61 +53,54 @@ export function DocumentCenter({ application }: DocumentCenterProps) {
     }
   };
 
+  const handleDocumentsChange = () => {
+    if (onUpdate) {
+      onUpdate();
+    }
+  };
+
   return (
-    <Card>
-      <CardHeader>
-        <div className="flex items-center justify-between">
-          <div>
-            <CardTitle className="flex items-center gap-2">
-              <FileText className="h-5 w-5" />
-              Document Center
-            </CardTitle>
-            <CardDescription>Upload and manage your application documents</CardDescription>
-          </div>
-          <Button onClick={handleUpload} size="sm">
-            <Upload className="h-4 w-4 mr-2" />
-            Upload
-          </Button>
-        </div>
-      </CardHeader>
-      <CardContent>
-        <div className="space-y-3">
-          {requiredDocuments.map((doc, index) => (
-            <div key={index} className="flex items-center justify-between p-3 rounded-lg border bg-card hover:bg-accent/5 transition-colors">
-              <div className="flex items-center gap-3 flex-1 min-w-0">
-                {getStatusIcon(doc.status)}
-                <div className="flex-1 min-w-0">
-                  <p className="font-medium text-sm truncate">{doc.name}</p>
-                  <div className="flex items-center gap-2 mt-1">
-                    <Badge variant={doc.status === "uploaded" ? "default" : "outline"} className="text-xs">
-                      {doc.status}
-                    </Badge>
-                    {doc.required && (
-                      <Badge variant="secondary" className="text-xs">Required</Badge>
-                    )}
+    <div className="space-y-6">
+      {/* Document Upload Section */}
+      <DocumentUpload
+        userId={application.id}
+        userEmail={application.email}
+        documents={application.document_urls}
+        onDocumentsChange={handleDocumentsChange}
+      />
+
+      {/* Document Checklist */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <FileText className="h-5 w-5" />
+            Required Documents Checklist
+          </CardTitle>
+          <CardDescription>Keep track of documents you need to submit</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-3">
+            {requiredDocuments.map((doc, index) => (
+              <div key={index} className="flex items-center justify-between p-3 rounded-lg border bg-card hover:bg-accent/5 transition-colors">
+                <div className="flex items-center gap-3 flex-1 min-w-0">
+                  {getStatusIcon(doc.status)}
+                  <div className="flex-1 min-w-0">
+                    <p className="font-medium text-sm truncate">{doc.name}</p>
+                    <div className="flex items-center gap-2 mt-1">
+                      <Badge variant={doc.status === "uploaded" ? "default" : "outline"} className="text-xs">
+                        {doc.status}
+                      </Badge>
+                      {doc.required && (
+                        <Badge variant="secondary" className="text-xs">Required</Badge>
+                      )}
+                    </div>
                   </div>
                 </div>
               </div>
-              {doc.status === "uploaded" && (
-                <Button variant="ghost" size="sm">
-                  <Download className="h-4 w-4" />
-                </Button>
-              )}
-            </div>
-          ))}
-        </div>
-
-        <div className="mt-6 p-4 rounded-lg bg-muted/50 border-2 border-dashed border-border">
-          <div className="flex flex-col items-center justify-center text-center">
-            <Upload className="h-8 w-8 text-muted-foreground mb-2" />
-            <p className="text-sm font-medium mb-1">Drag and drop files here</p>
-            <p className="text-xs text-muted-foreground mb-3">or click to browse</p>
-            <Button onClick={handleUpload} variant="outline" size="sm">
-              Choose Files
-            </Button>
+            ))}
           </div>
-        </div>
-      </CardContent>
-    </Card>
+        </CardContent>
+      </Card>
+    </div>
   );
 }

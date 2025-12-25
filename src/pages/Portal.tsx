@@ -330,7 +330,7 @@ export default function Portal() {
 
           {/* Documents Tab */}
           <TabsContent value="documents" className="space-y-4 sm:space-y-6">
-            <DocumentCenter application={application} />
+            <DocumentCenter application={application} onUpdate={() => loadApplication(user?.email)} />
           </TabsContent>
 
           {/* Messages Tab */}
