@@ -849,6 +849,7 @@ export function StudentLifecycleView({
                 userEmail={student.email}
                 documents={student.document_urls || []}
                 onDocumentsChange={onLoadStudents}
+                studentName={student.name}
               />
             </div>
           </TabsContent>
