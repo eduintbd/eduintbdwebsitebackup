@@ -69,27 +69,47 @@ function slugify(input: string) {
     .slice(0, 40);
 }
 
+const PATH_SLASH_TOKEN = "__slash__";
+
+function encodeDocNameForPath(name: string) {
+  // IMPORTANT: storage paths treat "/" as a folder delimiter.
+  // We encode it so document names like "IELTS/TOEFL" stay in a single object key.
+  return name.split("/").join(PATH_SLASH_TOKEN);
+}
+
+function decodeDocNameFromPath(name: string) {
+  return name.split(PATH_SLASH_TOKEN).join("/");
+}
+
+function fileBaseFromPath(filePath: string) {
+  const segments = filePath.split("/");
+  // Paths are stored as: "<userId>/<docName>--<timestamp>--<remark>.ext".
+  // Some legacy uploads may include "/" inside the docName, which becomes extra segments.
+  const withoutUserPrefix = segments.length > 1 ? segments.slice(1).join("/") : segments[0];
+  return (withoutUserPrefix || "").replace(/\.[^/.]+$/, "");
+}
+
 function parseDocNameFromPath(filePath: string) {
-  const base = (filePath.split("/").pop() || "").replace(/\.[^/.]+$/, "");
+  const base = fileBaseFromPath(filePath);
 
   // New format: "NAME--TIMESTAMP--REMARK"
   if (base.includes("--")) {
     const [name] = base.split("--");
-    return name || "Document";
+    return decodeDocNameFromPath(name || "Document");
   }
 
   // Old format: "NAME-<timestamp>"
   const lastDash = base.lastIndexOf("-");
   if (lastDash > 0) {
     const maybeTs = base.slice(lastDash + 1);
-    if (/^\d+$/.test(maybeTs)) return base.slice(0, lastDash) || "Document";
+    if (/^\d+$/.test(maybeTs)) return decodeDocNameFromPath(base.slice(0, lastDash) || "Document");
   }
 
-  return base || "Document";
+  return decodeDocNameFromPath(base || "Document");
 }
 
 function parseRemarkFromPath(filePath: string) {
-  const base = (filePath.split("/").pop() || "").replace(/\.[^/.]+$/, "");
+  const base = fileBaseFromPath(filePath);
   if (!base.includes("--")) return undefined;
   const parts = base.split("--");
   return parts[2] || undefined;
@@ -150,7 +170,8 @@ export function DocumentUpload({ userId: _userId, userEmail, documents, onDocume
 
       const fileExt = file.name.split(".").pop() || "bin";
       const remarkSlug = remark.trim() ? slugify(remark) : "";
-      const fileName = `${user.id}/${effectiveDocName}--${Date.now()}${remarkSlug ? `--${remarkSlug}` : ""}.${fileExt}`;
+      const safeDocName = encodeDocNameForPath(effectiveDocName);
+      const fileName = `${user.id}/${safeDocName}--${Date.now()}${remarkSlug ? `--${remarkSlug}` : ""}.${fileExt}`;
 
       const { error: uploadError } = await supabase.storage
         .from("student-documents")
