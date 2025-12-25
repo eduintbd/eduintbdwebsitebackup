@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Calendar, CheckCircle2, Clock, AlertCircle, Edit2, Save, X } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
@@ -8,6 +8,41 @@ import { Label } from "@/components/ui/label";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
 
+// Required documents list - must match DocumentUpload component
+const REQUIRED_DOCS = [
+  "Passport Copy",
+  "Academic Transcripts",
+  "English Test Scores (IELTS/TOEFL)",
+  "Statement of Purpose",
+  "Financial Documents",
+];
+
+const PATH_SLASH_TOKEN = "__slash__";
+
+function decodeDocNameFromPath(name: string) {
+  return name.split(PATH_SLASH_TOKEN).join("/");
+}
+
+function fileBaseFromPath(filePath: string) {
+  const segments = filePath.split("/");
+  const withoutUserPrefix = segments.length > 1 ? segments.slice(1).join("/") : segments[0];
+  return (withoutUserPrefix || "").replace(/\.[^/.]+$/, "");
+}
+
+function parseDocNameFromPath(filePath: string) {
+  const base = fileBaseFromPath(filePath);
+  if (base.includes("--")) {
+    const [name] = base.split("--");
+    return decodeDocNameFromPath(name || "Document");
+  }
+  const lastDash = base.lastIndexOf("-");
+  if (lastDash > 0) {
+    const maybeTs = base.slice(lastDash + 1);
+    if (/^\d+$/.test(maybeTs)) return decodeDocNameFromPath(base.slice(0, lastDash) || "Document");
+  }
+  return decodeDocNameFromPath(base || "Document");
+}
+
 interface TimelineViewProps {
   application: any;
   onUpdate?: () => void;
@@ -16,9 +51,35 @@ interface TimelineViewProps {
 export function TimelineView({ application, onUpdate }: TimelineViewProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [saving, setSaving] = useState(false);
+
+  // Calculate document upload status based on actual uploaded documents
+  const documentStatus = useMemo(() => {
+    const docs = application?.document_urls;
+    if (!docs || !Array.isArray(docs) || docs.length === 0) {
+      return { status: "pending" as const, count: 0, total: REQUIRED_DOCS.length };
+    }
+
+    // Get uploaded document names
+    const uploadedNames = new Set(
+      docs.map((path: string) => parseDocNameFromPath(path).toLowerCase())
+    );
+
+    // Count how many required docs are uploaded
+    const uploadedRequiredCount = REQUIRED_DOCS.filter(
+      (docName) => uploadedNames.has(docName.toLowerCase())
+    ).length;
+
+    if (uploadedRequiredCount >= REQUIRED_DOCS.length) {
+      return { status: "completed" as const, count: uploadedRequiredCount, total: REQUIRED_DOCS.length };
+    } else if (uploadedRequiredCount > 0) {
+      return { status: "in-progress" as const, count: uploadedRequiredCount, total: REQUIRED_DOCS.length };
+    }
+    return { status: "pending" as const, count: 0, total: REQUIRED_DOCS.length };
+  }, [application?.document_urls]);
+
   const [editableFields, setEditableFields] = useState({
     consultation_completed: application?.consultation_completed || false,
-    documents_uploaded: application?.documents_uploaded || false,
+    documents_uploaded: documentStatus.status === "completed",
     offer_letter_received: application?.offer_letter_received || false,
     cas_received: application?.cas_received || false,
     deposit_paid: application?.deposit_paid || false,
@@ -97,11 +158,13 @@ export function TimelineView({ application, onUpdate }: TimelineViewProps) {
     {
       title: "Document Submission",
       date: null,
-      status: editableFields.documents_uploaded ? "completed" : "pending",
-      icon: editableFields.documents_uploaded ? CheckCircle2 : Clock,
-      editable: true,
-      field: "documents_uploaded" as const,
-      label: "Documents uploaded",
+      status: documentStatus.status,
+      icon: documentStatus.status === "completed" ? CheckCircle2 : 
+            documentStatus.status === "in-progress" ? AlertCircle : Clock,
+      editable: false, // Auto-calculated from actual uploads
+      description: documentStatus.status !== "pending" 
+        ? `${documentStatus.count}/${documentStatus.total} required documents`
+        : undefined,
     },
     {
       title: "Offer Letter",
@@ -221,18 +284,24 @@ export function TimelineView({ application, onUpdate }: TimelineViewProps) {
                     milestone.status === "completed" ? "default" : 
                     milestone.status === "in-progress" ? "secondary" : "outline"
                   } className={`text-xs ${
-                    milestone.status === "completed" ? "bg-green-500/10 text-green-600 border-green-500/20" : ""
+                    milestone.status === "completed" 
+                      ? "bg-green-500/10 text-green-600 border-green-500/20" 
+                      : milestone.status === "in-progress"
+                      ? "bg-yellow-500/10 text-yellow-600 border-yellow-500/20"
+                      : ""
                   }`}>
                     {milestone.status}
                   </Badge>
                 </div>
-                {milestone.date && (
+                {(milestone.date || milestone.description) && (
                   <p className="text-xs text-muted-foreground mt-1">
-                    {new Date(milestone.date).toLocaleDateString('en-US', { 
-                      year: 'numeric', 
-                      month: 'long', 
-                      day: 'numeric' 
-                    })}
+                    {milestone.date 
+                      ? new Date(milestone.date).toLocaleDateString('en-US', { 
+                          year: 'numeric', 
+                          month: 'long', 
+                          day: 'numeric' 
+                        })
+                      : milestone.description}
                   </p>
                 )}
               </div>
