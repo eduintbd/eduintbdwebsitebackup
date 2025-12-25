@@ -147,6 +147,7 @@ export function StudentProfile({ studentId, onClose }: StudentProfileProps) {
                     userEmail={student.email}
                     documents={student.document_urls || []}
                     onDocumentsChange={loadStudent}
+                    studentName={student.name}
                   />
                 </TabsContent>
 

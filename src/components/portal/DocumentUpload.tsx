@@ -8,7 +8,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { cn } from "@/lib/utils";
-import { Upload, Eye, Trash2, CheckCircle2, FileText, AlertCircle } from "lucide-react";
+import { Upload, Eye, Trash2, CheckCircle2, FileText, AlertCircle, Download } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -21,6 +21,7 @@ interface DocumentUploadProps {
   userEmail: string;
   documents: any; // string[] (preferred) or legacy objects with fileName
   onDocumentsChange: () => void;
+  studentName?: string; // Optional: used for display in admin view
 }
 
 type StoredDocPath = string;
@@ -94,7 +95,7 @@ function parseRemarkFromPath(filePath: string) {
   return parts[2] || undefined;
 }
 
-export function DocumentUpload({ userId: _userId, userEmail, documents, onDocumentsChange }: DocumentUploadProps) {
+export function DocumentUpload({ userId: _userId, userEmail, documents, onDocumentsChange, studentName }: DocumentUploadProps) {
   const [selectedDoc, setSelectedDoc] = useState<string>("");
   const [customDocName, setCustomDocName] = useState("");
   const [remark, setRemark] = useState("");
@@ -217,6 +218,42 @@ export function DocumentUpload({ userId: _userId, userEmail, documents, onDocume
       toast({
         title: "Error",
         description: "Failed to load preview",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleDownload = async (filePath: string, docName: string) => {
+    try {
+      const { data, error } = await supabase.storage
+        .from("student-documents")
+        .createSignedUrl(filePath, 60);
+
+      if (error) throw error;
+
+      // Create download link with proper filename
+      const link = document.createElement("a");
+      link.href = data.signedUrl;
+      
+      // Format: "Document Name - Student Name.ext"
+      const ext = filePath.split(".").pop() || "pdf";
+      const downloadName = studentName 
+        ? `${docName} - ${studentName}.${ext}`
+        : `${docName}.${ext}`;
+      
+      link.download = downloadName;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      toast({
+        title: "Success",
+        description: "Document download started.",
+      });
+    } catch {
+      toast({
+        title: "Error",
+        description: "Failed to download document",
         variant: "destructive",
       });
     }
@@ -433,7 +470,10 @@ export function DocumentUpload({ userId: _userId, userEmail, documents, onDocume
       {/* Uploaded Documents */}
       {uploadedDocs.length > 0 && (
         <Card className="p-4">
-          <p className="text-sm font-medium mb-3">Uploaded Documents ({uploadedDocs.length}):</p>
+          <p className="text-sm font-medium mb-3">
+            Uploaded Documents ({uploadedDocs.length})
+            {studentName && <span className="text-muted-foreground"> - {studentName}</span>}:
+          </p>
           <div className="space-y-2">
             {uploadedDocs.map((doc, idx) => (
               <div
@@ -443,7 +483,12 @@ export function DocumentUpload({ userId: _userId, userEmail, documents, onDocume
                 <div className="flex items-center gap-3 flex-1 min-w-0">
                   <CheckCircle2 className="w-4 h-4 text-primary flex-shrink-0" />
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium truncate">{doc.name}</p>
+                    <p className="text-sm font-medium truncate">
+                      {doc.name}
+                      {studentName && (
+                        <span className="text-muted-foreground font-normal"> - {studentName}</span>
+                      )}
+                    </p>
                     {doc.remark && (
                       <p className="text-xs text-muted-foreground truncate">{doc.remark}</p>
                     )}
@@ -454,13 +499,23 @@ export function DocumentUpload({ userId: _userId, userEmail, documents, onDocume
                     size="sm"
                     variant="outline"
                     onClick={() => handlePreview(doc.filePath)}
+                    title="Preview"
                   >
                     <Eye className="w-4 h-4" />
                   </Button>
                   <Button
                     size="sm"
                     variant="outline"
+                    onClick={() => handleDownload(doc.filePath, doc.name)}
+                    title="Download"
+                  >
+                    <Download className="w-4 h-4" />
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="outline"
                     onClick={() => handleDelete(doc.filePath)}
+                    title="Delete"
                   >
                     <Trash2 className="w-4 h-4" />
                   </Button>
