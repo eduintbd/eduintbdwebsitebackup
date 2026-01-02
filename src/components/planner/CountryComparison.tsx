@@ -113,6 +113,20 @@ export function CountryComparison() {
       highlights: ["Safe environment", "Work rights", "Nature & lifestyle"],
       rating: 4.4,
     },
+    {
+      name: "South Korea",
+      flag: "🇰🇷",
+      route: "/study-south-korea",
+      popular: false,
+      tuitionRange: "₩4,000,000 - ₩12,000,000/year",
+      livingCost: "₩8,000,000 - ₩12,000,000/year",
+      visaTime: "2-4 weeks",
+      workRights: "20 hrs/week during study",
+      prPathway: "D-10 Job Seeker → E-7 Skilled Worker",
+      topPrograms: ["Engineering", "IT", "Korean Studies", "Business"],
+      highlights: ["Affordable tuition", "Tech hub", "K-culture immersion"],
+      rating: 4.5,
+    },
   ];
 
   const toggleCountry = (name: string) => {

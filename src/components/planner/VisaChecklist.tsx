@@ -123,6 +123,25 @@ export function VisaChecklist() {
         { id: "photo", title: "Biometric Photos", description: "2 recent passport photos", icon: FileText, required: true },
       ],
     },
+    southkorea: {
+      country: "South Korea",
+      flag: "🇰🇷",
+      visaType: "D-2 Student Visa",
+      processingTime: "2-4 weeks",
+      fee: "₩60,000 (~$45)",
+      checklist: [
+        { id: "admission", title: "Admission Letter", description: "Certificate of admission from Korean university", icon: FileText, required: true },
+        { id: "passport", title: "Valid Passport", description: "Valid for at least 6 months", icon: Plane, required: true },
+        { id: "financial", title: "Financial Proof", description: "Bank statement showing $10,000+ or scholarship letter", icon: DollarSign, required: true },
+        { id: "transcripts", title: "Academic Records", description: "Transcripts and degree certificates (apostilled)", icon: GraduationCap, required: true },
+        { id: "studyplan", title: "Study Plan", description: "Detailed study plan and purpose of study", icon: FileText, required: true },
+        { id: "photo", title: "Passport Photos", description: "3.5x4.5cm, white background, recent", icon: FileText, required: true },
+        { id: "application", title: "Visa Application Form", description: "Completed visa application form", icon: FileCheck, required: true },
+        { id: "insurance", title: "Health Insurance", description: "Korean health insurance enrollment proof", icon: Heart, required: false },
+        { id: "language", title: "Language Certificate", description: "TOPIK or English proficiency (IELTS/TOEFL)", icon: FileText, required: false },
+        { id: "residence", title: "Residence Plan", description: "Accommodation arrangement proof", icon: Home, required: false },
+      ],
+    },
   };
 
   const currentVisa = visaData[selectedCountry];
