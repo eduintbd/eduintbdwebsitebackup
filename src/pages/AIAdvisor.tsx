@@ -1,67 +1,126 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Navigation } from "@/components/Navigation";
 import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Send, Sparkles, GraduationCap, Globe, DollarSign, FileText } from "lucide-react";
+import { Send, Sparkles, GraduationCap, Globe, DollarSign, FileText, MapPin, Briefcase } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
+
+interface Message {
+  text: string;
+  isUser: boolean;
+}
 
 export default function AIAdvisor() {
-  const [messages, setMessages] = useState<{ text: string; isUser: boolean }[]>([
+  const [messages, setMessages] = useState<Message[]>([
     { 
-      text: "Hello! I'm your AI study abroad advisor. I can help you with universities, programs, scholarships, visa requirements, and more. What would you like to know?", 
+      text: "Hello! I'm your AI Study Abroad Advisor. I have detailed knowledge about studying in the **UK, USA, Canada, Australia, Germany, New Zealand, and South Korea**.\n\nAsk me about:\n• 🎓 Universities & programs\n• 💰 Tuition fees & living costs\n• 📋 Visa requirements & processes\n• 🎯 Scholarships & funding\n• 💼 Work rights & post-study options\n\nWhat would you like to know?", 
       isUser: false 
     },
   ]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const scrollRef = useRef<HTMLDivElement>(null);
 
   const popularQuestions = [
-    { icon: DollarSign, text: "Which country is best for my budget?" },
-    { icon: GraduationCap, text: "What are scholarship opportunities?" },
-    { icon: FileText, text: "How long is the application process?" },
-    { icon: Globe, text: "Can I work while studying?" },
+    { icon: MapPin, text: "Tell me about studying in UK" },
+    { icon: DollarSign, text: "Which country is cheapest for studying?" },
+    { icon: GraduationCap, text: "Best scholarships for Bangladeshi students?" },
+    { icon: Globe, text: "Compare Canada vs Australia for PR" },
+    { icon: Briefcase, text: "Which country has best work opportunities?" },
+    { icon: FileText, text: "How to apply for Germany student visa?" },
   ];
 
-  const handleSend = () => {
-    if (!input.trim()) return;
+  useEffect(() => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+    }
+  }, [messages]);
 
-    const userMessage = input;
+  const handleSend = async () => {
+    if (!input.trim() || isLoading) return;
+
+    const userMessage = input.trim();
     setMessages(prev => [...prev, { text: userMessage, isUser: true }]);
     setInput("");
     setIsLoading(true);
 
-    // Simulate AI response
-    setTimeout(() => {
-      const responses: { [key: string]: string } = {
-        "budget": "For budget-conscious students, countries like Germany (free public universities), Canada (affordable with work options), and Australia (good ROI) are excellent choices. Would you like detailed cost breakdowns?",
-        "scholarship": "We have access to 500+ scholarships! Popular ones include Chevening (UK), DAAD (Germany), Australia Awards, and Erasmus+ (Europe). What's your field of study?",
-        "application": "Typical timeline: 6-12 months. Start researching 12 months before, apply 6-9 months before intake, visa processing 2-3 months. Need help creating your timeline?",
-        "work": "Most countries allow 20 hours/week during studies: UK, Canada, Australia, Germany all permit part-time work. Post-study work visas range from 1-3 years depending on the country.",
-        "default": "That's a great question! Our counselors can provide detailed guidance. For personalized advice, I recommend booking a free consultation. Would you like me to help you with specific countries or programs?"
-      };
-
-      let response = responses.default;
-      const lowerInput = userMessage.toLowerCase();
+    try {
+      // Build conversation history for context
+      const conversationHistory = messages.map(msg => ({
+        role: msg.isUser ? "user" : "assistant",
+        content: msg.text
+      }));
       
-      if (lowerInput.includes("budget") || lowerInput.includes("cost") || lowerInput.includes("cheap")) {
-        response = responses.budget;
-      } else if (lowerInput.includes("scholarship") || lowerInput.includes("funding")) {
-        response = responses.scholarship;
-      } else if (lowerInput.includes("how long") || lowerInput.includes("timeline") || lowerInput.includes("process")) {
-        response = responses.application;
-      } else if (lowerInput.includes("work") || lowerInput.includes("job") || lowerInput.includes("part-time")) {
-        response = responses.work;
+      // Add current message
+      conversationHistory.push({ role: "user", content: userMessage });
+
+      const { data, error } = await supabase.functions.invoke("ai-study-advisor", {
+        body: { messages: conversationHistory }
+      });
+
+      if (error) throw error;
+
+      if (data.error) {
+        throw new Error(data.error);
       }
 
-      setMessages(prev => [...prev, { text: response, isUser: false }]);
+      setMessages(prev => [...prev, { text: data.response, isUser: false }]);
+    } catch (error) {
+      console.error("Error getting AI response:", error);
+      toast.error("Failed to get response. Please try again.");
+      setMessages(prev => [...prev, { 
+        text: "I apologize, I'm having trouble connecting right now. Please try again or book a free consultation with our experts for personalized guidance.", 
+        isUser: false 
+      }]);
+    } finally {
       setIsLoading(false);
-    }, 1500);
+    }
   };
 
   const handleQuestionClick = (question: string) => {
     setInput(question);
+  };
+
+  const formatMessage = (text: string) => {
+    // Convert markdown-style formatting to HTML
+    return text
+      .split('\n')
+      .map((line, i) => {
+        // Handle headers
+        if (line.startsWith('### ')) {
+          return <h4 key={i} className="font-semibold text-primary mt-3 mb-1">{line.replace('### ', '')}</h4>;
+        }
+        if (line.startsWith('## ')) {
+          return <h3 key={i} className="font-bold text-primary mt-3 mb-2">{line.replace('## ', '')}</h3>;
+        }
+        // Handle bullet points
+        if (line.startsWith('• ') || line.startsWith('- ') || line.startsWith('* ')) {
+          const content = line.replace(/^[•\-\*]\s/, '');
+          return <li key={i} className="ml-4 list-disc">{formatInlineStyles(content)}</li>;
+        }
+        // Handle numbered lists
+        if (/^\d+\.\s/.test(line)) {
+          return <li key={i} className="ml-4 list-decimal">{formatInlineStyles(line.replace(/^\d+\.\s/, ''))}</li>;
+        }
+        // Empty lines
+        if (!line.trim()) {
+          return <br key={i} />;
+        }
+        // Regular paragraphs
+        return <p key={i} className="mb-1">{formatInlineStyles(line)}</p>;
+      });
+  };
+
+  const formatInlineStyles = (text: string) => {
+    // Split by bold markers and reconstruct with styled spans
+    const parts = text.split(/\*\*(.*?)\*\*/g);
+    return parts.map((part, i) => 
+      i % 2 === 1 ? <strong key={i} className="font-semibold">{part}</strong> : part
+    );
   };
 
   return (
@@ -80,7 +139,7 @@ export default function AIAdvisor() {
               Get Instant Study Abroad Advice
             </h1>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Chat with our AI-powered study abroad advisor to get personalized recommendations on universities, programs, scholarships, and visa requirements.
+              Chat with our AI advisor for detailed, country-specific information on universities, costs, visas, scholarships, and more.
             </p>
           </div>
 
@@ -94,7 +153,7 @@ export default function AIAdvisor() {
               <CardDescription>Click on any question to get started</CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="grid sm:grid-cols-2 gap-3">
+              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
                 {popularQuestions.map((q, idx) => (
                   <Button
                     key={idx}
@@ -118,11 +177,11 @@ export default function AIAdvisor() {
                 AI Study Advisor
               </CardTitle>
               <CardDescription className="text-primary-foreground/80">
-                Available 24/7 • Instant Responses
+                Available 24/7 • Country-Specific Knowledge • Instant Responses
               </CardDescription>
             </CardHeader>
             <CardContent className="p-0">
-              <ScrollArea className="h-[400px] p-4">
+              <ScrollArea className="h-[450px] p-4" ref={scrollRef}>
                 <div className="space-y-4">
                   {messages.map((message, idx) => (
                     <div
@@ -130,20 +189,23 @@ export default function AIAdvisor() {
                       className={`flex ${message.isUser ? "justify-end" : "justify-start"} animate-fade-in`}
                     >
                       <div
-                        className={`max-w-[80%] rounded-2xl px-4 py-3 ${
+                        className={`max-w-[85%] rounded-2xl px-4 py-3 ${
                           message.isUser
                             ? "bg-primary text-primary-foreground rounded-br-sm"
                             : "bg-muted text-foreground rounded-bl-sm border"
                         }`}
                       >
-                        <p className="text-sm leading-relaxed">{message.text}</p>
+                        <div className="text-sm leading-relaxed">
+                          {message.isUser ? message.text : formatMessage(message.text)}
+                        </div>
                       </div>
                     </div>
                   ))}
                   {isLoading && (
                     <div className="flex justify-start animate-fade-in">
                       <div className="bg-muted text-foreground rounded-2xl rounded-bl-sm px-4 py-3 border">
-                        <div className="flex gap-1">
+                        <div className="flex gap-1 items-center">
+                          <span className="text-sm text-muted-foreground mr-2">Analyzing your question...</span>
                           <div className="w-2 h-2 bg-primary rounded-full animate-bounce" style={{ animationDelay: "0ms" }}></div>
                           <div className="w-2 h-2 bg-primary rounded-full animate-bounce" style={{ animationDelay: "150ms" }}></div>
                           <div className="w-2 h-2 bg-primary rounded-full animate-bounce" style={{ animationDelay: "300ms" }}></div>
@@ -160,7 +222,7 @@ export default function AIAdvisor() {
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
                     onKeyPress={(e) => e.key === "Enter" && handleSend()}
-                    placeholder="Ask me anything about studying abroad..."
+                    placeholder="Ask about any country, program, visa, or scholarship..."
                     className="flex-1"
                     disabled={isLoading}
                   />
@@ -174,7 +236,7 @@ export default function AIAdvisor() {
                   </Button>
                 </div>
                 <p className="text-xs text-muted-foreground mt-2 text-center">
-                  For personalized consultation, book a free session with our experts
+                  Try asking: "What are the costs for studying in Canada?" or "Compare UK vs USA for MBA"
                 </p>
               </div>
             </CardContent>
@@ -185,7 +247,7 @@ export default function AIAdvisor() {
             <CardContent className="p-6 text-center">
               <h3 className="text-xl font-semibold mb-2">Need More Personalized Guidance?</h3>
               <p className="text-primary-foreground/90 mb-4">
-                Book a free consultation with our expert counselors
+                Book a free consultation with our expert counselors for tailored advice
               </p>
               <Button variant="secondary" size="lg" asChild>
                 <a href="/#consultation">Book Free Consultation</a>
