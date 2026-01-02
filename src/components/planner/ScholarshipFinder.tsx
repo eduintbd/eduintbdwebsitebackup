@@ -170,6 +170,34 @@ export function ScholarshipFinder() {
       link: "https://www.sbfi.admin.ch",
       featured: false,
     },
+    {
+      id: "11",
+      name: "Korean Government Scholarship (KGSP)",
+      provider: "Korean Government",
+      country: "South Korea",
+      flag: "🇰🇷",
+      amount: "Full funding + allowance",
+      deadline: "February 2025",
+      eligibility: ["Under 25 (Bachelor's) or 40 (Graduate)", "GPA 80%+", "Good health"],
+      level: ["Bachelors", "Masters", "PhD"],
+      fields: ["All fields"],
+      link: "https://www.studyinkorea.go.kr",
+      featured: true,
+    },
+    {
+      id: "12",
+      name: "Global Korea Scholarship",
+      provider: "NIIED",
+      country: "South Korea",
+      flag: "🇰🇷",
+      amount: "₩900,000/month + tuition",
+      deadline: "March 2025",
+      eligibility: ["Bachelor's degree", "No Korean heritage", "Language courses included"],
+      level: ["Masters", "PhD"],
+      fields: ["All fields"],
+      link: "https://www.studyinkorea.go.kr",
+      featured: false,
+    },
   ];
 
   const filteredScholarships = scholarships.filter(s => {
@@ -215,6 +243,7 @@ export function ScholarshipFinder() {
                 <SelectItem value="Canada">🇨🇦 Canada</SelectItem>
                 <SelectItem value="Australia">🇦🇺 Australia</SelectItem>
                 <SelectItem value="Germany">🇩🇪 Germany</SelectItem>
+                <SelectItem value="South Korea">🇰🇷 South Korea</SelectItem>
                 <SelectItem value="Europe">🇪🇺 Europe</SelectItem>
               </SelectContent>
             </Select>
