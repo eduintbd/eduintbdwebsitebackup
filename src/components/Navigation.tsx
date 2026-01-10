@@ -125,16 +125,13 @@ export const Navigation = () => {
       <div className="container px-6">
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
-          <div className="flex items-center gap-3">
-            <Link to="/" className="flex items-center gap-3">
+          <div className="flex items-center">
+            <Link to="/" className="flex items-center">
               <img 
                 src={logo} 
-                alt="Education International Logo" 
-                className="h-16 md:h-20 w-auto object-contain"
+                alt="EDUINTBD Logo" 
+                className="h-14 md:h-16 w-auto object-contain"
               />
-              <h1 className="text-xl md:text-2xl font-display font-bold text-primary">
-                Education International
-              </h1>
             </Link>
           </div>
 
