@@ -9,7 +9,7 @@ export const Footer = () => {
           {/* Company Info */}
           <div className="space-y-4 md:col-span-2">
             <h3 className="text-2xl font-display font-bold text-secondary">
-              Education International
+              EDUINTBD
             </h3>
             <p className="text-white/80 text-sm leading-relaxed max-w-sm">
               Your trusted partner for international education. We're here to support you on your study abroad journey.
@@ -88,7 +88,7 @@ export const Footer = () => {
         <div className="border-t border-white/10 pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <p className="text-white/60 text-sm">
-              © {new Date().getFullYear()} Education International. All rights reserved.
+              © {new Date().getFullYear()} EDUINTBD. All rights reserved.
             </p>
             <div className="flex gap-4 text-sm">
               <Link to="/privacy-policy" className="text-white/60 hover:text-secondary transition-colors">Privacy Policy</Link>
