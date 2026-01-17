@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -56,6 +56,9 @@ export default function Login() {
   });
   const { toast } = useToast();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const [referralSource, setReferralSource] = useState<string>("");
+  const [isReferralFromUrl, setIsReferralFromUrl] = useState(false);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -64,6 +67,28 @@ export default function Login() {
       }
     });
   }, [navigate]);
+
+  // Handle referral URL parameters
+  useEffect(() => {
+    const refParam = searchParams.get('ref');
+    const sourceParam = searchParams.get('source');
+    
+    if (refParam) {
+      // Auto-switch to signup mode when referral link is detected
+      setIsSignUp(true);
+      setIsReferralFromUrl(true);
+      setSignupData(prev => ({
+        ...prev,
+        reference_source: 'referral',
+        referral_id: refParam,
+      }));
+    }
+    
+    // Store source param for tracking (e.g., 'qr', 'link', etc.)
+    if (sourceParam) {
+      setReferralSource(sourceParam);
+    }
+  }, [searchParams]);
 
 
   const handleForgotPassword = async (e: React.FormEvent) => {
@@ -179,7 +204,7 @@ export default function Login() {
               level: signupData.level || null,
               budget: signupData.budget || null,
               reference_source: signupData.reference_source === 'referral' && signupData.referral_id 
-                ? `referral:${signupData.referral_id}` 
+                ? `referral:${signupData.referral_id}${referralSource ? ':' + referralSource : ''}` 
                 : signupData.reference_source || null,
               details: validatedData.details || null,
             }]);
@@ -288,6 +313,13 @@ export default function Login() {
                   ? "Check your email to verify your account"
                   : "Access free IELTS tools or sign up to track your progress"}
             </CardDescription>
+            {isReferralFromUrl && signupData.referral_id && !showForgotPassword && !emailSent && (
+              <div className="bg-secondary/10 border border-secondary/30 rounded-lg p-3 text-center">
+                <p className="text-sm font-medium text-secondary">
+                  🎉 Referred by: <span className="font-bold">{signupData.referral_id}</span>
+                </p>
+              </div>
+            )}
             {!showForgotPassword && !emailSent && (
               <div className="flex gap-2 pt-2">
                 <Button
@@ -516,7 +548,14 @@ export default function Login() {
                           placeholder="Enter referral ID"
                           value={signupData.referral_id}
                           onChange={(e) => setSignupData({...signupData, referral_id: e.target.value})}
+                          readOnly={isReferralFromUrl}
+                          className={isReferralFromUrl ? "bg-muted cursor-not-allowed" : ""}
                         />
+                        {isReferralFromUrl && (
+                          <p className="text-xs text-muted-foreground">
+                            Referral ID pre-filled from your link
+                          </p>
+                        )}
                       </div>
                     )}
 
