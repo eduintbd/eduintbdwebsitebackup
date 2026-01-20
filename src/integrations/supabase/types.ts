@@ -44,6 +44,30 @@ export type Database = {
         }
         Relationships: []
       }
+      ai_usage: {
+        Row: {
+          created_at: string
+          id: string
+          request_type: string
+          tokens_used: number | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          request_type: string
+          tokens_used?: number | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          request_type?: string
+          tokens_used?: number | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       audit_logs: {
         Row: {
           action: string
@@ -881,6 +905,42 @@ export type Database = {
         }
         Relationships: []
       }
+      user_subscriptions: {
+        Row: {
+          created_at: string
+          current_period_end: string | null
+          current_period_start: string | null
+          id: string
+          status: string
+          stripe_customer_id: string | null
+          stripe_subscription_id: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          current_period_end?: string | null
+          current_period_start?: string | null
+          id?: string
+          status?: string
+          stripe_customer_id?: string | null
+          stripe_subscription_id?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          current_period_end?: string | null
+          current_period_start?: string | null
+          id?: string
+          status?: string
+          stripe_customer_id?: string | null
+          stripe_subscription_id?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       module_performance_by_type: {
@@ -954,6 +1014,7 @@ export type Database = {
     Functions: {
       calculate_study_streak: { Args: { p_user_id: string }; Returns: number }
       generate_student_link: { Args: { p_student_id: string }; Returns: string }
+      get_daily_ai_usage: { Args: { p_user_id: string }; Returns: number }
       get_weekly_progress: {
         Args: { p_user_id: string }
         Returns: {
@@ -971,6 +1032,7 @@ export type Database = {
         }
         Returns: boolean
       }
+      is_pro_user: { Args: { p_user_id: string }; Returns: boolean }
     }
     Enums: {
       app_role: "admin" | "student"
