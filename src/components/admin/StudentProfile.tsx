@@ -10,6 +10,7 @@ import { DocumentUpload } from "../portal/DocumentUpload";
 import { StudentLifecycleView } from "./StudentLifecycleView";
 import { StudentIELTSProgress } from "./StudentIELTSProgress";
 import { StudentStudyPlanner } from "./StudentStudyPlanner";
+import { StudentAIUsage } from "./StudentAIUsage";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Textarea } from "@/components/ui/textarea";
@@ -120,6 +121,7 @@ export function StudentProfile({ studentId, onClose }: StudentProfileProps) {
 
                 <TabsContent value="overview" className="space-y-6">
                   <StudentInfoGrid student={student} />
+                  <StudentAIUsage studentEmail={student.email} />
                 </TabsContent>
 
                 <TabsContent value="ielts" className="space-y-6">
