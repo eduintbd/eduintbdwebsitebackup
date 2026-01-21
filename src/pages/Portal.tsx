@@ -29,6 +29,7 @@ import { MobileNav } from "@/components/portal/MobileNav";
 import { IELTSProgressDashboard } from "@/components/portal/IELTSProgressDashboard";
 import { StudyPlannerSummary } from "@/components/portal/StudyPlannerSummary";
 import { ProfileAvatar } from "@/components/portal/ProfileAvatar";
+import { ProUpgradeCard } from "@/components/portal/ProUpgradeCard";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export default function Portal() {
@@ -306,6 +307,7 @@ export default function Portal() {
                   </CardContent>
                 </Card>
                 <SavedResources studentId={application.id} />
+                <ProUpgradeCard />
               </div>
             </div>
           </TabsContent>
