@@ -25,7 +25,7 @@ const BBAAustralia = () => {
 
           <div className="prose prose-lg max-w-none">
             <p className="text-xl text-muted-foreground mb-8">
-              Get a detailed roadmap for Bangladeshi students interested in BBA programs in Australia. Topics include admission requirements, student visa guidance, and tips for adapting to Australian campus life, all supported by Eduintbd's consultancy team.
+              Get a detailed roadmap for Bangladeshi students interested in BBA programs in Australia. Topics include admission requirements, student visa guidance, and tips for adapting to Australian campus life, all supported by Universal Council's consultancy team.
             </p>
           </div>
         </div>

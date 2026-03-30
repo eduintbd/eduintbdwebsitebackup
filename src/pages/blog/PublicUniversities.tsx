@@ -29,7 +29,7 @@ const PublicUniversities = () => {
             </p>
 
             <p>
-              Eduintbd offers tailored support to help Bangladeshi students navigate the complexities of international university applications.
+              Universal Council offers tailored support to help Bangladeshi students navigate the complexities of international university applications.
             </p>
           </div>
         </div>

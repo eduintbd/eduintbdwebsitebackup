@@ -29,7 +29,7 @@ const BestConsultancy = () => {
             </p>
 
             <p>
-              Learn why Eduintbd stands out in Dhaka, offering expert guidance, comprehensive support, and a proven track record of helping Bangladeshi students achieve their academic goals abroad.
+              Learn why Universal Council stands out in Dhaka, offering expert guidance, comprehensive support, and a proven track record of helping Bangladeshi students achieve their academic goals abroad.
             </p>
           </div>
         </div>

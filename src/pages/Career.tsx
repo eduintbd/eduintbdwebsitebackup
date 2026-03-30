@@ -10,7 +10,7 @@ const Career = () => {
         <iframe
           src="https://eduintbdteam.lovable.app"
           className="w-full h-[calc(100vh-4rem)] sm:h-[calc(100vh-5rem)] border-0"
-          title="EduIntBD Careers Portal"
+          title="Universal Council Careers Portal"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           allowFullScreen
         />

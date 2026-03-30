@@ -17,7 +17,7 @@ const PrivacyPolicy = () => {
           <section className="mb-8">
             <h2 className="text-2xl font-semibold text-foreground mb-4">1. Introduction</h2>
             <p className="text-muted-foreground leading-relaxed">
-              Education International ("we," "our," or "us") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our website and use our services.
+              Universal Council ("we," "our," or "us") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our website and use our services.
             </p>
           </section>
 
@@ -139,9 +139,9 @@ const PrivacyPolicy = () => {
               If you have any questions about this Privacy Policy or our data practices, please contact us:
             </p>
             <ul className="list-none text-muted-foreground space-y-2">
-              <li><strong>Email:</strong> info@eduintbd.com</li>
-              <li><strong>Phone:</strong> +880 1898934855</li>
-              <li><strong>Address:</strong> 264 Elephant Road, Bata Signal, Dhaka 1205</li>
+              <li><strong>Email:</strong> info@universalcouncil.com</li>
+              <li><strong>Phone:</strong> +880 1749-614998</li>
+              <li><strong>Address:</strong> Flat 3G, House 3G, Road 104, Gulshan 2, Dhaka 1212</li>
             </ul>
           </section>
         </article>

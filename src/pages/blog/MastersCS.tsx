@@ -29,7 +29,7 @@ const MastersCS = () => {
             </p>
 
             <p>
-              Learn how Eduintbd supports students with SOP writing, financial planning, and accommodation arrangements. Hear from alumni who share insights about campus life and career prospects post-graduation.
+              Learn how Universal Council supports students with SOP writing, financial planning, and accommodation arrangements. Hear from alumni who share insights about campus life and career prospects post-graduation.
             </p>
           </div>
         </div>

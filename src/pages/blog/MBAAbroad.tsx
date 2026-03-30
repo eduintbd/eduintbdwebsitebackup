@@ -29,7 +29,7 @@ const MBAAbroad = () => {
             </p>
 
             <p>
-              Eduintbd offers step-by-step guidance, from choosing the right business school to preparing for GMAT and interviews. Read about real student experiences and get advice on optimizing your MBA application for global success.
+              Universal Council offers step-by-step guidance, from choosing the right business school to preparing for GMAT and interviews. Read about real student experiences and get advice on optimizing your MBA application for global success.
             </p>
           </div>
         </div>

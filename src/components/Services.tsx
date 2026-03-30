@@ -1,4 +1,7 @@
-import { GraduationCap, FileCheck, Plane, Award } from "lucide-react";
+import {
+  MessageCircle, FileCheck, FileText, Monitor, Stamp, Briefcase,
+  Home, PlaneTakeoff, Building2, ScrollText, Landmark, ArrowRight
+} from "lucide-react";
 import { Link } from "react-router-dom";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { translations } from "@/translations";
@@ -9,65 +12,127 @@ export const Services = () => {
 
   const services = [
     {
-      icon: GraduationCap,
-      title: t.counsellingTitle,
-      description: t.counsellingDesc,
+      icon: MessageCircle,
+      title: language === 'en' ? "Free Consultation" : "বিনামূল্যে পরামর্শ",
+      bg: "bg-pink-50",
+      iconColor: "text-pink-500",
       link: "/admission",
     },
     {
       icon: FileCheck,
-      title: t.applicationTitle,
-      description: t.applicationDesc,
+      title: language === 'en' ? "Admission Services" : "ভর্তি সেবা",
+      bg: "bg-sky-50",
+      iconColor: "text-sky-600",
       link: "/admission",
     },
     {
-      icon: Plane,
-      title: t.visaTitle,
-      description: t.visaDesc,
+      icon: FileText,
+      title: language === 'en' ? "Guiding Students with Support Documents" : "সহায়ক ডকুমেন্ট গাইডেন্স",
+      bg: "bg-rose-50",
+      iconColor: "text-rose-500",
+      link: "/admission",
+    },
+    {
+      icon: Monitor,
+      title: language === 'en' ? "Interview Preparation" : "ইন্টারভিউ প্রস্তুতি",
+      bg: "bg-emerald-50",
+      iconColor: "text-emerald-500",
       link: "/visa",
     },
     {
-      icon: Award,
-      title: t.scholarshipTitle,
-      description: t.scholarshipDesc,
-      link: "/scholarship",
+      icon: Stamp,
+      title: language === 'en' ? "Visa Submission Assistance" : "ভিসা জমা সহায়তা",
+      bg: "bg-amber-50",
+      iconColor: "text-amber-500",
+      link: "/visa",
+    },
+    {
+      icon: Briefcase,
+      title: language === 'en' ? "Pre-Departure Briefing" : "প্রি-ডিপার্চার ব্রিফিং",
+      bg: "bg-violet-50",
+      iconColor: "text-violet-500",
+      link: "/pre-departure",
+    },
+    {
+      icon: Home,
+      title: language === 'en' ? "Accommodation Arrangements" : "থাকার ব্যবস্থা",
+      bg: "bg-pink-50",
+      iconColor: "text-pink-500",
+      link: "/accommodation",
+    },
+    {
+      icon: PlaneTakeoff,
+      title: language === 'en' ? "Airport Pick-Up" : "এয়ারপোর্ট পিক-আপ",
+      bg: "bg-blue-50",
+      iconColor: "text-blue-500",
+      link: "/pre-departure",
+    },
+    {
+      icon: Building2,
+      title: language === 'en' ? "Institution Change Processing" : "প্রতিষ্ঠান পরিবর্তন প্রক্রিয়া",
+      bg: "bg-orange-50",
+      iconColor: "text-orange-500",
+      link: "/admission",
+    },
+    {
+      icon: ScrollText,
+      title: language === 'en' ? "Study Permit Extension & Post-Graduation Work Permit" : "স্টাডি পারমিট এক্সটেনশন ও পোস্ট-গ্র্যাজুয়েশন ওয়ার্ক পারমিট",
+      bg: "bg-teal-50",
+      iconColor: "text-teal-500",
+      link: "/visa",
+    },
+    {
+      icon: Landmark,
+      title: language === 'en' ? "Helping Students with PR (Permanent Residency) Process" : "পিআর (স্থায়ী বাসিন্দা) প্রক্রিয়ায় সহায়তা",
+      bg: "bg-sky-100",
+      iconColor: "text-white",
+      highlight: true,
+      link: "/career",
     },
   ];
+
   return (
-    <section className="py-24 bg-background">
+    <section className="py-24 bg-white" id="services">
       <div className="container px-6">
         <div className="text-center mb-16 animate-fade-in">
-          <h2 className="text-4xl md:text-5xl lg:text-6xl font-display font-bold text-foreground mb-4">
-            {t.title}
+          <h2 className="text-4xl md:text-5xl lg:text-6xl font-display font-bold text-foreground mb-3">
+            {language === 'en' ? 'Services' : 'সেবাসমূহ'}
           </h2>
-          <p className="text-xl text-muted-foreground max-w-3xl mx-auto font-light">
-            {t.subtitle}
+          {/* Underline decoration */}
+          <div className="flex justify-center mb-6">
+            <svg width="80" height="16" viewBox="0 0 80 16" fill="none">
+              <path d="M5 11C20 3 60 3 75 11" stroke="hsl(var(--primary))" strokeWidth="4" strokeLinecap="round" />
+            </svg>
+          </div>
+          <p className="text-lg text-muted-foreground max-w-3xl mx-auto font-light">
+            {language === 'en'
+              ? 'Our service provides the full guidance for the student from free consulting to accommodation support and many more.'
+              : 'আমাদের সেবা শিক্ষার্থীদের বিনামূল্যে পরামর্শ থেকে থাকার ব্যবস্থা এবং আরও অনেক কিছু সহ সম্পূর্ণ গাইডেন্স প্রদান করে।'}
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-7xl mx-auto">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5 max-w-6xl mx-auto">
           {services.map((service, index) => (
             <Link
               key={service.title}
               to={service.link}
-              className="group relative bg-card rounded-2xl p-8 border border-border hover:border-secondary/50 transition-all duration-500 hover:shadow-[0_20px_60px_-15px_hsl(var(--secondary)/0.3)] animate-scale-in block"
-              style={{ animationDelay: `${index * 0.2}s` }}
+              className={`group flex items-center gap-4 p-5 rounded-2xl border transition-all duration-300 hover:shadow-lg hover:-translate-y-1 animate-scale-in ${
+                service.highlight
+                  ? 'bg-sky-500 border-sky-500 text-white'
+                  : 'bg-white border-gray-100 hover:border-secondary/30'
+              }`}
+              style={{ animationDelay: `${index * 0.06}s` }}
             >
-              {/* Icon */}
-              <div className="w-16 h-16 mb-6 rounded-xl bg-secondary/10 flex items-center justify-center group-hover:bg-secondary/20 transition-all duration-300">
-                <service.icon className="w-8 h-8 text-secondary" />
+              <div className={`w-14 h-14 rounded-xl flex items-center justify-center flex-shrink-0 ${
+                service.highlight ? 'bg-white/20' : service.bg
+              }`}>
+                <service.icon className={`w-7 h-7 ${service.highlight ? 'text-white' : service.iconColor}`} strokeWidth={1.8} />
               </div>
-
-              {/* Content */}
-              <h3 className="text-2xl font-display font-semibold text-foreground mb-4 group-hover:text-primary transition-colors">
+              <h3 className={`text-sm font-bold leading-snug ${
+                service.highlight ? 'text-white' : 'text-foreground'
+              }`}>
                 {service.title}
               </h3>
-              <p className="text-muted-foreground leading-relaxed">
-                {service.description}
-              </p>
-
-              {/* Hover gradient effect */}
-              <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-secondary/0 via-secondary/0 to-secondary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
             </Link>
           ))}
         </div>

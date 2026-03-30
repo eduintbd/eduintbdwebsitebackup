@@ -29,7 +29,7 @@ const CanadaScholarship = () => {
             </p>
 
             <p>
-              Eduintbd provides insights into scholarship programs, eligibility criteria, and strategies for crafting standout applications and essays.
+              Universal Council provides insights into scholarship programs, eligibility criteria, and strategies for crafting standout applications and essays.
             </p>
           </div>
         </div>

@@ -22,12 +22,12 @@ export const FloatingActions = () => {
 
   const handleWhatsApp = () => {
     trackContact({ contact_method: 'whatsapp' });
-    window.open("https://api.whatsapp.com/send?phone=8801898934855", "_blank");
+    window.open("https://api.whatsapp.com/send?phone=8801749614998", "_blank");
   };
 
   const handleCall = () => {
     trackContact({ contact_method: 'phone' });
-    window.location.href = "tel:+8801898934855";
+    window.location.href = "tel:+8801749614998";
   };
 
   const handleEnquire = () => {
@@ -52,11 +52,11 @@ export const FloatingActions = () => {
   };
 
   const handleFacebook = () => {
-    window.open("https://www.facebook.com/profile.php?id=61578321455931", "_blank");
+    window.open("https://www.facebook.com/share/1E1eN62AQw/", "_blank");
   };
 
   const handleLinkedIn = () => {
-    window.open("https://www.linkedin.com/company/go-abroad-bd", "_blank");
+    window.open("https://www.facebook.com/share/1E1eN62AQw/", "_blank");
   };
 
   return (
@@ -106,7 +106,7 @@ export const FloatingActions = () => {
         >
           <Phone className="w-7 h-7" />
           <span className="absolute right-full mr-3 top-1/2 -translate-y-1/2 bg-gray-900 text-white text-sm px-3 py-2 rounded-lg whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity">
-            Call +880 1898934855
+            Call +880 1749-614998
           </span>
         </button>
 
@@ -135,15 +135,15 @@ export const FloatingActions = () => {
           </span>
         </button>
 
-        {/* LinkedIn Button */}
+        {/* Facebook Page Button */}
         <button
-          onClick={handleLinkedIn}
-          className="fixed bottom-[120px] right-6 z-40 bg-blue-700 hover:bg-blue-800 text-white w-16 h-16 rounded-full shadow-[0_4px_20px_rgba(0,0,0,0.15)] hover:shadow-[0_6px_30px_rgba(0,0,0,0.25)] transition-all duration-300 hover:scale-110 group flex items-center justify-center"
-          aria-label="LinkedIn"
+          onClick={handleFacebook}
+          className="fixed bottom-[120px] right-6 z-40 bg-blue-600 hover:bg-blue-700 text-white w-16 h-16 rounded-full shadow-[0_4px_20px_rgba(0,0,0,0.15)] hover:shadow-[0_6px_30px_rgba(0,0,0,0.25)] transition-all duration-300 hover:scale-110 group flex items-center justify-center"
+          aria-label="Facebook Page"
         >
-          <Linkedin className="w-7 h-7" />
+          <Facebook className="w-7 h-7" />
           <span className="absolute right-full mr-3 top-1/2 -translate-y-1/2 bg-gray-900 text-white text-sm px-3 py-2 rounded-lg whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity">
-            Connect on LinkedIn
+            Visit our Facebook
           </span>
         </button>
 
@@ -163,7 +163,7 @@ export const FloatingActions = () => {
         {showScrollTop && (
           <button
             onClick={scrollToTop}
-            className="fixed bottom-[520px] right-6 z-40 bg-secondary hover:bg-secondary/90 text-primary w-14 h-14 rounded-full shadow-[0_4px_20px_rgba(0,0,0,0.15)] hover:shadow-[0_6px_30px_rgba(0,0,0,0.25)] transition-all duration-300 hover:scale-110 animate-fade-in flex items-center justify-center"
+            className="fixed bottom-[520px] right-6 z-40 bg-secondary hover:bg-secondary/90 text-white w-14 h-14 rounded-full shadow-[0_4px_20px_rgba(0,0,0,0.15)] hover:shadow-[0_6px_30px_rgba(0,0,0,0.25)] transition-all duration-300 hover:scale-110 animate-fade-in flex items-center justify-center"
             aria-label="Scroll to top"
           >
             <ArrowUp className="w-6 h-6" />

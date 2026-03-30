@@ -29,7 +29,7 @@ const GermanyCost = () => {
             </p>
 
             <p>
-              Eduintbd helps you budget and explore funding options.
+              Universal Council helps you budget and explore funding options.
             </p>
           </div>
         </div>

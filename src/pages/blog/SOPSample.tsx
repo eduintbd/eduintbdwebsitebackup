@@ -29,7 +29,7 @@ const SOPSample = () => {
             </p>
 
             <p>
-              Eduintbd's consultants help you personalize your SOP to reflect your achievements and goals.
+              Universal Council's consultants help you personalize your SOP to reflect your achievements and goals.
             </p>
           </div>
         </div>

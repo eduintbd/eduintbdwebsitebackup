@@ -29,7 +29,7 @@ const PhDScholarships = () => {
             </p>
 
             <p>
-              Eduintbd helps you craft compelling research proposals, connect with potential supervisors, and navigate complex application requirements for leading universities worldwide.
+              Universal Council helps you craft compelling research proposals, connect with potential supervisors, and navigate complex application requirements for leading universities worldwide.
             </p>
           </div>
         </div>

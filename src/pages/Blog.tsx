@@ -53,7 +53,7 @@ const blogPosts = [
   },
   {
     title: "Which Is the Best Education Consultancy in Dhaka?",
-    excerpt: "Learn why Eduintbd stands out in Dhaka, offering expert guidance, comprehensive support, and a proven track record.",
+    excerpt: "Learn why Universal Council stands out in Dhaka, offering expert guidance, comprehensive support, and a proven track record.",
     slug: "which-is-the-best-education-consultancy-in-dhaka"
   },
   {
@@ -78,7 +78,7 @@ const blogPosts = [
   },
   {
     title: "Study Abroad Consultants Near Me: Why Local Expertise Matters",
-    excerpt: "Learn how Eduintbd's local presence and personalized services make the difference for Bangladeshi students seeking overseas opportunities.",
+    excerpt: "Learn how Universal Council's local presence and personalized services make the difference for Bangladeshi students seeking overseas opportunities.",
     slug: "study-abroad-consultants-near-me-why-local-expertise-matters"
   }
 ];

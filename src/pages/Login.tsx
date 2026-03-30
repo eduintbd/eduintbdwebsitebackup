@@ -304,7 +304,7 @@ export default function Login() {
         <Card className="w-full max-w-2xl shadow-xl border-2 my-8">
           <CardHeader className="space-y-3 pb-6">
             <CardTitle className="text-3xl font-bold text-center">
-              {showForgotPassword ? "Reset Password" : "Welcome to EduintBD"}
+              {showForgotPassword ? "Reset Password" : "Welcome to Universal Council"}
             </CardTitle>
             <CardDescription className="text-center text-base">
               {showForgotPassword 

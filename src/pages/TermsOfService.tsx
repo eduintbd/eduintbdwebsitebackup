@@ -17,14 +17,14 @@ const TermsOfService = () => {
           <section className="mb-8">
             <h2 className="text-2xl font-semibold text-foreground mb-4">1. Acceptance of Terms</h2>
             <p className="text-muted-foreground leading-relaxed">
-              By accessing and using Education International's website and services, you accept and agree to be bound by these Terms of Service. If you do not agree to these terms, please do not use our services.
+              By accessing and using Universal Council's website and services, you accept and agree to be bound by these Terms of Service. If you do not agree to these terms, please do not use our services.
             </p>
           </section>
 
           <section className="mb-8">
             <h2 className="text-2xl font-semibold text-foreground mb-4">2. Description of Services</h2>
             <p className="text-muted-foreground leading-relaxed mb-4">
-              Education International provides education consulting services, including but not limited to:
+              Universal Council provides education consulting services, including but not limited to:
             </p>
             <ul className="list-disc pl-6 text-muted-foreground space-y-2">
               <li>Study abroad counseling and guidance</li>
@@ -56,7 +56,7 @@ const TermsOfService = () => {
           <section className="mb-8">
             <h2 className="text-2xl font-semibold text-foreground mb-4">4. Service Disclaimer</h2>
             <p className="text-muted-foreground leading-relaxed">
-              While we strive to provide accurate and helpful guidance, Education International does not guarantee admission to any educational institution, visa approval, or scholarship awards. Final decisions rest with the respective universities, immigration authorities, and scholarship organizations. We provide consulting services to help you prepare strong applications but cannot control the outcomes.
+              While we strive to provide accurate and helpful guidance, Universal Council does not guarantee admission to any educational institution, visa approval, or scholarship awards. Final decisions rest with the respective universities, immigration authorities, and scholarship organizations. We provide consulting services to help you prepare strong applications but cannot control the outcomes.
             </p>
           </section>
 
@@ -78,7 +78,7 @@ const TermsOfService = () => {
           <section className="mb-8">
             <h2 className="text-2xl font-semibold text-foreground mb-4">6. Intellectual Property</h2>
             <p className="text-muted-foreground leading-relaxed">
-              All content on our website, including text, graphics, logos, images, and software, is the property of Education International or its content suppliers and is protected by international copyright laws. You may not reproduce, distribute, or create derivative works from our content without express written permission.
+              All content on our website, including text, graphics, logos, images, and software, is the property of Universal Council or its content suppliers and is protected by international copyright laws. You may not reproduce, distribute, or create derivative works from our content without express written permission.
             </p>
           </section>
 
@@ -92,7 +92,7 @@ const TermsOfService = () => {
           <section className="mb-8">
             <h2 className="text-2xl font-semibold text-foreground mb-4">8. Limitation of Liability</h2>
             <p className="text-muted-foreground leading-relaxed mb-4">
-              To the maximum extent permitted by law, Education International shall not be liable for:
+              To the maximum extent permitted by law, Universal Council shall not be liable for:
             </p>
             <ul className="list-disc pl-6 text-muted-foreground space-y-2">
               <li>Any indirect, incidental, special, or consequential damages</li>
@@ -109,7 +109,7 @@ const TermsOfService = () => {
           <section className="mb-8">
             <h2 className="text-2xl font-semibold text-foreground mb-4">9. Indemnification</h2>
             <p className="text-muted-foreground leading-relaxed">
-              You agree to indemnify and hold Education International harmless from any claims, damages, losses, liabilities, and expenses arising from your use of our services, your violation of these Terms, or your violation of any rights of another party.
+              You agree to indemnify and hold Universal Council harmless from any claims, damages, losses, liabilities, and expenses arising from your use of our services, your violation of these Terms, or your violation of any rights of another party.
             </p>
           </section>
 
@@ -161,15 +161,15 @@ const TermsOfService = () => {
               If you have any questions about these Terms of Service, please contact us:
             </p>
             <ul className="list-none text-muted-foreground space-y-2">
-              <li><strong>Email:</strong> info@eduintbd.com</li>
-              <li><strong>Phone:</strong> +880 1898934855</li>
-              <li><strong>Address:</strong> 264 Elephant Road, Bata Signal, Dhaka 1205</li>
+              <li><strong>Email:</strong> info@universalcouncil.com</li>
+              <li><strong>Phone:</strong> +880 1749-614998</li>
+              <li><strong>Address:</strong> Flat 3G, House 3G, Road 104, Gulshan 2, Dhaka 1212</li>
             </ul>
           </section>
 
           <section className="mb-8">
             <p className="text-muted-foreground leading-relaxed">
-              By using Education International's services, you acknowledge that you have read, understood, and agree to be bound by these Terms of Service.
+              By using Universal Council's services, you acknowledge that you have read, understood, and agree to be bound by these Terms of Service.
             </p>
           </section>
         </article>

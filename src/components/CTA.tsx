@@ -34,18 +34,18 @@ export const CTA = () => {
             <Button 
               size="lg" 
               onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
-              className="bg-secondary hover:bg-secondary/90 text-primary font-semibold px-8 py-6 text-lg rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
+              className="bg-secondary hover:bg-secondary/90 text-white font-semibold px-8 py-6 text-lg rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
             >
               {t.bookButton}
               <ArrowRight className="ml-2 w-5 h-5" />
             </Button>
-            <Button 
-              size="lg" 
-              variant="hero"
+            <Button
+              size="lg"
+              variant="outline"
               asChild
-              className="font-semibold px-8 py-6 text-lg rounded-full transition-all duration-300"
+              className="border-white/30 text-white hover:bg-white/10 font-semibold px-8 py-6 text-lg rounded-full transition-all duration-300"
             >
-              <a href="tel:+8801898934855">{t.callButton}</a>
+              <a href="tel:+8801749614998">{t.callButton}</a>
             </Button>
           </div>
         </div>

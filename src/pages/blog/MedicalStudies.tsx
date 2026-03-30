@@ -29,7 +29,7 @@ const MedicalStudies = () => {
             </p>
 
             <p>
-              Eduintbd's guidance ensures you meet all criteria and secure the right financial aid, including scholarships for Bangladeshi students pursuing medicine.
+              Universal Council's guidance ensures you meet all criteria and secure the right financial aid, including scholarships for Bangladeshi students pursuing medicine.
             </p>
           </div>
         </div>

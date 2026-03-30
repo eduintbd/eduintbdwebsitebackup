@@ -43,7 +43,7 @@ const BrandGuidelines = () => {
         heightLeft -= pageHeight;
       }
 
-      pdf.save("eduintbd-brand-guidelines.pdf");
+      pdf.save("universal-council-brand-guidelines.pdf");
     } catch (error) {
       console.error("Error generating PDF:", error);
     } finally {
@@ -67,7 +67,7 @@ const BrandGuidelines = () => {
         <div className="flex justify-between items-center mb-8">
           <div>
             <h1 className="text-4xl font-bold text-primary mb-2">Brand Guidelines</h1>
-            <p className="text-muted-foreground">EduInt BD Design System</p>
+            <p className="text-muted-foreground">Universal Council Design System</p>
           </div>
           <Button onClick={handleDownloadPDF} disabled={isGenerating}>
             <Download className="mr-2 h-4 w-4" />
@@ -79,10 +79,10 @@ const BrandGuidelines = () => {
           {/* Header */}
           <div className="text-center border-b pb-8">
             <h1 className="text-5xl font-display font-bold text-primary mb-4">
-              EduInt BD
+              Universal Council
             </h1>
             <p className="text-xl text-muted-foreground">Brand Guidelines & Design System</p>
-            <p className="text-sm text-muted-foreground mt-2">Version 1.0 • 2025</p>
+            <p className="text-sm text-muted-foreground mt-2">Version 1.0 • 2026</p>
           </div>
 
           {/* Color Palette */}
@@ -237,7 +237,7 @@ const BrandGuidelines = () => {
 
           {/* Footer */}
           <div className="text-center text-sm text-muted-foreground border-t pt-8">
-            <p>© 2025 EduInt BD. All rights reserved.</p>
+            <p>© 2026 Universal Council. All rights reserved.</p>
             <p className="mt-2">For internal use only. Do not distribute without permission.</p>
           </div>
         </div>

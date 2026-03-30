@@ -50,7 +50,7 @@ export function CommunicationCenter({
 
   const openWhatsApp = async () => {
     const cleanPhone = studentPhone.replace(/\D/g, '');
-    const message = encodeURIComponent(`Hi ${studentName}, this is EduInt BD. How can we assist you today?`);
+    const message = encodeURIComponent(`Hi ${studentName}, this is Universal Council. How can we assist you today?`);
     window.open(`https://wa.me/${cleanPhone}?text=${message}`, '_blank');
     
     // Log activity
@@ -60,8 +60,8 @@ export function CommunicationCenter({
   };
 
   const openZohoMail = async () => {
-    const subject = encodeURIComponent(`EduInt BD - Your Study Abroad Application`);
-    const body = encodeURIComponent(`Dear ${studentName},\n\nThank you for choosing EduInt BD for your study abroad journey.\n\nBest regards,\nEduInt BD Team\nsupport@eduintbd.com\nWhatsApp: +880 1898934855`);
+    const subject = encodeURIComponent(`Universal Council - Your Study Abroad Application`);
+    const body = encodeURIComponent(`Dear ${studentName},\n\nThank you for choosing Universal Council for your study abroad journey.\n\nBest regards,\nUniversal Council Team\nsupport@universalcouncil.com\nWhatsApp: +880 1749-614998`);
     window.open(`mailto:${studentEmail}?subject=${subject}&body=${body}`, '_blank');
     
     // Log activity
@@ -71,7 +71,7 @@ export function CommunicationCenter({
   };
 
   const openFacebook = async () => {
-    window.open(`https://www.facebook.com/messages/`, '_blank');
+    window.open(`https://www.facebook.com/share/1E1eN62AQw/`, '_blank');
     
     // Log activity
     if (isAdmin) {

@@ -51,7 +51,7 @@ export const CourseSearch = () => {
 
               <Button 
                 size="lg"
-                className="bg-secondary hover:bg-secondary/90 text-primary font-semibold px-8 py-6 text-lg rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
+                className="bg-secondary hover:bg-secondary/90 text-white font-semibold px-8 py-6 text-lg rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
                 onClick={() => window.open('https://www.edvoy.com', '_blank')}
               >
                 <Search className="mr-2 w-5 h-5" />

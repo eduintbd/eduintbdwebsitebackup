@@ -21,7 +21,7 @@ export function AdvisorConnection({ studentPhone, studentEmail, studentName }: A
 
   const openEmail = () => {
     const subject = encodeURIComponent(`Application Query - ${studentName}`);
-    window.open(`mailto:support@eduintbd.com?subject=${subject}`, '_blank');
+    window.open(`mailto:support@universalcouncil.com?subject=${subject}`, '_blank');
   };
 
   return (

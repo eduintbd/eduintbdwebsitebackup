@@ -15,7 +15,7 @@ export const translations = {
     about: {
       title: "Empowering Dreams,",
       titleHighlight: "Connecting Futures",
-      description: "At Education International, we believe education is more than just a degree — it's a journey that shapes who you are and where you're going. We guide students every step of the way toward studying abroad with confidence and clarity.",
+      description: "At Universal Council, we believe education is more than just a degree — it's a journey that shapes who you are and where you're going. We guide students every step of the way toward studying abroad with confidence and clarity.",
       icefTitle: "British Council Certified",
       icefDesc: "Internationally recognized education consultancy with proven track record",
       networkTitle: "Global Network",
@@ -28,7 +28,7 @@ export const translations = {
       description3: "Our expert advisors combine local insight with international expertise to deliver results that open doors — not just to campuses, but to careers and possibilities worldwide.",
     },
     services: {
-      title: "Why Choose Education International",
+      title: "Why Choose Universal Council",
       subtitle: "Comprehensive, transparent, and reliable service approach that sets us apart",
       counsellingTitle: "Education Counselling",
       counsellingDesc: "We shortlist universities and programs that match your profile, compare costs and outcomes, and advise on entry requirements for the best chances of success.",
@@ -85,7 +85,7 @@ export const translations = {
       title: "Ready to Start Your Global Education Journey?",
       subtitle: "Connect with our expert counselors today and take the first step toward your dream university",
       bookButton: "Book Free Consultation",
-      callButton: "Call +880 1898934855",
+      callButton: "Call +880 1749-614998",
     },
     contactForm: {
       title: "Get Free Consultation",
@@ -123,7 +123,7 @@ export const translations = {
     about: {
       title: "স্বপ্নকে ক্ষমতায়ন,",
       titleHighlight: "ভবিষ্যৎ সংযোগ",
-      description: "এডুকেশন ইন্টারন্যাশনালে, আমরা বিশ্বাস করি শিক্ষা শুধু একটি ডিগ্রি নয় — এটি একটি যাত্রা যা আপনাকে গঠন করে এবং আপনি কোথায় যাচ্ছেন তা নির্ধারণ করে। আমরা শিক্ষার্থীদের আত্মবিশ্বাস এবং স্পষ্টতার সাথে বিদেশে পড়ার প্রতিটি পদক্ষেপে গাইড করি।",
+      description: "ইউনিভার্সাল কাউন্সিলে, আমরা বিশ্বাস করি শিক্ষা শুধু একটি ডিগ্রি নয় — এটি একটি যাত্রা যা আপনাকে গঠন করে এবং আপনি কোথায় যাচ্ছেন তা নির্ধারণ করে। আমরা শিক্ষার্থীদের আত্মবিশ্বাস এবং স্পষ্টতার সাথে বিদেশে পড়ার প্রতিটি পদক্ষেপে গাইড করি।",
       icefTitle: "ব্রিটিশ কাউন্সিল সার্টিফাইড",
       icefDesc: "প্রমাণিত ট্র্যাক রেকর্ড সহ আন্তর্জাতিকভাবে স্বীকৃত শিক্ষা পরামর্শদাতা",
       networkTitle: "গ্লোবাল নেটওয়ার্ক",
@@ -136,7 +136,7 @@ export const translations = {
       description3: "আমাদের বিশেষজ্ঞ পরামর্শদাতারা স্থানীয় অন্তর্দৃষ্টি এবং আন্তর্জাতিক দক্ষতার সমন্বয় করে ফলাফল প্রদান করে যা দরজা খুলে দেয় — শুধু ক্যাম্পাসে নয়, বরং ক্যারিয়ার এবং বিশ্বব্যাপী সম্ভাবনার।",
     },
     services: {
-      title: "কেন এডুকেশন ইন্টারন্যাশনাল বেছে নেবেন",
+      title: "কেন ইউনিভার্সাল কাউন্সিল বেছে নেবেন",
       subtitle: "ব্যাপক, স্বচ্ছ এবং নির্ভরযোগ্য সেবা পদ্ধতি যা আমাদের আলাদা করে",
       counsellingTitle: "শিক্ষা পরামর্শ",
       counsellingDesc: "আমরা আপনার প্রোফাইলের সাথে মেলে এমন বিশ্ববিদ্যালয় এবং প্রোগ্রাম শর্টলিস্ট করি, খরচ এবং ফলাফল তুলনা করি এবং সফলতার সর্বোত্তম সম্ভাবনার জন্য প্রবেশের প্রয়োজনীয়তা সম্পর্কে পরামর্শ দিই।",
@@ -193,7 +193,7 @@ export const translations = {
       title: "আপনার বৈশ্বিক শিক্ষা যাত্রা শুরু করার জন্য প্রস্তুত?",
       subtitle: "আজই আমাদের বিশেষজ্ঞ পরামর্শদাতাদের সাথে সংযুক্ত হন এবং আপনার স্বপ্নের বিশ্ববিদ্যালয়ের দিকে প্রথম পদক্ষেপ নিন",
       bookButton: "বিনামূল্যে পরামর্শ বুক করুন",
-      callButton: "কল করুন +৮৮০ ১৮৯৮৯৩৪৮৫৫",
+      callButton: "কল করুন +৮৮০ ১৭৪৯-৬১৪৯৯৮",
     },
     contactForm: {
       title: "বিনামূল্যে পরামর্শ পান",

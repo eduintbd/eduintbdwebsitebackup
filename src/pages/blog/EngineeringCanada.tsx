@@ -29,7 +29,7 @@ const EngineeringCanada = () => {
             </p>
 
             <p>
-              Eduintbd consultants assist with university selection, application preparation, and accommodation search for students relocating to Canada.
+              Universal Council consultants assist with university selection, application preparation, and accommodation search for students relocating to Canada.
             </p>
           </div>
         </div>

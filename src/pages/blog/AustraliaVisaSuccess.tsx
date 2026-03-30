@@ -25,7 +25,7 @@ const AustraliaVisaSuccess = () => {
 
           <div className="prose prose-lg max-w-none">
             <p className="text-xl text-muted-foreground mb-8">
-              Curious about your chances of securing an Australian student visa? We analyze the latest statistics and share tips to improve your success rate, based on Eduintbd's experience helping Bangladeshi students apply successfully.
+              Curious about your chances of securing an Australian student visa? We analyze the latest statistics and share tips to improve your success rate, based on Universal Council's experience helping Bangladeshi students apply successfully.
             </p>
           </div>
         </div>

@@ -29,7 +29,7 @@ const AustraliaVisaGuide = () => {
             </p>
 
             <p>
-              Learn how Eduintbd's expert consultants in Dhaka can streamline your application process, assist with SOP writing, and provide personalized interview coaching to maximize your chances of visa approval. Discover tips for successful applications and common mistakes to avoid.
+              Learn how Universal Council's expert consultants in Dhaka can streamline your application process, assist with SOP writing, and provide personalized interview coaching to maximize your chances of visa approval. Discover tips for successful applications and common mistakes to avoid.
             </p>
 
             <p>

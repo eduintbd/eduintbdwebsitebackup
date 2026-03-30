@@ -17,7 +17,7 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
-import logo from "@/assets/logo.png";
+import { Logo } from "@/components/Logo";
 
 export const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -126,12 +126,16 @@ export const Navigation = () => {
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
           <div className="flex items-center">
-            <Link to="/" className="flex items-center">
-              <img 
-                src={logo} 
-                alt="EDUINTBD Logo" 
-                className="h-14 md:h-16 w-auto object-contain"
-              />
+            <Link to="/" className="flex items-center gap-2.5">
+              <Logo size={42} className="text-secondary" />
+              <div className="flex flex-col leading-none">
+                <span className="text-lg font-display font-bold text-primary tracking-wide">
+                  Universal Council
+                </span>
+                <span className="text-[10px] font-semibold text-secondary tracking-widest uppercase">
+                  International Education Consultancy
+                </span>
+              </div>
             </Link>
           </div>
 
@@ -225,7 +229,7 @@ export const Navigation = () => {
 
             {/* Careers - External Link */}
             <a
-              href="https://team.eduintbd.ai/careers"
+              href="https://team.universalcouncil.com/careers"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex h-10 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none text-foreground"
@@ -284,7 +288,7 @@ export const Navigation = () => {
             ) : (
               <Button 
                 asChild
-                className="bg-secondary hover:bg-secondary/90 text-primary font-semibold rounded-full ml-2"
+                className="bg-secondary hover:bg-secondary/90 text-white font-semibold rounded-full ml-2"
               >
                 <Link to="/login">Sign up/Log in</Link>
               </Button>
@@ -413,7 +417,7 @@ export const Navigation = () => {
               </Collapsible>
 
               <a 
-                href="https://team.eduintbd.ai/careers"
+                href="https://team.universalcouncil.com/careers"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="py-2 text-foreground hover:text-primary transition-colors font-medium text-sm"
@@ -462,7 +466,7 @@ export const Navigation = () => {
                 </Button>
               ) : (
                 <Button 
-                  className="bg-secondary hover:bg-secondary/90 text-primary font-semibold rounded-full w-full mt-2"
+                  className="bg-secondary hover:bg-secondary/90 text-white font-semibold rounded-full w-full mt-2"
                   asChild
                 >
                   <Link to="/login" onClick={() => setIsOpen(false)}>Sign up/Log in</Link>

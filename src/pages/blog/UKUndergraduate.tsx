@@ -29,7 +29,7 @@ const UKUndergraduate = () => {
             </p>
 
             <p>
-              Eduintbd consultants in Dhaka provide expert advice on course selection and offer tailored support for your application, including personal statement review and interview preparation.
+              Universal Council consultants in Dhaka provide expert advice on course selection and offer tailored support for your application, including personal statement review and interview preparation.
             </p>
           </div>
         </div>

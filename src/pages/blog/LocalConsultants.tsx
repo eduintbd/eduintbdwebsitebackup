@@ -29,7 +29,7 @@ const LocalConsultants = () => {
             </p>
 
             <p>
-              Learn how Eduintbd's local presence, Google My Business optimization, and personalized services make the difference for Bangladeshi students seeking overseas opportunities.
+              Learn how Universal Council's local presence, Google My Business optimization, and personalized services make the difference for Bangladeshi students seeking overseas opportunities.
             </p>
           </div>
         </div>
